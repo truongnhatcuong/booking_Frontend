@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { decrypt } from "@/lib/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "./lib/verifyToken";
 
 export default async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
