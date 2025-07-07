@@ -61,7 +61,7 @@ const AdminBookingForm = ({
 }: BookingProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(0);
-  const [discount, setDiscount] = useState<any>(null);
+  const [discount, setDiscount] = useState<any | null>(null);
 
   const { data } = useSWR(
     `${URL_API}/api/room/${
@@ -127,7 +127,7 @@ const AdminBookingForm = ({
       const checkOut = new Date(formData.checkOutDate);
       const nights =
         (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24);
-      let baseAmount = formData.pricePerNight * nights;
+      const baseAmount = formData.pricePerNight * nights;
       let discountAmount = 0;
 
       if (formData.discountCode) {

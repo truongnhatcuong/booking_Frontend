@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/lib/axios";
-import axios from "axios";
 import { Trash } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";

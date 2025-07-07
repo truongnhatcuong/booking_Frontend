@@ -36,17 +36,6 @@ enum RoomStatus {
   MAINTENANCE = "MAINTENANCE",
 }
 
-export function translateRoomStatus(status: RoomStatus): string {
-  switch (status) {
-    case RoomStatus.AVAILABLE:
-      return "Còn trống";
-    case RoomStatus.OCCUPIED:
-      return "Đang có khách";
-    case RoomStatus.MAINTENANCE:
-      return "Đang bảo trì";
-  }
-}
-
 interface FormData {
   checkInDate: Date | null;
   checkOutDate: Date | null;
