@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle } from "lucide-react";
 import axios from "axios";
@@ -35,4 +35,10 @@ const PaymentSuccess = () => {
   );
 };
 
-export default PaymentSuccess;
+export default function Page() {
+  return (
+    <Suspense>
+      <PaymentSuccess />
+    </Suspense>
+  );
+}
