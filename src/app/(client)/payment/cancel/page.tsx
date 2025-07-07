@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { Factory } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -53,4 +53,12 @@ const CancelPage = () => {
   );
 };
 
-export default CancelPage;
+const page = () => {
+  return (
+    <Suspense>
+      <CancelPage />
+    </Suspense>
+  );
+};
+
+export default page;

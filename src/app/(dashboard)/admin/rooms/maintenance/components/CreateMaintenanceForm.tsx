@@ -1,7 +1,6 @@
 "use client";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
 import Modal from "react-modal";
