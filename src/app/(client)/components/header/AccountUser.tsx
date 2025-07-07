@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { mutate } from "swr";
+import { URL_API } from "@/lib/fetcher";
 
 interface AccountUserProps {
   userType: string | null;
@@ -46,7 +47,7 @@ const AccountUser = ({ userType, lastName }: AccountUserProps) => {
         <Link
           href="/logOut"
           onClick={() => {
-            mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/auth/user`, null, {
+            mutate(`${URL_API}/api/auth/user`, null, {
               revalidate: false,
             });
           }}

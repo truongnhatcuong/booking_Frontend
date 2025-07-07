@@ -53,24 +53,36 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
   function getCurrentBookingVisualStatus(
     checkIn: string,
     checkOut: string
-  ): "check-in" | "in-use" | "check-out" {
+  ): "check-in" | "in-use" | "check-out" | "clean" | null {
     const today = new Date();
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
 
-    if (today.toDateString() === checkInDate.toDateString()) {
+    // Normalize ngày để so sánh (bỏ phần giờ phút giây)
+    const normalize = (date: Date) =>
+      new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    const todayNorm = normalize(today);
+    const checkInNorm = normalize(checkInDate);
+    const checkOutNorm = normalize(checkOutDate);
+
+    if (todayNorm.getTime() === checkInNorm.getTime()) {
       return "check-in";
     }
 
-    if (today > checkInDate && today < checkOutDate) {
+    if (todayNorm > checkInNorm && todayNorm < checkOutNorm) {
       return "in-use";
     }
 
-    if (today.toDateString() === checkOutDate.toDateString()) {
+    if (todayNorm.getTime() === checkOutNorm.getTime()) {
       return "check-out";
     }
 
-    return "in-use"; // fallback nếu ngoài phạm vi (có thể return null nếu muốn ẩn)
+    if (todayNorm.getTime() > checkOutNorm.getTime()) {
+      return "clean";
+    }
+
+    return null;
   }
 
   return (
@@ -79,7 +91,7 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
         <TableHeader className="bg-gray-50">
           <TableRow>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Hình Ảnh
+              Mã đặt phòng
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Khách hàng
@@ -88,10 +100,7 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
               Loại Phòng
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ngày nhận phòng
-            </TableHead>
-            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ngày trả phòng
+              Ngày nhận phòng - Ngày trả phòng
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Tổng tiền
@@ -113,21 +122,8 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
         <TableBody className="bg-white divide-y divide-gray-200">
           {booking?.map((booking) => (
             <TableRow key={booking.id}>
-              <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {booking.bookingItems.map((item, index) => (
-                  <div key={index} className="relative">
-                    <p className="absolute text-gray-700 bg-white bottom-0 right-8 rounded-b-md ">
-                      P{item.room.roomNumber}{" "}
-                    </p>
-                    <Image
-                      alt="lỗi ảnh"
-                      src={item.room.roomType.photoUrls || "/available.png"}
-                      width={300}
-                      height={300}
-                      className=" w-20 h-20 rounded-full object-cover"
-                    />
-                  </div>
-                ))}
+              <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 *:flex items-center gap-2">
+                #{booking.id.replace(/-/g, "").slice(0, 8)}
               </TableCell>
               <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {booking.customer.user.firstName}{" "}
@@ -142,11 +138,14 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
                 ))}
               </TableCell>
 
-              <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {new Date(booking.checkInDate).toLocaleDateString("vi-VN")}
-              </TableCell>
-              <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {new Date(booking.checkOutDate).toLocaleDateString("vi-VN")}
+              <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex items-center gap-20 ">
+                <p>
+                  {" "}
+                  {new Date(booking.checkInDate).toLocaleDateString("vi-VN")}
+                </p>
+                <p>
+                  {new Date(booking.checkOutDate).toLocaleDateString("vi-VN")}
+                </p>
               </TableCell>
               <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {formatPrice(Number(booking.totalAmount))}
@@ -167,25 +166,32 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
                 </span>
               </TableCell>
               <TableCell className="px-6 py-4 whitespace-nowrap text-sm">
-                {(() => {
-                  const status = getCurrentBookingVisualStatus(
-                    booking.checkInDate,
-                    booking.checkOutDate
-                  );
-                  const color =
-                    status === "check-in"
-                      ? "bg-green-500"
-                      : status === "in-use"
-                      ? "bg-yellow-400"
-                      : "bg-red-500";
+                {booking.status === "CANCELLED"
+                  ? null
+                  : (() => {
+                      const status = getCurrentBookingVisualStatus(
+                        booking.checkInDate,
+                        booking.checkOutDate
+                      );
 
-                  return (
-                    <div
-                      className={`w-5 h-5 rounded-full ${color}`}
-                      title={status}
-                    ></div>
-                  );
-                })()}
+                      const color =
+                        status === "check-in"
+                          ? "bg-green-500"
+                          : status === "in-use"
+                          ? "bg-yellow-400"
+                          : status === "check-out"
+                          ? "bg-blue-500"
+                          : status === "clean"
+                          ? "bg-gray-400"
+                          : "bg-transparent"; // fallback nếu null
+
+                      return (
+                        <div
+                          className={`w-5 h-5 rounded-full ${color}`}
+                          title={status ?? ""}
+                        ></div>
+                      );
+                    })()}
               </TableCell>
 
               <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -202,11 +208,10 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm">
-                {booking.status !== "CANCELLED" && (
-                  <>
+                {booking.status !== "CANCELLED" &&
+                  booking.status !== "CHECKED_OUT" && (
                     <UpdateStatus id={booking.id} status={booking.status} />
-                  </>
-                )}
+                  )}
               </td>
             </TableRow>
           ))}

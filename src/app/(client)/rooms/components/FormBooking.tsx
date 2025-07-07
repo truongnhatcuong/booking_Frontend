@@ -14,6 +14,12 @@ import axios from "axios";
 interface BookedRange {
   start: string; // "YYYY-MM-DD"
   end: string; // "YYYY-MM-DD"
+  status: string;
+}
+
+interface HighlightedRange {
+  dates: Date[];
+  className: string;
 }
 const fetcher1 = (url: string) => axios.get(url).then((res) => res.data);
 interface RoomBooking {
@@ -54,6 +60,10 @@ const FormBooking = ({
   const [isOpen, setIsOpen] = useState(false);
   const [bookedDates, setBookedDates] = useState<Date[]>([]);
   const [discountCode, setDiscountCode] = useState("");
+  const [highlightedDates, setHighlightedDates] = useState<
+    { [className: string]: Date[] }[]
+  >([]);
+
   const handleOpenModal = () => {
     if (formData.checkInDate && formData.checkOutDate) {
       if (formData.checkOutDate <= formData.checkInDate) {
@@ -66,8 +76,25 @@ const FormBooking = ({
     }
   };
 
-  const { data } = useSWR(`${URL_API}/api/room/${room.id}/booked-dates`);
+  function getExcludeDates(bookedRanges: BookedRange[]): Date[] {
+    const dates: Date[] = [];
+    bookedRanges.forEach((range) => {
+      const startDate = new Date(range.start);
+      const endDate = new Date(range.end);
 
+      for (
+        let d = new Date(startDate);
+        d <= endDate;
+        d.setDate(d.getDate() + 1)
+      ) {
+        dates.push(new Date(d));
+      }
+    });
+    return dates;
+  }
+
+  const { data } = useSWR(`${URL_API}/api/room/${room.id}/booked-dates`);
+  console.log("Booked Dates Data:", data);
   const { data: discount } = useSWR(
     discountCode ? `${URL_API}/api/discount?code=${discountCode}` : null,
     fetcher1
@@ -101,23 +128,43 @@ const FormBooking = ({
 
   useEffect(() => {
     if (data) {
-      setBookedDates(getBookedDates(data));
+      setHighlightedDates(getHighlightedDates(data));
+      setBookedDates(getExcludeDates(data));
     }
   }, [data]);
 
-  function getBookedDates(bookedRanges: BookedRange[]): Date[] {
-    const bookedDates: Date[] = [];
+  function getHighlightedDates(
+    bookedRanges: BookedRange[]
+  ): { [className: string]: Date[] }[] {
+    const highlighted: { [className: string]: Date[] }[] = [];
 
     bookedRanges.forEach((range) => {
       const startDate = new Date(range.start);
       const endDate = new Date(range.end);
+      const dates: Date[] = [];
 
-      for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        bookedDates.push(new Date(d)); // Store as Date object
+      for (
+        let d = new Date(startDate);
+        d <= endDate;
+        d.setDate(d.getDate() + 1)
+      ) {
+        dates.push(new Date(d));
+      }
+
+      let className = "";
+
+      if (range.status === "CHECKED_IN") {
+        className = "react-datepicker__day--checked-in";
+      } else if (range.status === "PENDING") {
+        className = "react-datepicker__day--pending";
+      }
+
+      if (className) {
+        highlighted.push({ [className]: dates });
       }
     });
 
-    return bookedDates;
+    return highlighted;
   }
 
   const handleDateChange = (
@@ -161,6 +208,7 @@ const FormBooking = ({
                   selected={formData.checkInDate}
                   onChange={(date) => handleDateChange(date, "checkInDate")}
                   excludeDates={bookedDates}
+                  highlightDates={highlightedDates}
                   placeholderText="Chọn ngày nhận phòng"
                   dateFormat="yyyy-MM-dd"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
@@ -177,6 +225,7 @@ const FormBooking = ({
                   selected={formData.checkOutDate}
                   onChange={(date) => handleDateChange(date, "checkOutDate")}
                   excludeDates={bookedDates}
+                  highlightDates={highlightedDates}
                   placeholderText="Chọn ngày trả phòng"
                   dateFormat="yyyy-MM-dd"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
@@ -273,12 +322,7 @@ const FormBooking = ({
           </p>
         </form>
       </div>
-      <ModalPayMent
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        formData={formData}
-        setFormData={setFormData}
-      />
+      <ModalPayMent isOpen={isOpen} setIsOpen={setIsOpen} formData={formData} />
     </div>
   );
 };

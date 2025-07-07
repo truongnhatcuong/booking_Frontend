@@ -1,5 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import axiosInstance from "@/lib/axios";
+import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import React from "react";
@@ -27,11 +29,9 @@ const DeleteDisCount = ({ id }: DeleteDiscountProps) => {
       });
 
       if (result.isConfirmed) {
-        const res = await axios.delete(
-          `${process.env.NEXT_PUBLIC_URL_API}/api/discount/${id}`
-        );
+        const res = await axiosInstance.delete(`/api/discount/${id}`);
         if (res.data) {
-          mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/discount/getAll`);
+          mutate(`${URL_API}/api/discount/getAll`);
           toast.success("Xóa Thành Công Mã Giảm Giá");
         }
       }

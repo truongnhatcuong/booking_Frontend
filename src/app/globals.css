@@ -203,3 +203,19 @@
 .animate-bounce-in {
   animation: bounceIn 0.8s ease-out forwards;
 }
+
+/* Highlight màu xanh cho ngày CHECKED_IN */
+.react-datepicker__day--checked-in {
+  background-color: #4ade80;
+  /* màu xanh lá */
+  color: white;
+  border-radius: 0.3rem;
+}
+
+/* Highlight màu xám cho ngày PENDING */
+.react-datepicker__day--pending {
+  background-color: #a3a3a3;
+  /* màu xám */
+  color: white;
+  border-radius: 0.3rem;
+}

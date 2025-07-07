@@ -4,6 +4,8 @@ import { toast } from "react-hot-toast";
 import Modal from "react-modal";
 import { Button } from "@/components/ui/button";
 import { mutate } from "swr";
+import axiosInstance from "@/lib/axios";
+import { URL_API } from "@/lib/fetcher";
 
 Modal.setAppElement("#root");
 
@@ -34,22 +36,22 @@ const CreateDiscount = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_URL_API}/api/discount`,
-        formData
-      );
-      toast.success("Thêm Mã Giảm Giá Thành Công!");
-      setIsOpen(false);
-      mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/discount/getAll`);
-      setFormData({
-        code: "",
-        percentage: 0,
-        validFrom: "",
-        validTo: "",
+      const res = await axios.post(`${URL_API}/api/discount`, formData, {
+        withCredentials: true,
       });
+      if (res.data) {
+        mutate(`${URL_API}/api/discount/getAll`);
+        toast.success("Thêm Mã Giảm Giá Thành Công");
+        setIsOpen(false);
+        setFormData({
+          code: "",
+          percentage: 0,
+          validFrom: "",
+          validTo: "",
+        });
+      }
     } catch (error: any) {
-      toast.error(error.response.data.message || "Failed to create discount");
-      console.error(error);
+      toast.error(error?.response?.data.message || "Failed to create discount");
     }
   };
 

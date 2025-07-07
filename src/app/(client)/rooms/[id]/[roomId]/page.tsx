@@ -163,21 +163,6 @@ const Page = ({ params }: { params: Promise<{ roomId: string }> }) => {
               </SwiperSlide>
             ))}
           </Swiper>
-
-          {/* Room status badge */}
-          <div className="absolute top-8 right-8 z-20">
-            <div
-              className={`px-4 py-2 rounded-full font-medium ${
-                room.status === RoomStatus.AVAILABLE
-                  ? "bg-emerald-500 text-white"
-                  : room.status === RoomStatus.MAINTENANCE
-                  ? "bg-amber-500 text-white"
-                  : "bg-red-500 text-white"
-              }`}
-            >
-              {translateRoomStatus(room.status as RoomStatus)}
-            </div>
-          </div>
         </div>
 
         {/* Main Content */}

@@ -2,6 +2,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import axiosInstance from "@/lib/axios";
+import { URL_API } from "@/lib/fetcher";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { UserPlus, X } from "lucide-react";
@@ -17,7 +19,7 @@ const AddEmployee = () => {
     email: "",
     phone: "",
     password: "",
-    position: "",
+    position: "FRONT_DESK",
     department: "FRONT_DESK",
   });
 
@@ -28,6 +30,13 @@ const AddEmployee = () => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      position: prev.department,
+    }));
+  }, [formData.department]);
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
@@ -43,12 +52,9 @@ const AddEmployee = () => {
   const handleSubmitCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_URL_API}/api/auth/employee`,
-        formData
-      );
+      const res = await axiosInstance.post(`/api/auth/employee`, formData);
       if (res.data) {
-        mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/auth/employee`);
+        mutate(`${URL_API}/api/auth/employee`);
         toast.success("Thêm Nhân Viên Thành Công");
         setIsOpen(false);
         setFormData({
@@ -146,14 +152,14 @@ const AddEmployee = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1  gap-4">
               <div className="space-y-2">
                 <Label htmlFor="department">Phòng ban</Label>
                 <select
                   name="department"
                   onChange={handleSelect}
                   value={formData.department}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-10 w-full items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="FRONT_DESK">Lễ tân</option>
                   <option value="MAINTENANCE">Bảo trì</option>
@@ -162,10 +168,10 @@ const AddEmployee = () => {
                 </select>
               </div>
 
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="position">Vị trí</Label>
                 <Input name="position" onChange={handleChange} />
-              </div>
+              </div> */}
             </div>
 
             <div className="flex justify-end gap-4 pt-4">

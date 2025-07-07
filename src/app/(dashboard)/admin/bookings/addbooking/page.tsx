@@ -1,6 +1,5 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { fetcher } from "@/lib/fetcher";
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import AdminBookingForm from "./components/AdminBookingForm";
@@ -47,20 +46,17 @@ const Page = () => {
   });
 
   const { data: customerData } = useSWR(
-    idNumber
-      ? `${process.env.NEXT_PUBLIC_URL_API}/api/auth/customer?idNumber=${idNumber}`
-      : null,
-    fetcher,
+    idNumber ? `/api/auth/customer?idNumber=${idNumber}` : null,
     {
-      dedupingInterval: 200, // ép load lại mỗi khi idNumber thay đổi
+      dedupingInterval: 200,
     }
   );
-  console.log(customerData, "hihi");
 
-  const { data: roomData } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/room`,
-    fetcher
-  );
+  const { data: roomData, isLoading: isLoadingRoomData } =
+    useSWR(`/api/room?limit=9999`);
+
+  console.log("phòng mảng", roomData);
+
   useEffect(() => {
     if (!idNumber) {
       setFormCustomer({
@@ -102,16 +98,21 @@ const Page = () => {
   useEffect(() => {
     if (!formData.roomId || !roomData?.room) return;
 
-    const room = roomData.room.find((r: Room) => r.id === formData.roomId);
-    if (room) {
-      const basePrice = parseFloat(room.roomType.basePrice);
-      setFormData((prev) => ({
-        ...prev,
-        pricePerNight: basePrice,
-      }));
+    if (roomData > 0) {
+      const room = roomData.room.find((r: Room) => r.id === formData.roomId);
+      if (room) {
+        const basePrice = parseFloat(room.roomType.basePrice);
+        setFormData((prev) => ({
+          ...prev,
+          pricePerNight: basePrice,
+        }));
+      }
     }
   }, [formData.roomId, roomData, formData.checkInDate, formData.checkOutDate]);
 
+  if (isLoadingRoomData) {
+    return <div>đang tải ....</div>;
+  }
   return (
     <div className="p-6 mx-auto bg-white border rounded-xl">
       <div className="flex items-center justify-between gap-5 mb-6">
@@ -159,7 +160,7 @@ const Page = () => {
 
       <AdminBookingForm
         formData={formData}
-        roomData={roomData}
+        roomData={roomData.room.data || []}
         setFormData={setFormData}
       />
     </div>

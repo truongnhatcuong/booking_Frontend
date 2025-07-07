@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
-import { fetcher } from "@/lib/fetcher";
+import { fetcher, URL_API } from "@/lib/fetcher";
 import { formatPrice } from "@/lib/formatPrice";
 import { Label } from "@radix-ui/react-label";
 import React, { useState, useEffect } from "react";
@@ -13,22 +13,45 @@ import ModalPaymentAdmin from "./ModalPaymentAdmin";
 import axios from "axios";
 import { BookingFormData } from "../page";
 
-interface Room {
+export interface RoomImage {
+  id: string;
+  imageUrl: string;
+}
+
+export interface Booking {
+  checkInDate: string;
+  checkOutDate: string;
+}
+
+export interface BookingItem {
+  booking: Booking;
+}
+
+export interface RoomType {
+  id: string;
+  name: string;
+  maxOccupancy: number;
+  basePrice: string; // dạng string (vd: "500000") trong dữ liệu JSON của bạn
+}
+
+export type RoomStatus = "AVAILABLE" | "OCCUPIED" | string;
+
+export interface Room {
   id: string;
   roomNumber: string;
   floor: number;
-  status: string;
-  roomType: {
-    name: string;
-    maxOccupancy: number;
-    basePrice: string;
-  };
+  status: RoomStatus;
+  notes: string | null;
+  roomTypeId: string;
+  bookingItems: BookingItem[];
+  images: RoomImage[];
+  roomType: RoomType;
 }
 
 export interface BookingProps {
   formData: BookingFormData;
   setFormData: React.Dispatch<React.SetStateAction<BookingFormData>>;
-  roomData: any;
+  roomData: Room[];
 }
 const fetcher1 = (url: string) => axios.get(url).then((res) => res.data);
 const AdminBookingForm = ({
@@ -41,7 +64,7 @@ const AdminBookingForm = ({
   const [discount, setDiscount] = useState<any>(null);
 
   const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/room/${
+    `${URL_API}/api/room/${
       formData.roomId ? formData.roomId : null
     }/booked-dates`,
     fetcher
@@ -71,15 +94,14 @@ const AdminBookingForm = ({
     );
   };
 
-  // Hàm lấy thông tin mã giảm giá
+  console.log("phòng 2", roomData);
 
   const { data: code, error } = useSWR(
     formData.discountCode
-      ? `${process.env.NEXT_PUBLIC_URL_API}/api/discount?code=${formData.discountCode}`
+      ? `${URL_API}/api/discount?code=${formData.discountCode}`
       : null,
     fetcher1
   );
-  console.log(code?.data?.percentage, "ccc");
 
   useEffect(() => {
     if (code) {
@@ -124,7 +146,7 @@ const AdminBookingForm = ({
     formData.discountCode,
     discount,
   ]);
-  console.log("formData alf :", formData);
+
   return (
     <>
       <form className="space-y-4">
@@ -187,22 +209,25 @@ const AdminBookingForm = ({
             <select
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
               value={formData.roomId}
-              onChange={(e) =>
+              onChange={(e) => {
+                const selectedRoom = roomData.find(
+                  (room) => room.id === e.target.value
+                );
+
                 setFormData((prev) => ({
                   ...prev,
                   roomId: e.target.value,
-                  pricePerNight:
-                    roomData?.room?.find(
-                      (room: Room) => room.id === e.target.value
-                    )?.roomType.basePrice || prev.pricePerNight,
-                }))
-              }
+                  pricePerNight: selectedRoom
+                    ? Number(selectedRoom.roomType.basePrice)
+                    : prev.pricePerNight,
+                }));
+              }}
               required
             >
               <option value="">Select a room</option>
-              {roomData?.room
-                ?.filter((room: Room) => room.status === "AVAILABLE")
-                .map((room: Room) => (
+              {roomData
+                ?.filter((room) => room.status === "AVAILABLE")
+                .map((room) => (
                   <option value={room.id} key={room.id}>
                     {room.roomNumber} - {room.roomType.name} (Max:{" "}
                     {room.roomType.maxOccupancy})
@@ -229,9 +254,8 @@ const AdminBookingForm = ({
             >
               {Array.from({
                 length:
-                  roomData?.room?.find(
-                    (room: Room) => room.id === formData.roomId
-                  )?.roomType.maxOccupancy || 1,
+                  roomData.find((room) => room.id === formData.roomId)?.roomType
+                    .maxOccupancy || 1,
               }).map((_, index) => (
                 <option key={index + 1} value={index + 1}>
                   {index + 1} khách

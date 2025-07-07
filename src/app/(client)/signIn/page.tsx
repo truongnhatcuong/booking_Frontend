@@ -7,11 +7,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import { mutate } from "swr";
 import { URL_API } from "@/lib/fetcher";
-import axiosInstance from "@/lib/axios";
-import { error } from "console";
+import axios from "axios";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -41,18 +39,18 @@ export default function SignInForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post(`/api/auth/login`, formData, {
+      const res = await axios.post(`${URL_API}/api/auth/login`, formData, {
         withCredentials: true,
       });
 
       if (res.data) {
-        mutate(`${URL_API}/api/auth/user`);
         setTimeout(() => {
           router.push("/");
+          mutate(`${URL_API}/api/auth/user`);
         }, 1800);
       }
     } catch (error: any) {
-      setMessage(error.response.data.message);
+      setMessage(error.response?.data?.message || "Đăng nhập không thành công");
     }
   };
   useEffect(() => {

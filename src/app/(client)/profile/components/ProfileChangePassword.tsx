@@ -1,5 +1,6 @@
 "use client";
 
+import axiosInstance from "@/lib/axios";
 import axios from "axios";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { toast } from "react-hot-toast";
@@ -36,8 +37,8 @@ const ProfileChangePassword = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_URL_API}/api/auth/user/changePassword`,
+      const res = await axiosInstance.post(
+        `/api/auth/user/changePassword`,
         {
           currentPassword: formData.currentPassword,
           newPassword: formData.newPassword,
