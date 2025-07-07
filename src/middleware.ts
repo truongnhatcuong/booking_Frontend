@@ -63,5 +63,6 @@ export const config = {
     "/signUp",
     "/logOut",
     "/profile/:path*",
+    "/profile",
   ],
 };
