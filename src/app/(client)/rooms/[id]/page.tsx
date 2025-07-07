@@ -7,7 +7,7 @@ import { fetcher } from "@/lib/fetcher";
 type RoomPageProps = {
   params: Promise<{ id: string }>;
 };
-const Page: React.FC<RoomPageProps> = ({ params }) => {
+export default function Page({ params }: RoomPageProps) {
   const { id } = use(params); // Unwrap params bằng React.use()
 
   const { data } = useSWR(
@@ -20,6 +20,4 @@ const Page: React.FC<RoomPageProps> = ({ params }) => {
     return <div>Loading...</div>;
   }
   return <div>{<CardRoom room={data ? data.room : {}} />}</div>;
-};
-
-export default Page;
+}

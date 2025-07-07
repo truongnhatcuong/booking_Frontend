@@ -58,11 +58,11 @@ interface FormData {
   pricePerNight: number;
   roomId: string;
 }
-const Page = ({
+export default function Page({
   params,
 }: {
   params: Promise<{ id: string; roomId: string }>;
-}) => {
+}) {
   const { roomId } = use(params);
 
   const { data, isLoading } = useSWR<RoomData>(
@@ -256,6 +256,4 @@ const Page = ({
       </div>
     </div>
   );
-};
-
-export default Page;
+}
