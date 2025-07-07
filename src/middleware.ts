@@ -32,11 +32,12 @@ export default async function middleware(req: NextRequest) {
     const response = NextResponse.redirect(new URL("/signIn", req.url));
     response.cookies.set("token", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
       maxAge: -1,
       path: "/",
     });
+
     return response;
   }
 
@@ -63,6 +64,5 @@ export const config = {
     "/signUp",
     "/logOut",
     "/profile/:path*",
-    "/profile",
   ],
 };
