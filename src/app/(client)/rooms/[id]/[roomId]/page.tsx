@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { fetcher } from "@/lib/fetcher";
 import React, { use, useEffect } from "react";
@@ -59,7 +58,11 @@ interface FormData {
   pricePerNight: number;
   roomId: string;
 }
-const Page = ({ params }: { params: Promise<{ roomId: string }> }) => {
+const Page = ({
+  params,
+}: {
+  params: Promise<{ id: string; roomId: string }>;
+}) => {
   const { roomId } = use(params);
 
   const { data, isLoading } = useSWR<RoomData>(
