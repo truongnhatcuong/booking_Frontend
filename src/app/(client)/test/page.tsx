@@ -1,22 +1,17 @@
+"use client";
+import { URL_API } from "@/lib/fetcher";
 import React from "react";
+import useSWR from "swr";
 
 const page = () => {
-  const customer = [
-    [1, 2, 3],
-    [3, 2, 1],
-  ];
+  const { data } = useSWR(
+    `https://booking-backend-sage.vercel.app/api/room/customer`
+  );
+  console.log("là ", URL_API);
 
-  function richCustomer(customer: number[][]) {
-    let maxWealth = 0;
-    for (let i = 0; i < customer.length; i++) {
-      const sum = customer[i].reduce((Item, total) => Item + total, 0);
-      maxWealth = Math.max(maxWealth, sum);
-    }
-    return maxWealth;
-  }
-  console.log(richCustomer(customer));
+  console.log(data);
 
-  return <div>page</div>;
+  return <div></div>;
 };
 
 export default page;

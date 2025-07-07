@@ -30,6 +30,7 @@ export default async function middleware(req: NextRequest) {
     response.cookies.set("token", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: -1,
       path: "/",
     });
