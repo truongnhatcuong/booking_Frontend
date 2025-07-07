@@ -72,12 +72,12 @@ export const adminMenu: IListItemAdmin[] = [
         title: "Tiện nghi",
         icon: HomeIcon,
       },
-      {
-        id: 204,
-        link: "/admin/rooms/maintenance",
-        title: "Danh sách bảo trì",
-        icon: WrenchIcon,
-      },
+      // {
+      //   id: 204,
+      //   link: "/admin/rooms/maintenance",
+      //   title: "Danh sách bảo trì",
+      //   icon: WrenchIcon,
+      // },
     ],
   },
   {
