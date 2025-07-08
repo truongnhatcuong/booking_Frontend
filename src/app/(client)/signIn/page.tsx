@@ -62,6 +62,12 @@ export default function SignInForm() {
       return () => clearTimeout(timeout);
     }
   }, [message]);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/");
+    }
+  }, [router]);
 
   return (
     <div className="min-h-screen  flex items-center justify-center p-3">

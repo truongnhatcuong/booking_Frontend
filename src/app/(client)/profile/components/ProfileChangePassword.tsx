@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import useAuth from "@/lib/authUser";
 import axiosInstance from "@/lib/axios";
-import axios from "axios";
-import { useState, FormEvent, ChangeEvent } from "react";
+
+import { useState, ChangeEvent } from "react";
 import { toast } from "react-hot-toast";
 
 interface FormData {

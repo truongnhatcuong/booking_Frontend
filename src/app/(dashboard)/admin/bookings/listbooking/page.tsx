@@ -1,18 +1,14 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
-import { formatPrice } from "@/lib/formatPrice";
-import { Calendar, User, DollarSign, Filter } from "lucide-react";
+import React, { useState, useMemo } from "react";
+
+import { Filter } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import useSWR, { mutate } from "swr";
-import toast from "react-hot-toast";
+import useSWR from "swr";
+
 import { fetcher } from "@/lib/fetcher";
 import TableListBooking, { IBooking } from "./components/TableListBooking";
-
-interface BookedRange {
-  start: string; // YYYY-MM-DD
-  end: string; // YYYY-MM-DD
-}
+import useAuth from "@/lib/authUser";
 
 const API_URL = process.env.NEXT_PUBLIC_URL_API;
 
@@ -34,6 +30,12 @@ const BookingManagementForm = () => {
       );
     }
   }, [data, selectedRange]);
+  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
+
+  // Nếu còn loading
+  if (loadingLog) {
+    return <div>đang kiểm tra quyền truy cập...</div>;
+  }
 
   return (
     <div className="container mx-auto p-6">

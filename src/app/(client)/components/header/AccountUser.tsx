@@ -50,6 +50,7 @@ const AccountUser = ({ userType, lastName }: AccountUserProps) => {
             mutate(`${URL_API}/api/auth/user`, null, {
               revalidate: false,
             });
+            localStorage.removeItem("token");
           }}
         >
           <DropdownMenuItem className=" cursor-pointer">

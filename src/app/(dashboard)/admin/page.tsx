@@ -5,6 +5,7 @@ import useSWR from "swr";
 import RevenueTotalMonth from "../components/statistical/RevenueTotalMonth";
 import CustomerBarChart from "../components/statistical/CustomerBarChart";
 import BookingResourceChart from "../components/statistical/BookingResourceChart";
+import useAuth from "@/lib/authUser";
 
 const Page = () => {
   const { data, isLoading } = useSWR("/api/dashboard/revenue-total-month");
@@ -14,6 +15,7 @@ const Page = () => {
   const { data: bookingResource, isLoading: isLoadingBookings } = useSWR(
     "/api/dashboard/revenue-online-offline"
   );
+  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -40,6 +42,8 @@ const Page = () => {
     online: item.online,
     offline: item.offline,
   }));
+
+  if (loadingLog) return "đang kiểm tra quyền truy cập";
   return (
     // <div>
     //   {" "}

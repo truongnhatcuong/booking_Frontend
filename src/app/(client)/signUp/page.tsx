@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
 
@@ -52,6 +52,12 @@ export default function SignUpForm() {
       console.log(error);
     }
   };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/");
+    }
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b  py-12 px-4 sm:px-6 lg:px-8">

@@ -1,27 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
-import { UploadButton } from "@/utils/uploadthing";
-import {
-  ImageDownIcon,
-  Bold,
-  Italic,
-  Heading1,
-  Heading2,
-  List,
-  ListOrdered,
-  Quote,
-  ImageIcon,
-} from "lucide-react";
 import FormBlog from "../components/FormBlog";
 import axios from "axios";
-import axiosInstance from "@/lib/axios";
+
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { URL_API } from "@/lib/fetcher";
+import useAuth from "@/lib/authUser";
 
 export interface PostData {
   title: string;
@@ -64,10 +53,17 @@ const PostBlog = () => {
         toast.success("Bài Viết Của Bạn Đã Được Post");
         route.push("/admin/blog");
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response.data.message || "error");
     }
   };
+  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
+
+  // Nếu còn loading
+  if (loadingLog) {
+    return <div>đang kiểm tra quyền truy cập...</div>;
+  }
 
   return (
     <div className=" mx-auto p-4 bg-white">

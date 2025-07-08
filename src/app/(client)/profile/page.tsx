@@ -1,22 +1,24 @@
 "use client";
-import { fetcher } from "@/lib/fetcher";
+
 import React from "react";
-import useSWR from "swr";
+
 import ProfileUser from "./components/ProfileUser";
+import useAuth from "@/lib/authUser";
 
-const page = () => {
-  const { data, isLoading, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/auth/user`,
-    fetcher
-  );
+const Page = () => {
+  // const { data, isLoading, error } = useSWR(
+  //   `${process.env.NEXT_PUBLIC_URL_API}/api/auth/user`,
+  //   fetcher
+  // );
+  const { user, loadingLog } = useAuth(["CUSTOMER"]);
 
-  if (isLoading) return <div>đang tải</div>;
-  if (error) return <div>Đã xảy ra lỗi</div>;
+  if (loadingLog) return <div>đang tải</div>;
+
   return (
     <div>
-      <ProfileUser user={data || {}} />
+      <ProfileUser user={user || {}} />
     </div>
   );
 };
 
-export default page;
+export default Page;
