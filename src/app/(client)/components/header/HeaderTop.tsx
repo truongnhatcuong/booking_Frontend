@@ -8,10 +8,23 @@ import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 
 const HeaderTop = () => {
+  const [token, setToken] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const localToken = localStorage.getItem("token");
+    setToken(localToken);
+  }, []);
   const { data } = useSWR(
     `${URL_API}/api/auth/user`,
-    (url) => axios.get(url, { withCredentials: true }).then((res) => res.data),
+    (url) =>
+      axios
+        .get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        })
+        .then((res) => res.data),
     {
       onError: (err) => {
         console.log("Custom handle error", err);
