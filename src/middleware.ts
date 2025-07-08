@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/verifyToken";
 
 export default async function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-
-  console.log(token);
+  const authHeader = req.headers.get("Authorization");
+  const token = authHeader
+    ? authHeader.split(" ")[1]
+    : req.cookies.get("token")?.value;
+  console.log("token ", token);
 
   if (
     (req.nextUrl.pathname === "/signIn" ||

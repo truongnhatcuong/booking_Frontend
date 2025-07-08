@@ -44,6 +44,7 @@ export default function SignInForm() {
       });
 
       if (res.data) {
+        localStorage.setItem("token", res.data.accessToken);
         setTimeout(() => {
           router.push("/");
           mutate(`${URL_API}/api/auth/user`);
