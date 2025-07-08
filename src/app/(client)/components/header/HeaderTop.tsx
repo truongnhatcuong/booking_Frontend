@@ -15,7 +15,7 @@ const HeaderTop = () => {
     setToken(localToken);
   }, []);
   const { data } = useSWR(
-    `${URL_API}/api/auth/user`,
+    token ? `${URL_API}/api/auth/user` : null,
     (url) =>
       axios
         .get(url, {
