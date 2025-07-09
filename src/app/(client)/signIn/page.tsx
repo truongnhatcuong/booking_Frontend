@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
-import { get, set } from "localstorage-with-expire";
+import localstorage from "localstorage-with-expire";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -46,10 +45,10 @@ export default function SignInForm() {
       });
 
       if (res.data) {
-        set("token", res.data.accessToken, {
+        localstorage.set("token", res.data.accessToken, {
           hour: 1,
         });
-        console.log("Lưu token thành công:", get("token"));
+
         setTimeout(() => {
           router.push("/");
           mutate(`${URL_API}/api/auth/user`);
@@ -68,7 +67,7 @@ export default function SignInForm() {
     }
   }, [message]);
   useEffect(() => {
-    const token = get("token");
+    const token = localstorage.get("token");
     if (token) {
       router.push("/");
     }

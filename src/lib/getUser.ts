@@ -1,10 +1,10 @@
 import axios from "axios";
 import { URL_API } from "./fetcher";
-import { get } from "localstorage-with-expire";
+import localstorage from "localstorage-with-expire";
 
 export async function getUser() {
   try {
-    const token = get("token");
+    const token = localstorage.get("token");
     if (!token) return null;
 
     const res = await axios.get(`${URL_API}/api/auth/user`, {

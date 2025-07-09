@@ -6,13 +6,13 @@ import AccountUser from "./AccountUser";
 import useSWR from "swr";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
-import { get } from "localstorage-with-expire";
+import localstorage from "localstorage-with-expire";
 
 const HeaderTop = () => {
   const [token, setToken] = useState<string | null | unknown>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    const token = get("token");
+    const token = localstorage.get("token");
     setToken(token);
   }, []);
 
