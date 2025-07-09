@@ -15,7 +15,8 @@ export default function useAuth(
       const data = await getUser();
 
       if (!data) {
-        router.push("/signIn");
+        setLoadingLog(false);
+        router.push("/");
         return;
       }
 

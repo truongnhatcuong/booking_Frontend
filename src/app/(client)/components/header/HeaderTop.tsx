@@ -6,33 +6,25 @@ import AccountUser from "./AccountUser";
 import useSWR from "swr";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
+import { get } from "localstorage-with-expire";
 
 const HeaderTop = () => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null | unknown>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    const localToken = localStorage.getItem("token");
-    setToken(localToken);
+    const token = get("token");
+    setToken(token);
   }, []);
-  const { data } = useSWR(
-    token ? `${URL_API}/api/auth/user` : null,
-    (url) =>
-      axios
-        .get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        })
-        .then((res) => res.data),
-    {
-      onError: (err) => {
-        console.log("Custom handle error", err);
-      },
-      shouldRetryOnError: false, // Không tự retry nếu có lỗi
-      revalidateOnFocus: false, // Không tự động revalidate khi focus lại trang
-      revalidateOnReconnect: false, // Không tự động revalidate khi kết nối lại
-    }
+
+  const { data } = useSWR(token ? `${URL_API}/api/auth/user` : null, (url) =>
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
+      .then((res) => res.data)
   );
 
   useEffect(() => {

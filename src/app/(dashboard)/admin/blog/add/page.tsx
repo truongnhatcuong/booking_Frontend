@@ -49,7 +49,7 @@ const PostBlog = () => {
       const res = await axios.post(`${URL_API}/api/blog`, postData, {
         withCredentials: true,
       });
-      if (res.status === 200) {
+      if (res.status === 201) {
         toast.success("Bài Viết Của Bạn Đã Được Post");
         route.push("/admin/blog");
       }

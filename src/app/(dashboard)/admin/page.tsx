@@ -48,13 +48,13 @@ const Page = () => {
     <div>
       {" "}
       <CardStatistical />
-      {/* biểu đồ doanh thu theo tháng và khách hàng */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 items-center">
+      biểu đồ doanh thu theo tháng và khách hàng
+      <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 items-center">
         <RevenueTotalMonth data={data || []} />
         <CustomerBarChart data={customerData.data || []} />
-      </div> */}
-      {/* biểu đồ doanh thu online offline */}
-      {/* <BookingResourceChart data={formattedData || null} /> */}
+      </div>
+      biểu đồ doanh thu online offline
+      <BookingResourceChart data={formattedData || null} />
     </div>
   );
 };

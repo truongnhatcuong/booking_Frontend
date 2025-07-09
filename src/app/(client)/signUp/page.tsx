@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import { LocalStorageExpiry } from "localstorage-expiry";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
-
 export default function SignUpForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -53,7 +53,8 @@ export default function SignUpForm() {
     }
   };
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const lsExpiry = new LocalStorageExpiry();
+    const token = lsExpiry.get("token");
     if (token) {
       router.push("/");
     }
