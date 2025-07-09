@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
-import localstorage from "localstorage-with-expire";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -45,9 +44,7 @@ export default function SignInForm() {
       });
 
       if (res.data) {
-        localstorage.set("token", res.data.accessToken, {
-          hour: 1,
-        });
+        localStorage.setItem("token", res.data.accessToken);
 
         setTimeout(() => {
           router.push("/");
@@ -67,7 +64,7 @@ export default function SignInForm() {
     }
   }, [message]);
   useEffect(() => {
-    const token = localstorage.get("token");
+    const token = localStorage.getItem("token");
     if (token) {
       router.push("/");
     }

@@ -6,14 +6,14 @@ import AccountUser from "./AccountUser";
 import useSWR from "swr";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
-import localstorage from "localstorage-with-expire";
 
 const HeaderTop = () => {
-  const [token, setToken] = useState<string | null | unknown>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
-    const token = localstorage.get("token");
-    setToken(token);
+    const savedToken = localStorage.getItem("token");
+    setToken(savedToken);
   }, []);
 
   const { data } = useSWR(token ? `${URL_API}/api/auth/user` : null, (url) =>

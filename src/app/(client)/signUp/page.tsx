@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
-import { LocalStorageExpiry } from "localstorage-expiry";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -53,8 +52,7 @@ export default function SignUpForm() {
     }
   };
   useEffect(() => {
-    const lsExpiry = new LocalStorageExpiry();
-    const token = lsExpiry.get("token");
+    const token = localStorage.getItem("token");
     if (token) {
       router.push("/");
     }
