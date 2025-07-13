@@ -1,27 +1,26 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import AccountUser from "./AccountUser";
 import useSWR from "swr";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
+import { useRouter } from "next/navigation";
 
 const HeaderTop = () => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    setToken(savedToken);
-  }, []);
+    if (router) {
+      const savedToken = localStorage.getItem("token");
+      setToken(savedToken);
+    }
+  }, [token, router]);
 
   const { data } = useSWR(token ? `${URL_API}/api/auth/user` : null, (url) =>
     axios
       .get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         withCredentials: true,
       })
       .then((res) => res.data)
@@ -41,10 +40,13 @@ const HeaderTop = () => {
 
           <div className="flex items-center space-x-4 text-sm">
             {isLoggedIn ? (
-              <AccountUser
-                userType={data?.userType}
-                lastName={data?.lastName}
-              />
+              <div className="    ">
+                {" "}
+                <AccountUser
+                  userType={data?.userType}
+                  lastName={data?.lastName}
+                />
+              </div>
             ) : (
               <div className="flex items-center space-x-4 w-screen justify-center md:w-full">
                 <Link href={"/signIn"}>

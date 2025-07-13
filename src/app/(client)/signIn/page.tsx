@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,13 +42,10 @@ export default function SignInForm() {
         withCredentials: true,
       });
 
-      if (res.data) {
+      if (res.data && res.data.accessToken) {
         localStorage.setItem("token", res.data.accessToken);
-
-        setTimeout(() => {
-          router.push("/");
-          mutate(`${URL_API}/api/auth/user`);
-        }, 1800);
+        router.push("/");
+        mutate(`${URL_API}/api/auth/user`);
       }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Đăng nhập không thành công");
@@ -63,12 +59,6 @@ export default function SignInForm() {
       return () => clearTimeout(timeout);
     }
   }, [message]);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      router.push("/");
-    }
-  }, [router]);
 
   return (
     <div className="min-h-screen  flex items-center justify-center p-3">

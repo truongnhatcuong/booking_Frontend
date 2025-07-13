@@ -121,69 +121,69 @@ export default function Page({
   return (
     <div className="container mx-auto px-4 py-12 max-w-[1400px]">
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
-        {/* Image Gallery - Full width, taller, with fade effect */}
-        <div className="relative">
-          <Swiper
-            modules={[Navigation, Pagination, EffectFade, Autoplay]}
-            effect="fade"
-            navigation
-            pagination={{ clickable: true, dynamicBullets: true }}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            loop={true}
-            className="w-full h-[500px] lg:h-[600px]"
-          >
-            {room.images.map((image, index) => (
-              <SwiperSlide key={index}>
-                <div className="relative h-full w-full">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10"></div>
-                  <Image
-                    src={image.imageUrl}
-                    alt={`${room.roomType.name} - Phòng ${room.roomNumber}`}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                  <div className="absolute bottom-0 left-0 p-8 z-20 text-white">
-                    <h1 className="text-4xl font-serif mb-2 tracking-wide">
-                      {room.roomType.name}
-                    </h1>
-                    <p className="text-xl font-light opacity-90">
-                      Phòng {room.roomNumber}, Tầng {room.floor}
-                    </p>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8 lg:p-12">
-          {/* Room Details */}
+          {" "}
           <div className="lg:col-span-2 space-y-8">
-            {/* Price and key details */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-6 border-gray-200">
-              <div>
-                <p className="text-3xl font-bold text-gray-800">
-                  {formatPrice(Number(room.roomType.basePrice))}
-                  <span className="text-lg font-normal text-gray-500">
-                    /đêm
-                  </span>
-                </p>
-              </div>
-              <div className="flex space-x-6 mt-4 md:mt-0">
-                <div className="flex items-center">
-                  <Users size={18} className="text-blue-600 mr-2" />
-                  <span className="text-gray-700">
-                    Tối đa {room.roomType.maxOccupancy} khách
-                  </span>
+            {/* Image Gallery - Full width, taller, with fade effect */}
+            <div className="relative">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-6 border-gray-200">
+                <div className="flex space-x-6 mt-4 md:mt-0">
+                  <div className="flex items-center">
+                    <Users size={18} className="text-blue-600 mr-2" />
+                    <span className="text-gray-700">
+                      Tối đa {room.roomType.maxOccupancy} khách
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <Star size={18} className="text-amber-500 mr-2" />
+                    <span className="text-gray-700">Phòng cao cấp</span>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Star size={18} className="text-amber-500 mr-2" />
-                  <span className="text-gray-700">Phòng cao cấp</span>
+                <div>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {formatPrice(Number(room.roomType.basePrice))}
+                    <span className="text-lg font-normal text-gray-500">
+                      /đêm
+                    </span>
+                  </p>
                 </div>
               </div>
+              <Swiper
+                modules={[Navigation, Pagination, EffectFade, Autoplay]}
+                effect="fade"
+                navigation
+                pagination={{ clickable: true, dynamicBullets: true }}
+                autoplay={{ delay: 5000, disableOnInteraction: false }}
+                loop={true}
+                className="w-full h-[500px] lg:h-[600px]"
+              >
+                {room.images.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <div className="relative h-[90%] w-full">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10"></div>
+                      <Image
+                        src={image.imageUrl}
+                        alt={`${room.roomType.name} - Phòng ${room.roomNumber}`}
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                      <div className="absolute bottom-0 left-0 p-8 z-20 text-white">
+                        <h1 className="text-4xl font-serif mb-2 tracking-wide">
+                          {room.roomType.name}
+                        </h1>
+                        <p className="text-xl font-light opacity-90">
+                          Phòng {room.roomNumber}, Tầng {room.floor}
+                        </p>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
+            {/* Room Details */}
+            {/* Price and key details */}
 
             {/* Description */}
             <div>
@@ -233,7 +233,6 @@ export default function Page({
               </div>
             </div>
           </div>
-
           {/* Booking Form */}
           <FormBooking
             room={room}

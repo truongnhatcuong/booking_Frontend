@@ -11,7 +11,7 @@ interface CardBlogProps {
 const CardBlog = ({ data }: CardBlogProps) => {
   const route = useRouter();
   return (
-    <div className="grid md:grid-cols-4 container mx-auto gap-8">
+    <div className="grid md:grid-cols-4  grid-cols-1   ml:5 md:ml-12  gap-8">
       {data.map((item) => (
         <Card
           className="max-w-sm rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"

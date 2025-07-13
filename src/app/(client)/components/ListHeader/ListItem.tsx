@@ -23,8 +23,8 @@ const ListItems: IListHeader[] = [
   { id: 1, link: "/", title: "Trang Chủ" },
   { id: 2, link: "/about", title: "Giới Thiệu" },
   { id: 3, link: "#", title: "Phòng", hasDropdown: true },
-  { id: 4, link: "/imageshotel", title: "Thư Viện ảnh" },
-  { id: 5, link: "/blog", title: "Bài viết " },
+  { id: 4, link: "/blog", title: "Bài viết " },
+  { id: 5, link: "/imageshotel", title: "Thư Viện ảnh" },
 ];
 
 const ListItem = () => {

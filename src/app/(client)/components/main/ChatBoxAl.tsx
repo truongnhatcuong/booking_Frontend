@@ -75,7 +75,7 @@ const CozeChat: React.FC = () => {
     <>
       {/* Tải script Coze bằng Next.js */}
       <Script
-        src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"
+        src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"
         strategy="afterInteractive"
         onLoad={initializeChat}
       />

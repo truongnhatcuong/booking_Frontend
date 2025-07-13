@@ -10,6 +10,8 @@ import { URL_API } from "@/lib/fetcher";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Square } from "lucide-react";
+
 import axios from "axios";
 interface BookedRange {
   start: string; // "YYYY-MM-DD"
@@ -17,10 +19,6 @@ interface BookedRange {
   status: string;
 }
 
-interface HighlightedRange {
-  dates: Date[];
-  className: string;
-}
 const fetcher1 = (url: string) => axios.get(url).then((res) => res.data);
 interface RoomBooking {
   room: {
@@ -115,6 +113,7 @@ const FormBooking = ({
           basePrice * days * (1 - discount.data.percentage / 100)
         ),
       }));
+
       toast.success("Mã giảm giá đã được áp dụng!");
     } else {
       toast.error("Mã giảm giá không hợp lệ hoặc đã hết hạn");
@@ -202,7 +201,7 @@ const FormBooking = ({
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Calendar size={16} className="mr-2 text-blue-600" />
-                  Ngày nhận phòng *
+                  Ngày nhận *
                 </label>
                 <DatePicker
                   selected={formData.checkInDate}
@@ -219,7 +218,7 @@ const FormBooking = ({
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Calendar size={16} className="mr-2 text-blue-600" />
-                  Ngày trả phòng *
+                  Ngày trả *
                 </label>
                 <DatePicker
                   selected={formData.checkOutDate}
@@ -234,7 +233,16 @@ const FormBooking = ({
                 />
               </div>
             </div>
-
+            <div className="flex  items-center gap-6">
+              <div className="flex items-center gap-2">
+                <Square className="w-4 h-4 text-gray-400 bg-gray-400" />
+                <span>Đã có người đặt</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                <Square className="w-4 h-4 text-green-500 bg-green-500" />
+                <span>Đã Nhận Phòng</span>
+              </div>
+            </div>
             {room.roomType.maxOccupancy !== 1 && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -254,7 +262,6 @@ const FormBooking = ({
                 </select>
               </div>
             )}
-
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
                 <Coffee size={16} className="mr-2 text-blue-600" />

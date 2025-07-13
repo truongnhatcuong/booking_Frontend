@@ -1,5 +1,6 @@
 "use client";
 import { formatPrice } from "@/lib/formatPrice";
+import Image from "next/image";
 import Link from "next/link";
 
 interface Iroom {
@@ -18,9 +19,11 @@ const RoomCard = ({ room }: Iroom) => {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
       <div className="h-48 bg-gray-200 overflow-hidden">
-        <img
+        <Image
           src={room.images[0].imageUrl || "/images/room-placeholder.jpg"}
           alt={room.id}
+          width={300}
+          height={300}
           className="w-full h-full object-cover"
         />
       </div>

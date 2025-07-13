@@ -21,7 +21,6 @@ const PermissionEmployee = ({
   }, []);
   const { data } = useSWR(`${URL_API}/api/role`);
   const [idRole, setIdRole] = useState("");
-  console.log("idEmployee", idEmployee, "idRole", idRole);
 
   const handleSumit = async () => {
     try {

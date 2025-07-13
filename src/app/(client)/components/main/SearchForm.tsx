@@ -1,7 +1,6 @@
 "use client";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { URL_API } from "@/lib/fetcher";
 
@@ -14,7 +13,7 @@ interface IRoomType {
 interface ISeearchForm {
   setSearchParams: (value: any) => void;
   searchParams: any;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: React.FormEvent) => Promise<void>;
 }
 const SearchForm = ({
   searchParams,
@@ -22,6 +21,7 @@ const SearchForm = ({
   onSubmit,
 }: ISeearchForm) => {
   const { data: roomType } = useSWR(`${URL_API}/api/roomtype`);
+  const [isSticky, setIsSticky] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -33,6 +33,18 @@ const SearchForm = ({
     }));
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth >= 768) {
+        setIsSticky(window.scrollY > 1200);
+      } else {
+        setIsSticky(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const selectedRoom = roomType?.find(
     (r: IRoomType) => r.id === searchParams.roomType
   );
@@ -42,18 +54,30 @@ const SearchForm = ({
     Math.max(...(roomType?.map((r: IRoomType) => r.maxOccupancy) || [1]));
 
   return (
-    <div className="max-w-4xl mx-auto my-8 p-6 bg-white rounded-lg shadow-md">
+    <div
+      className={`max-w-4xl mx-auto my-8  bg-white rounded-lg shadow-md transition-all duration-300 
+        ${
+          isSticky
+            ? "fixed -top-8 left-0 p-2 right-0 z-50 max-w-full  shadow-lg"
+            : "p-6"
+        }
+      `}
+    >
       <form
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+        className={`flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 ${
+          isSticky ? "text-sm" : ""
+        }`}
         onSubmit={onSubmit}
       >
         <div className="flex flex-col">
-          <label
-            htmlFor="checkInDate"
-            className="mb-2 font-medium text-gray-700"
-          >
-            Ngày nhận phòng
-          </label>
+          {!isSticky && (
+            <label
+              htmlFor="checkInDate"
+              className="mb-2 font-medium text-gray-700"
+            >
+              Ngày nhận phòng
+            </label>
+          )}
           <input
             type="date"
             id="checkInDate"
@@ -64,22 +88,17 @@ const SearchForm = ({
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             min={new Date().toISOString().split("T")[0]}
           />
-          {/* <DatePicker
-            id="checkInDate"
-            name="checkInDate"
-            value={searchParams.checkInDate}
-            onChange={handleChange}
-            min={new Date().toISOString().split("T")[0]}
-          /> */}
         </div>
 
         <div className="flex flex-col">
-          <label
-            htmlFor="checkOutDate"
-            className="mb-2 font-medium text-gray-700"
-          >
-            Ngày trả phòng
-          </label>
+          {!isSticky && (
+            <label
+              htmlFor="checkOutDate"
+              className="mb-2 font-medium text-gray-700"
+            >
+              Ngày trả phòng
+            </label>
+          )}
           <input
             type="date"
             id="checkOutDate"
@@ -93,9 +112,14 @@ const SearchForm = ({
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="customer" className="mb-2 font-medium text-gray-700">
-            Số Khách
-          </label>
+          {!isSticky && (
+            <label
+              htmlFor="customer"
+              className="mb-2 font-medium text-gray-700"
+            >
+              Số Khách
+            </label>
+          )}
           <select
             id="customer"
             name="customer"
@@ -112,9 +136,14 @@ const SearchForm = ({
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="roomType" className="mb-2 font-medium text-gray-700">
-            Loại phòng
-          </label>
+          {!isSticky && (
+            <label
+              htmlFor="roomType"
+              className="mb-2 font-medium text-gray-700"
+            >
+              Loại phòng
+            </label>
+          )}
           <select
             id="roomType"
             name="roomType"
@@ -133,6 +162,7 @@ const SearchForm = ({
 
         <button
           type="submit"
+          disabled={!searchParams.checkInDate || !searchParams.checkOutDate}
           className="col-span-1 md:col-span-2 lg:col-span-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
         >
           Tìm phòng trống

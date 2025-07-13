@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Factory } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import { URL_API } from "@/lib/fetcher";
 
 const CancelPage = () => {
   const searchParams = useSearchParams();
@@ -11,7 +12,7 @@ const CancelPage = () => {
   const orderCode = searchParams.get("orderCode");
   console.log(status, orderCode);
   useEffect(() => {
-    axios.post(`${process.env.NEXT_PUBLIC_URL_API}/api/payment/webhook/payos`, {
+    axios.post(`${URL_API}/api/payment/webhook/payos`, {
       status,
       orderCode,
     });

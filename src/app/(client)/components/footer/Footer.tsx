@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-300 py-12">
+    <footer className="bg-gray-900 text-gray-300 py-6">
       <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-5 gap-8">
         {/* Dịch Vụ */}
         <div>
@@ -203,7 +203,7 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="container mx-auto px-6 pt-8 mt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+      <div className="container mx-auto px-6 pt-4 mt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
         <p className="text-gray-400 text-sm mb-4 md:mb-0">
           Thiết Kế WebSite ©𝙏𝙧𝙪̛𝙤̛𝙣𝙜 𝙉𝙝𝙖̣̂𝙩 𝘾𝙪̛𝙤̛̀𝙣𝙜
         </p>

@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 import SearchForm from "./SearchForm";
 import RoomCard from "./RoomCard";
-import axiosInstance from "@/lib/axios";
+import axios from "axios";
+import { URL_API } from "@/lib/fetcher";
+import toast from "react-hot-toast";
 
 const SearchRoomPage = () => {
   const [availableRooms, setAvailableRooms] = useState([]);
@@ -15,21 +16,40 @@ const SearchRoomPage = () => {
     customer: 1,
     roomType: "",
   });
+  const roomListRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (availableRooms.length > 0 && roomListRef.current) {
+      roomListRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [availableRooms]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!searchParams.checkInDate || !searchParams.checkOutDate) {
+      toast.error(
+        "Vui lòng chọn đầy đủ ngày nhận và ngày trả phòng trước khi tìm!"
+      );
+      return;
+    }
     setLoading(true);
+
     try {
-      const res = await axiosInstance.get(
-        `/api/room?customer=${searchParams.customer}&checkIn=${searchParams.checkInDate}&checkOut=${searchParams.checkOutDate}&roomType=${searchParams.roomType}`
+      const res = await axios.get(
+        `${URL_API}/api/room/customer?customer=${searchParams.customer}&checkIn=${searchParams.checkInDate}&checkOut=${searchParams.checkOutDate}&roomType=${searchParams.roomType}`
       );
       if (res.data) {
-        setAvailableRooms(res?.data?.room || []);
+        setAvailableRooms(res?.data || []);
       }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
+      setSearchParams({
+        checkInDate: "",
+        checkOutDate: "",
+        customer: 1,
+        roomType: "",
+      });
     }
   };
   const handleReset = () => {
@@ -53,7 +73,7 @@ const SearchRoomPage = () => {
       />
 
       {!loading && (
-        <div className="mt-8">
+        <div className="mt-8" ref={roomListRef}>
           {availableRooms.length > 0 ? (
             <>
               <div className="flex justify-between mx-8  items-center">

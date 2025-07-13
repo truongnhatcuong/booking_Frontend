@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,12 +35,9 @@ export default function SignUpForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_URL_API}/api/auth/signUp`,
-        formData
-      );
+      const res = await axios.post(`${URL_API}/api/auth/signUp`, formData);
       if (res.data) {
-        mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/auth/customer`);
+        mutate(`${URL_API}/api/auth/customer`);
         toast.success("Đăng Kí Thành Công");
         setTimeout(() => {
           router.push("/signIn");
@@ -48,7 +46,6 @@ export default function SignUpForm() {
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log(error);
     }
   };
   useEffect(() => {

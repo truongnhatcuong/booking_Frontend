@@ -1,45 +1,34 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
+import { fetcher, URL_API } from "@/lib/fetcher";
 import ListRoom, { RoomCustomer } from "./ListRoom";
+import ButtonSeclectType from "./ButtonSeclectType";
 
 const RoomShow = () => {
-  const { data, error } = useSWR<RoomCustomer[]>(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/room/customer`,
+  const [typeRoom, setTypeRoom] = useState("");
+  const { data, isLoading } = useSWR<RoomCustomer[]>(
+    `${URL_API}/api/room/customer?roomType=${typeRoom}`,
     fetcher
   );
 
-  if (error) return <div>Đã có lỗi xảy ra.</div>;
-  if (!data) return <div>Đang tải dữ liệu...</div>;
-
-  const singleRooms = data?.filter(
-    (room) => room.roomType.name === "Phòng Đơn"
-  );
-  const doubleRooms = data?.filter(
-    (room) => room.roomType.name === "Phòng Vip"
-  );
+  if (!data || isLoading) return <div>Đang tải dữ liệu...</div>;
 
   return (
     <div className="space-y-8 text-center pt-9">
       {/* Phòng Đơn */}
       <div>
-        <h2 className="text-5xl  regular mb-4">Phòng Đơn</h2>
+        <ButtonSeclectType setTypeRoom={setTypeRoom} />
+        <div className="text-5xl font-semibold regular mt-6">{typeRoom}</div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
-          {singleRooms.slice(0, 4).map((room, index) => (
-            <ListRoom roomtype={room} key={`single-${index}`} />
-          ))}
-        </div>
-      </div>
-
-      {/* Phòng Đôi */}
-      <div>
-        <h2 className="text-5xl regular mb-4">Phòng Vip</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
-          {doubleRooms.slice(0, 4).map((room, index) => (
-            <ListRoom roomtype={room} key={`double-${index}`} />
-          ))}
+          {data && data.length > 0 ? (
+            data.map((room, index) => (
+              <ListRoom roomtype={room} key={`single-${index}`} />
+            ))
+          ) : (
+            <div>Phòng Không Có Sẵn</div>
+          )}
         </div>
       </div>
     </div>
