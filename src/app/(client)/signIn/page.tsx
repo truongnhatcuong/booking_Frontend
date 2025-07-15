@@ -5,13 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { mutate } from "swr";
 import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
 
 export default function SignInForm() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -44,8 +41,7 @@ export default function SignInForm() {
 
       if (res.data && res.data.accessToken) {
         localStorage.setItem("token", res.data.accessToken);
-        router.push("/");
-        mutate(`${URL_API}/api/auth/user`);
+        document.location.href = "/";
       }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Đăng nhập không thành công");

@@ -61,7 +61,7 @@ const AdminBookingForm = ({
 }: BookingProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(0);
-  const [discount, setDiscount] = useState<any | null>(null);
+  const [discount, setDiscount] = useState<number | null>(null);
 
   const { data } = useSWR(
     `${URL_API}/api/room/${
@@ -93,8 +93,6 @@ const AdminBookingForm = ({
       priceValid
     );
   };
-
-  console.log("phòng 2", roomData);
 
   const { data: code, error } = useSWR(
     formData.discountCode

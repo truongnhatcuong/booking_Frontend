@@ -27,7 +27,7 @@ const CustomerBarChart = ({ data }: CustomerBarChartProps) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
           <YAxis />
-          <Tooltip formatter={(value, name) => [`${value}`, "Khách hàng"]} />
+          <Tooltip formatter={(value) => [`${value}`, "Khách hàng"]} />
           <Bar dataKey="customers" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>

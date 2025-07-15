@@ -1,5 +1,7 @@
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import axiosInstance from "@/lib/axios";
+import { URL_API } from "@/lib/fetcher";
+import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
@@ -14,8 +16,8 @@ const DisabledUser = ({ employee }: IDisabledUser) => {
   const handleDisable = async () => {
     const nextStatus = employee.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
     try {
-      await axiosInstance.put(
-        `/api/auth/employee/disabled/${employee.id}`,
+      await axios.put(
+        `${URL_API}/api/auth/employee/disabled/${employee.id}`,
         {
           action: nextStatus,
         },
@@ -23,13 +25,12 @@ const DisabledUser = ({ employee }: IDisabledUser) => {
           withCredentials: true,
         }
       );
-      mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/auth/employee`);
+      mutate(`${URL_API}/api/auth/employee`);
       toast.success(
         `${employee.status === "ACTIVE" ? "đã vô hiệu hóa " : "Kích hoạt"}`
       );
     } catch (error: any) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response.data);
     }
   };
   return (

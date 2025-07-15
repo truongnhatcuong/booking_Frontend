@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import AccountUser from "./AccountUser";
 import useSWR from "swr";
-import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 import { useRouter } from "next/navigation";
+import { fetcher } from "../../../../lib/fetcher";
 
 const HeaderTop = () => {
   const [token, setToken] = useState<string | null>(null);
@@ -18,13 +18,7 @@ const HeaderTop = () => {
     }
   }, [token, router]);
 
-  const { data } = useSWR(token ? `${URL_API}/api/auth/user` : null, (url) =>
-    axios
-      .get(url, {
-        withCredentials: true,
-      })
-      .then((res) => res.data)
-  );
+  const { data } = useSWR(token ? `${URL_API}/api/auth/user` : null, fetcher);
 
   useEffect(() => {
     setIsLoggedIn(!!data);

@@ -5,10 +5,10 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
-
 import { Label } from "@/components/ui/label";
 import QrCodePayment from "./QrCodePayment";
 import { BookingFormData } from "../page";
+import { URL_API } from "@/lib/fetcher";
 
 interface IPaymen {
   isOpen: boolean;
@@ -55,42 +55,47 @@ const ModalPaymentAdmin = ({
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_URL_API}/api/booking/employee`,
-        formData
+        `${URL_API}/api/booking/employee`,
+        formData,
+        {
+          withCredentials: true,
+        }
       );
-      if (res.data) {
-        toast.success("Đặt Phòng Thành Công");
 
-        setIsOpen(false);
-        const resPayment = await axios.post(
-          `${process.env.NEXT_PUBLIC_URL_API}/api/payment`,
-          {
+      console.log("Response booking:", res.data);
+
+      if (res.data) {
+        if (res.data.data && res.data.data.id) {
+          const resPayment = await axios.post(`${URL_API}/api/payment`, {
             amount: totalAmount,
             paymentMethod: paymentMethod,
             bookingId: res.data.data.id,
             status: "COMPLETED",
-          }
-        );
-        if (resPayment.data) {
-          setIsOpen(false);
-        } else {
-          toast.error("Thanh toán thất bại, vui lòng thử lại!");
-        }
+          });
 
+          if (resPayment.data) {
+            toast.success("Thanh toán thành công");
+            setIsOpen(false);
+          } else {
+            toast.error("Thanh toán thất bại, vui lòng thử lại!");
+          }
+        } else {
+          toast.error("Không lấy được ID booking từ server");
+        }
         setFormData({
+          bookingSource: "DIRECT",
           checkInDate: "",
           checkOutDate: "",
-          customerId: "",
+          totalGuests: 1,
+          specialRequests: "",
           discountCode: "",
-          bookingSource: "DIRECT",
           pricePerNight: 0,
           roomId: "",
-          specialRequests: "",
-          totalGuests: 0,
+          customerId: "",
         });
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Có lỗi xảy ra");
     }
   };
 

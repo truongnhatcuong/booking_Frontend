@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -20,7 +20,7 @@ interface BookingResourceChartProps {
 }
 
 const BookingResourceChart = ({ data }: BookingResourceChartProps) => {
-  const chartData = data || [];
+  const chartData = useMemo(() => data || [], [data]);
   if (chartData.length === 0) {
     return (
       <div className="bg-white p-4 rounded-2xl shadow hover:shadow-xl duration-300 mt-5">

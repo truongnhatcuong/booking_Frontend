@@ -56,8 +56,6 @@ const Page = () => {
   const { data: roomData, isLoading: isLoadingRoomData } =
     useSWR(`/api/room?limit=9999`);
 
-  console.log("phòng mảng", roomData);
-
   useEffect(() => {
     if (!idNumber) {
       setFormCustomer({

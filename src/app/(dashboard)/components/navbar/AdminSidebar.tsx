@@ -8,15 +8,23 @@ import {
   Menu,
   ChevronLeft,
   ChevronRightIcon as ChevronRightDouble,
+  ArrowRight,
 } from "lucide-react";
 import { adminMenu, IListItemAdmin } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
+import useAuth from "@/lib/authUser";
+
+const ALLOWED_ROLES: ("CUSTOMER" | "EMPLOYEE" | "ADMIN")[] = [
+  "EMPLOYEE",
+  "ADMIN",
+];
 
 const AdminSidebar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<number[]>([]);
   const pathname = usePathname();
   const { isCollapsed, toggleCollapse } = useSidebar();
+  const { user } = useAuth(ALLOWED_ROLES);
 
   const toggleMobileMenu = () => {
     setIsMobileOpen(!isMobileOpen);
@@ -63,7 +71,9 @@ const AdminSidebar = () => {
             } items-center`}
           >
             {!isCollapsed && (
-              <h2 className="text-xl font-semibold text-gray-800">Admin</h2>
+              <h2 className="text-xl font-semibold text-gray-800">
+                <Link href={"/admin"}>Admin</Link>
+              </h2>
             )}
             <button
               onClick={toggleCollapse}
@@ -155,16 +165,26 @@ const AdminSidebar = () => {
 
           {/* Sidebar footer */}
           {!isCollapsed && (
-            <div className="px-4 py-4 border-t">
+            <div className="px-3 py-4 border-t flex items-center">
               <div className="flex items-center gap-3 text-gray-700">
                 <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
                   <span className="text-sm font-medium">AD</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Admin User</p>
-                  <p className="text-xs text-gray-500">admin@example.com</p>
+                  <p className="text-sm font-medium">
+                    {user ? user.firstName + " " + user.lastName : ""}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {user ? user.email : ""}
+                  </p>
                 </div>
               </div>
+              <Link
+                href="/"
+                className="flex items-center gap-1 text-red-600 hover:text-red-800 mr-9 font-bold"
+              >
+                <ArrowRight size={30} />
+              </Link>
             </div>
           )}
           {isCollapsed && (

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { URL_API } from "@/lib/fetcher";
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +19,7 @@ const ForgotPasswordForm = () => {
 
     try {
       // Thay bằng API endpoint thực tế của bạn
-      const res = await axiosInstance.post(`/api/auth/forgot-password`, {
+      const res = await axios.post(`${URL_API}/api/auth/forgot-password`, {
         email,
       });
       console.log("ressss", res);

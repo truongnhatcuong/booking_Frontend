@@ -28,9 +28,10 @@ export default function useAuth(
       setUser(data);
       setLoadingLog(false);
     };
-
+    console.log("useAuth effect chạy lại");
     checkUser();
-  }, [expectedRole, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { user, loadingLog };
 }

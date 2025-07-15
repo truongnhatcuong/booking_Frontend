@@ -163,6 +163,7 @@ const TableEmployee = ({ employee }: IEmployees) => {
                           Cấp Quyền
                         </DropdownMenuItem>
                         <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
+
                         <DisabledUser employee={employee} />
                       </DropdownMenuContent>
                     </DropdownMenu>

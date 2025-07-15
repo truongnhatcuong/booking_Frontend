@@ -9,12 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { MoreHorizontal } from "lucide-react";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
 import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
+import axios from "axios";
 interface IUpdateStatus {
   id: string;
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "CHECKED_IN" | "CHECKED_OUT";
@@ -36,11 +47,26 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
   // huy
   const handleCancelledStatus = async () => {
     try {
-      const res = await axiosInstance.put(`/api/booking/cancelled/${id}`);
+      const res = await axios.put(`${URL_API}/api/booking/cancelled/${id}`);
 
       if (res.data) {
         mutate(`${URL_API}/api/booking`);
         toast.success("Phòng Đã Được Hủy");
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const deleteBooking = async () => {
+    try {
+      const res = await axios.delete(`${URL_API}/api/booking/employee/${id}`, {
+        withCredentials: true,
+      });
+
+      if (res.data) {
+        mutate(`${URL_API}/api/booking`);
+        toast.success("Phòng Đã Được xóa");
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
@@ -82,10 +108,31 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
                 </button>
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem>
-              <button className="text-red-600 hover:text-red-800">
-                Xóa Phòng
-              </button>
+
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button className="text-red-600 hover:text-red-800">
+                    xóa Phòng
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Bạn Có Chắc Chắn Muốn Xóa Không ?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Không Thể Khôi Phục Dữ Liệu Này
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Hủy</AlertDialogCancel>
+                    <AlertDialogAction onClick={deleteBooking}>
+                      Xác Nhận
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

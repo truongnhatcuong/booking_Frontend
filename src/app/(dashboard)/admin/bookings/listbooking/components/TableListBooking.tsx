@@ -1,12 +1,4 @@
 import {
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Table,
   TableBody,
   TableCell,
@@ -15,9 +7,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatPrice } from "@/lib/formatPrice";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 import React from "react";
 import UpdateStatus from "./UpdateStatus";
 
@@ -87,7 +76,7 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-x-auto">
-      <Table className="min-w-full divide-y divide-gray-200">
+      <Table className="w-full divide-y divide-gray-200">
         <TableHeader className="bg-gray-50">
           <TableRow>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -208,10 +197,9 @@ const TableListBooking = ({ booking, error }: BookingProps) => {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm">
-                {booking.status !== "CANCELLED" &&
-                  booking.status !== "CHECKED_OUT" && (
-                    <UpdateStatus id={booking.id} status={booking.status} />
-                  )}
+                {booking.status !== "CHECKED_OUT" && (
+                  <UpdateStatus id={booking.id} status={booking.status} />
+                )}
               </td>
             </TableRow>
           ))}

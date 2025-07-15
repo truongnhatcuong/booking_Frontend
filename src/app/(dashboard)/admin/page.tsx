@@ -1,60 +1,117 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import React from "react";
+
+import React, { useEffect, useState, useMemo } from "react";
 import CardStatistical from "../components/statistical/CardStatistical";
-import useSWR from "swr";
 import RevenueTotalMonth from "../components/statistical/RevenueTotalMonth";
 import CustomerBarChart from "../components/statistical/CustomerBarChart";
 import BookingResourceChart from "../components/statistical/BookingResourceChart";
 import useAuth from "@/lib/authUser";
+import axios from "axios";
+import { URL_API } from "@/lib/fetcher";
+
+interface RevenueDataType {
+  months: string[];
+  data: number[];
+}
+
+interface CustomerDatatype {
+  months: string[];
+  counts: number[];
+}
+const ALLOWED_ROLES: ("CUSTOMER" | "EMPLOYEE" | "ADMIN")[] = [
+  "EMPLOYEE",
+  "ADMIN",
+];
 
 const Page = () => {
-  const { data, isLoading } = useSWR("/api/dashboard/revenue-total-month");
-  const { data: customerData, isLoading: isLoadingCustomers } = useSWR(
-    "/api/dashboard/customer-count-by-month"
-  );
-  const { data: bookingResource, isLoading: isLoadingBookings } = useSWR(
-    "/api/dashboard/revenue-online-offline"
-  );
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500">Loading...</p>
-      </div>
-    );
-  }
-  if (isLoadingCustomers) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500">Loading customer data...</p>
-      </div>
-    );
-  }
-  if (isLoadingBookings) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500">Loading booking data...</p>
-      </div>
-    );
-  }
-  const formattedData = bookingResource.data?.map((item: any) => ({
-    name: item.month,
-    online: item.online,
-    offline: item.offline,
-  }));
+  const emptyRevenueData: RevenueDataType = { months: [], data: [] };
+  const emtypeCustomerData: CustomerDatatype = { months: [], counts: [] };
+  const [revenueData, setRevenueData] =
+    useState<RevenueDataType>(emptyRevenueData);
+  const [customerData, setCustomerData] =
+    useState<CustomerDatatype>(emtypeCustomerData);
+  const [bookingResource, setBookingResource] = useState<any[]>([]);
 
-  if (loadingLog) return "đang kiểm tra quyền truy cập";
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const { loadingLog } = useAuth(ALLOWED_ROLES);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [resRevenue, resCustomer, resBooking] = await Promise.all([
+        axios.get(`${URL_API}/api/dashboard/revenue-total-month`),
+        axios.get(`${URL_API}/api/dashboard/customer-count-by-month`),
+        axios.get(`${URL_API}/api/dashboard/revenue-online-offline`),
+      ]);
+
+      setRevenueData(resRevenue.data);
+      setCustomerData(resCustomer.data.data);
+      setBookingResource(resBooking.data.data);
+    } catch (err: any) {
+      console.error(err);
+      setError("Có lỗi khi tải dữ liệu. Vui lòng kiểm tra API.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const formattedData = useMemo(() => {
+    return (
+      bookingResource?.map((item) => ({
+        name: item.month,
+        online: item.online,
+        offline: item.offline,
+      })) || []
+    );
+  }, [bookingResource]);
+
+  if (loadingLog) {
+    return <div>Đang kiểm tra quyền</div>;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-gray-500">Đang tải dữ liệu...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  console.log("revenueData:", revenueData);
+  // console.log("customerData:", customerData);
+  // console.log("bookingResource:", bookingResource);
+
   return (
     <div>
-      {" "}
       <CardStatistical />
-      biểu đồ doanh thu theo tháng và khách hàng
+      <h2 className="text-lg font-bold mt-4 mb-2">
+        Biểu đồ doanh thu theo tháng và khách hàng
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 items-center">
-        <RevenueTotalMonth data={data || []} />
-        <CustomerBarChart data={customerData.data || []} />
+        <RevenueTotalMonth data={revenueData || []} />
+        <CustomerBarChart data={customerData || []} />
       </div>
-      biểu đồ doanh thu online offline
-      <BookingResourceChart data={formattedData || null} />
+      <h2 className="text-lg font-bold mt-4 mb-2">
+        Biểu đồ doanh thu online/offline
+      </h2>
+      <BookingResourceChart data={formattedData || []} />
     </div>
   );
 };
