@@ -1,13 +1,24 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TableCustomer from "../components/TableCustomer";
 import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
+import { fetcher, URL_API } from "@/lib/fetcher";
 import useAuth from "@/lib/authUser";
 
 const Page = () => {
-  const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/auth/customer`,
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  const { data, isLoading } = useSWR(
+    `${URL_API}/api/auth/customer?searchName=${debouncedSearch}&idNumber=${debouncedSearch}`,
     fetcher
   );
   const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
@@ -17,10 +28,6 @@ const Page = () => {
     return <div>đang kiểm tra quyền truy cập...</div>;
   }
 
-  if (error) {
-    return <div>Đã xảy ra lỗi: {error.message}</div>;
-  }
-
   // Kiểm tra trạng thái loading và hiển thị thông báo
   if (isLoading) {
     return <div>Đang tải dữ liệu...</div>;
@@ -28,7 +35,13 @@ const Page = () => {
 
   return (
     <div className="bg-white p-6 rounded-xl">
-      {<TableCustomer customers={data.customer} />}
+      {
+        <TableCustomer
+          customers={data.customer || []}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
+      }
     </div>
   );
 };

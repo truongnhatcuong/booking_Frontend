@@ -6,8 +6,8 @@ import Link from "next/link";
 interface Iroom {
   room: {
     id: string;
+    roomTypeId: string;
     roomType: {
-      id: string;
       maxOccupancy: number;
       basePrice: string;
       name: string;
@@ -53,7 +53,7 @@ const RoomCard = ({ room }: Iroom) => {
         </div>
 
         <Link
-          href={`/rooms/${room.roomType.id}/${room.id}`}
+          href={`/rooms/${room.roomTypeId}/${room.id}`}
           className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-medium py-2 px-4 rounded transition duration-200"
         >
           Đặt ngay

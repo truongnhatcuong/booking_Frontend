@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
@@ -93,10 +92,6 @@ const Page = () => {
       </div>
     );
   }
-
-  console.log("revenueData:", revenueData);
-  // console.log("customerData:", customerData);
-  // console.log("bookingResource:", bookingResource);
 
   return (
     <div>

@@ -36,10 +36,10 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
 
     if (res.data) {
       if (res.data.data.status === "CHECKED_IN") {
-        mutate(`${URL_API}/api/booking`);
+        mutate(`${URL_API}/api/booking?idNumber=`);
         toast.success("Đã nhận phòng");
       } else if (res.data.data.status === "CHECKED_OUT") {
-        mutate(`${URL_API}/api/booking`);
+        mutate(`${URL_API}/api/booking?idNumber=`);
         toast.success("Đã trả phòng");
       }
     }
@@ -47,10 +47,17 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
   // huy
   const handleCancelledStatus = async () => {
     try {
-      const res = await axios.put(`${URL_API}/api/booking/cancelled/${id}`);
+      const res = await axios.put(
+        `${URL_API}/api/booking/cancelled/${id}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res.data);
 
       if (res.data) {
-        mutate(`${URL_API}/api/booking`);
+        mutate(`${URL_API}/api/booking?idNumber=`);
         toast.success("Phòng Đã Được Hủy");
       }
     } catch (error: any) {
@@ -65,7 +72,7 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
       });
 
       if (res.data) {
-        mutate(`${URL_API}/api/booking`);
+        mutate(`${URL_API}/api/booking?idNumber=`);
         toast.success("Phòng Đã Được xóa");
       }
     } catch (error: any) {

@@ -12,6 +12,10 @@ const Page = () => {
     fetcher
   );
   const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
+  // Kiểm tra trạng thái loading và hiển thị thông báo
+  if (isLoading) {
+    return <div>Đang tải dữ liệu...</div>;
+  }
 
   // Nếu còn loading
   if (loadingLog) {

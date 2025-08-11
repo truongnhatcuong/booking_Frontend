@@ -4,7 +4,6 @@ import { toast } from "react-hot-toast";
 import Modal from "react-modal";
 import { Button } from "@/components/ui/button";
 import { mutate } from "swr";
-import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
 
 Modal.setAppElement("#root");

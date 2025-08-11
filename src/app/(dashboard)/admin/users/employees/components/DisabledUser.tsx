@@ -30,7 +30,7 @@ const DisabledUser = ({ employee }: IDisabledUser) => {
         `${employee.status === "ACTIVE" ? "đã vô hiệu hóa " : "Kích hoạt"}`
       );
     } catch (error: any) {
-      toast.error(error.response.data);
+      toast.error(error.response.data.message || "Có lỗi xảy ra");
     }
   };
   return (

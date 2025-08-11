@@ -37,7 +37,15 @@ const TableDiscount = ({ discounts }: TableDiscountProps) => {
               <TableCell className="font-medium">{discount.code}</TableCell>
               <TableCell>{discount.percentage}%</TableCell>
               <TableCell>{formatDate(discount.validFrom)}</TableCell>
-              <TableCell>{formatDate(discount.validTo)}</TableCell>
+              <TableCell>
+                {formatDate(discount.validTo)}{" "}
+                {new Date(discount.validTo) < new Date() && (
+                  <span className="ml-2 inline-block px-2 py-0.5 text-xs font-medium bg-red-100 text-red-700 rounded-full">
+                    Hết hạn
+                  </span>
+                )}
+              </TableCell>
+
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   <DeleteDisCount id={discount.id} />

@@ -2,27 +2,38 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import AccountUser from "./AccountUser";
-import useSWR from "swr";
-import { URL_API } from "@/lib/fetcher";
 import { useRouter } from "next/navigation";
-import { fetcher } from "../../../../lib/fetcher";
+import { jwtDecode } from "jwt-decode";
+
+interface MyTokenPayload {
+  userType: string;
+  lastName: string;
+}
 
 const HeaderTop = () => {
-  const [token, setToken] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({
+    userType: "",
+    lastName: "",
+  });
   const router = useRouter();
   useEffect(() => {
-    if (router) {
-      const savedToken = localStorage.getItem("token");
-      setToken(savedToken);
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) {
+      const decoded = jwtDecode<MyTokenPayload>(savedToken);
+      setIsLoggedIn(true);
+      setUserData({
+        userType: decoded?.userType || "",
+        lastName: decoded?.lastName || "",
+      });
+    } else {
+      setIsLoggedIn(false);
+      setUserData({
+        userType: "",
+        lastName: "",
+      });
     }
-  }, [token, router]);
-
-  const { data } = useSWR(token ? `${URL_API}/api/auth/user` : null, fetcher);
-
-  useEffect(() => {
-    setIsLoggedIn(!!data);
-  }, [data]);
+  }, [router, isLoggedIn]);
 
   return (
     <div className="h-8 bg-black shadow-md">
@@ -37,8 +48,9 @@ const HeaderTop = () => {
               <div className="    ">
                 {" "}
                 <AccountUser
-                  userType={data?.userType}
-                  lastName={data?.lastName}
+                  setIsLoggedIn={setIsLoggedIn}
+                  userType={userData.userType}
+                  lastName={userData.lastName}
                 />
               </div>
             ) : (

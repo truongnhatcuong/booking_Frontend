@@ -11,6 +11,7 @@ import {
   ChartBarIcon,
   ChatBubbleLeftIcon,
   PencilIcon,
+  ChartPieIcon,
 } from "@heroicons/react/24/outline";
 
 export interface IListItemAdmin {
@@ -72,12 +73,12 @@ export const adminMenu: IListItemAdmin[] = [
         title: "Tiện nghi",
         icon: HomeIcon,
       },
-      // {
-      //   id: 204,
-      //   link: "/admin/rooms/maintenance",
-      //   title: "Danh sách bảo trì",
-      //   icon: WrenchIcon,
-      // },
+      {
+        id: 204,
+        link: "/admin/rooms/maintenance",
+        title: "Danh sách bảo trì",
+        icon: WrenchIcon,
+      },
     ],
   },
   {
@@ -100,78 +101,98 @@ export const adminMenu: IListItemAdmin[] = [
       },
     ],
   },
-  // {
-  //   id: 5,
-  //   link: "/admin/discounts",
-  //   title: "Quản lý khuyến mãi",
-  //   icon: TagIcon,
-  //   subMenuItem: [
-  //     {
-  //       id: 501,
-  //       link: "/admin/discounts",
-  //       title: "Danh sách khuyến mãi",
-  //       icon: TagIcon,
-  //     },
-  //   ],
-  // },
-  // {
-  //   id: 6,
-  //   link: "/admin/reviews",
-  //   title: "Quản lý hành vi",
-  //   icon: StarIcon,
-  //   subMenuItem: [
-  //     {
-  //       id: 601,
-  //       link: "/admin/reviews",
-  //       title: "Danh sách đánh giá",
-  //       icon: StarIcon,
-  //     },
-  //     {
-  //       id: 602,
-  //       link: "/admin/reviews/audit-logs",
-  //       title: "Xem nhật ký",
-  //       icon: DocumentTextIcon,
-  //     },
-  //   ],
-  // },
-  // {
-  //   id: 9,
-  //   link: "/admin/seasonal-rates",
-  //   title: "Quản lý giá theo mùa",
-  //   icon: ChartBarIcon,
-  //   subMenuItem: [
-  //     {
-  //       id: 901,
-  //       link: "/admin/seasonal-rates",
-  //       title: "Danh sách giá theo mùa",
-  //       icon: ChartBarIcon,
-  //     },
-  //     {
-  //       id: 902,
-  //       link: "/admin/seasonal-rates/add",
-  //       title: "Thêm giá theo mùa",
-  //       icon: ChartBarIcon,
-  //     },
-  //   ],
-  // },
-  // {
-  //   id: 10,
-  //   link: "/admin/blog",
-  //   title: "Quản lý Blog",
-  //   icon: NewspaperIcon,
-  //   subMenuItem: [
-  //     {
-  //       id: 1001,
-  //       link: "/admin/blog",
-  //       title: "Danh sách bài viết",
-  //       icon: ChatBubbleLeftIcon,
-  //     },
-  //     {
-  //       id: 1002,
-  //       link: "/admin/blog/add",
-  //       title: "Thêm bài viết",
-  //       icon: PencilIcon,
-  //     },
-  //   ],
-  // },
+  {
+    id: 5,
+    link: "/admin/discounts",
+    title: "Quản lý khuyến mãi",
+    icon: TagIcon,
+    subMenuItem: [
+      {
+        id: 501,
+        link: "/admin/discounts",
+        title: "Danh sách khuyến mãi",
+        icon: TagIcon,
+      },
+    ],
+  },
+  {
+    id: 6,
+    link: "/admin/reviews",
+    title: "Quản lý hành vi",
+    icon: StarIcon,
+    subMenuItem: [
+      {
+        id: 601,
+        link: "/admin/reviews",
+        title: "Danh sách đánh giá",
+        icon: StarIcon,
+      },
+      {
+        id: 602,
+        link: "/admin/reviews/audit-logs",
+        title: "Xem nhật ký",
+        icon: DocumentTextIcon,
+      },
+    ],
+  },
+  {
+    id: 9,
+    link: "/admin/seasonal-rates",
+    title: "Quản lý giá theo mùa",
+    icon: ChartBarIcon,
+    subMenuItem: [
+      {
+        id: 901,
+        link: "/admin/seasonal-rates",
+        title: "Danh sách giá theo mùa",
+        icon: ChartBarIcon,
+      },
+      {
+        id: 902,
+        link: "/admin/seasonal-rates/add",
+        title: "Thêm giá theo mùa",
+        icon: ChartBarIcon,
+      },
+    ],
+  },
+  {
+    id: 10,
+    link: "/admin/blog",
+    title: "Quản lý Blog",
+    icon: NewspaperIcon,
+    subMenuItem: [
+      {
+        id: 1001,
+        link: "/admin/blog",
+        title: "Danh sách bài viết",
+        icon: ChatBubbleLeftIcon,
+      },
+      {
+        id: 1002,
+        link: "/admin/blog/add",
+        title: "Thêm bài viết",
+        icon: PencilIcon,
+      },
+    ],
+  },
+  {
+    id: 11,
+    link: "/admin/thongke",
+    title: "Thống Kê Doanh Thu",
+    icon: ChartPieIcon,
+    subMenuItem: [
+      {
+        id: 1101,
+        link: "/admin/thongke/thong_ke_phong",
+        title: "thống kê Phòng",
+        icon: ChartPieIcon,
+      },
+      // {
+      //   id: 1102,
+      //   link: "/admin/thongke/thong_ke",
+      //   title: "thống kê Phòng",
+      //   icon: ChartPieIcon,
+      // },
+    ],
+  },
 ];

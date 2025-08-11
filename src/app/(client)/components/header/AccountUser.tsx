@@ -8,14 +8,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { mutate } from "swr";
-import { URL_API } from "@/lib/fetcher";
 
 interface AccountUserProps {
   userType: string | null;
   lastName: string | null;
+
+  setIsLoggedIn: (value: boolean) => void;
 }
-const AccountUser = ({ userType, lastName }: AccountUserProps) => {
+const AccountUser = ({
+  userType,
+  lastName,
+
+  setIsLoggedIn,
+}: AccountUserProps) => {
   return (
     <div className="">
       <DropdownMenu>
@@ -48,9 +53,7 @@ const AccountUser = ({ userType, lastName }: AccountUserProps) => {
           <Link
             href="/logOut"
             onClick={() => {
-              mutate(`${URL_API}/api/auth/user`, null, {
-                revalidate: false,
-              });
+              setIsLoggedIn(false);
               localStorage.removeItem("token");
             }}
           >

@@ -64,6 +64,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-modal": "^3.16.3",
+    "daisyui": "^5.0.46",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
     "tailwindcss": "^4",

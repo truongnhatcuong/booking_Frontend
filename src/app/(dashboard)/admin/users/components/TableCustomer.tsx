@@ -1,6 +1,4 @@
 "use client";
-
-import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,10 +8,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, UserRound } from "lucide-react";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import StatusCustomer from "./StatusCustomer";
+import SearchInput from "@/app/(dashboard)/components/searchPage/SearchInput";
+import { UserRound } from "lucide-react";
 
 // Define types based on your Prisma schema
 type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
@@ -40,29 +38,26 @@ interface Customer {
 
 interface ITableCustomer {
   customers: User[];
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
 }
 
-const TableCustomer = ({ customers }: ITableCustomer) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
+const TableCustomer = ({
+  customers,
+  searchTerm,
+  setSearchTerm,
+}: ITableCustomer) => {
   // Filter customers based on search term
 
   return (
     <div className="space-y-4 bg-white p-3 border rounded-xl">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Customer Management</h2>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search customers..."
-              className="pl-8 w-[250px] md:w-[300px]"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
+        <h2 className="text-2xl font-bold">Quản lý khách hàng</h2>
+        <SearchInput
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          placeholder="Tìm Kiếm Theo Tên / CCCD"
+        />
       </div>
 
       <div className="rounded-md border">
@@ -123,14 +118,17 @@ const TableCustomer = ({ customers }: ITableCustomer) => {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <PencilSquareIcon className="w-7 h-7 text-gray-500 inline-block mr-5 cursor-pointer hover:text-blue-500" />
+                    <StatusCustomer
+                      userId={customer.id}
+                      status={customer.status}
+                    />
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell colSpan={7} className="h-24 text-center">
-                  No customers found.
+                  khách hàng không tìm thấy
                 </TableCell>
               </TableRow>
             )}

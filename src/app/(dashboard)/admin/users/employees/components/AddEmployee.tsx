@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
 import { Label } from "@radix-ui/react-label";
-import axios from "axios";
 import { UserPlus, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";

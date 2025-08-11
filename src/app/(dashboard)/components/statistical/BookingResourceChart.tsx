@@ -58,11 +58,13 @@ const BookingResourceChart = ({ data }: BookingResourceChartProps) => {
             dataKey="online"
             stroke="#8884d8"
             strokeDasharray="5 5"
+            strokeWidth={2}
           />
           <Line
             type="monotone"
             dataKey="offline"
             stroke="#82ca9d"
+            strokeWidth={2}
             strokeDasharray="3 4 5 2"
           />
         </LineChart>

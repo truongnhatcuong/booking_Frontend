@@ -26,7 +26,12 @@ const RevenueTotalMonth: React.FC<RevenueTotalMonthProps> = ({ data }) => {
           <XAxis dataKey="months" />
           <YAxis />
           <Tooltip />
-          <Line type="monotone" dataKey="data" stroke="#8884d8" />
+          <Line
+            type="monotone"
+            dataKey="data"
+            stroke="#FFA500"
+            strokeWidth={3}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

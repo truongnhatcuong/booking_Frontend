@@ -26,11 +26,13 @@ const SearchRoomPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchParams.checkInDate || !searchParams.checkOutDate) {
+      console.log("Thiếu ngày check-in hoặc check-out");
       toast.error(
         "Vui lòng chọn đầy đủ ngày nhận và ngày trả phòng trước khi tìm!"
       );
       return;
     }
+
     setLoading(true);
 
     try {
@@ -39,17 +41,12 @@ const SearchRoomPage = () => {
       );
       if (res.data) {
         setAvailableRooms(res?.data || []);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
-      setSearchParams({
-        checkInDate: "",
-        checkOutDate: "",
-        customer: 1,
-        roomType: "",
-      });
     }
   };
   const handleReset = () => {

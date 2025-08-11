@@ -1,11 +1,11 @@
 "use client";
 import Modal from "react-modal";
 import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { URL_API } from "@/lib/fetcher";
 import { Button } from "@/components/ui/button";
-import axiosInstance from "@/lib/axios";
 import toast from "react-hot-toast";
+import axios from "axios";
 interface IPermissonEmployee {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
@@ -24,8 +24,8 @@ const PermissionEmployee = ({
 
   const handleSumit = async () => {
     try {
-      await axiosInstance.post(
-        "/api/role/roleEmployee",
+      await axios.post(
+        `${URL_API}/api/role/roleEmployee`,
         {
           idEmployee,
           idRole,
@@ -34,11 +34,11 @@ const PermissionEmployee = ({
           withCredentials: true,
         }
       );
-      toast.success("cập Nhật Quyền Thành Công");
+      mutate(`${URL_API}/api/auth/employee`);
+      toast.success("Cập nhật quyền thành công");
       setIsOpen(false);
     } catch (error: any) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response.data.message || "Có lỗi xảy ra");
     }
   };
   return (
@@ -62,7 +62,9 @@ const PermissionEmployee = ({
             value={idRole}
             onChange={(e) => setIdRole(e.target.value)}
           >
-            <option value="">Chọn quyền</option>
+            <option value="" disabled>
+              Chọn quyền
+            </option>
             {data?.map((role: { id: string; name: string }) => (
               <option key={role.id} value={role.id}>
                 {role.name}

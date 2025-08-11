@@ -8,7 +8,6 @@ import {
   Menu,
   ChevronLeft,
   ChevronRightIcon as ChevronRightDouble,
-  ArrowRight,
 } from "lucide-react";
 import { adminMenu, IListItemAdmin } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
@@ -175,16 +174,10 @@ const AdminSidebar = () => {
                     {user ? user.firstName + " " + user.lastName : ""}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {user ? user.email : ""}
+                    {user ? user.email.split("@")[0] : ""}@
                   </p>
                 </div>
               </div>
-              <Link
-                href="/"
-                className="flex items-center gap-1 text-red-600 hover:text-red-800 mr-9 font-bold"
-              >
-                <ArrowRight size={30} />
-              </Link>
             </div>
           )}
           {isCollapsed && (

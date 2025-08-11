@@ -2,6 +2,7 @@
 import type React from "react";
 import { SidebarProvider, useSidebar } from "../context/contextAdmin";
 import AdminSidebar from "../components/navbar/AdminSidebar";
+import AdminHeader from "../components/navbar/AdminHeader";
 
 // This component will dynamically adjust based on sidebar state
 function MainContent({ children }: { children: React.ReactNode }) {
@@ -27,7 +28,11 @@ export default function AdminLayout({
     <SidebarProvider>
       <div className="min-h-screen bg-gray-100">
         <AdminSidebar />
-        <MainContent>{children}</MainContent>
+
+        <MainContent>
+          <AdminHeader />
+          {children}
+        </MainContent>
       </div>
     </SidebarProvider>
   );

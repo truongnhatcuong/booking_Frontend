@@ -36,7 +36,7 @@ const SearchForm = ({
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerWidth >= 768) {
-        setIsSticky(window.scrollY > 1200);
+        setIsSticky(window.scrollY > 1500);
       } else {
         setIsSticky(false);
       }
@@ -106,6 +106,7 @@ const SearchForm = ({
             value={searchParams.checkOutDate}
             onChange={handleChange}
             disabled={!searchParams.checkInDate}
+            min={searchParams.checkInDate}
             required
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -160,11 +161,7 @@ const SearchForm = ({
           </select>
         </div>
 
-        <button
-          type="submit"
-          disabled={!searchParams.checkInDate || !searchParams.checkOutDate}
-          className="col-span-1 md:col-span-2 lg:col-span-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
-        >
+        <button className="col-span-1 md:col-span-2 lg:col-span-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200">
           Tìm phòng trống
         </button>
       </form>

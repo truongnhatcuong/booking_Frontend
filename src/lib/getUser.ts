@@ -4,7 +4,7 @@ import { URL_API } from "./fetcher";
 export async function getUser() {
   try {
     const token = localStorage.getItem("token");
-    if (!token) return null;
+    if (!token) return (location.href = "/");
 
     const res = await axios.get(`${URL_API}/api/auth/user`, {
       withCredentials: true,
@@ -12,6 +12,6 @@ export async function getUser() {
 
     return res.data;
   } catch (error: any) {
-    return null;
+    return (location.href = "/");
   }
 }

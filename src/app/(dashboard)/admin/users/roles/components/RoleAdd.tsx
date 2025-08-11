@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
@@ -63,12 +63,16 @@ const RoleAdd = () => {
         contentLabel="Thêm nhân viên mới"
       >
         <div className="space-y-4 mb-6 ">
-          <h2 className="text-2xl font-bold mb-4">Thêm Quyền Truy Cập Mới</h2>
+          <div className="flex justify-between items-center mt-3">
+            {" "}
+            <h2 className="text-2xl font-bold ">Thêm Quyền Truy Cập Mới</h2>
+            <X
+              className="h-4 w-4 cursor-pointer text-red-500 hover:text-red-700"
+              onClick={() => setIsOpen(false)}
+            />
+          </div>
           <form className="grid gap-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <label htmlFor="permissions" className="text-sm font-medium">
-                Phân Công
-              </label>
               <div className="space-y-2">
                 <label htmlFor="roleName" className="text-sm font-medium">
                   Tên vai trò

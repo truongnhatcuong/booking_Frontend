@@ -25,16 +25,22 @@ import { formatDate } from "@/lib/formatDate";
 import AddEmployee from "./AddEmployee";
 import DisabledUser from "./DisabledUser";
 import PermissionEmployee from "./PermissionEmployee";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { URL_API } from "@/lib/fetcher";
+import { mutate } from "swr";
+import EmployeeRoleAction from "./EmployeeRoleAction";
+import UpdateEmployee from "./UpdateEmployee";
 
 interface EmployeeDetails {
   id: string;
   department: string;
   hireDate: string;
   position: string;
-  roles: { role: { name: string } }[];
+  roles: { id: string; role: { name: string } }[];
 }
 
-interface Employee {
+export interface Employee {
   id: string;
   email: string;
   firstName: string;
@@ -59,6 +65,22 @@ const TableEmployee = ({ employee }: IEmployees) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
   const [idEmployee, setIdEmployee] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [subEmployee, setSubEmployee] = useState<Employee | null>(null);
+  async function RemoveEmployeeRole(id: string) {
+    try {
+      await axios.delete(`${URL_API}/api/role/${id}`, {
+        withCredentials: true,
+      });
+      toast.success("Hủy quyền thành công!");
+      mutate(`${URL_API}/api/auth/employee`);
+      setIsPermissionModalOpen(false);
+    } catch (error: any) {
+      toast.error(
+        error.response.data.message || "Đã xảy ra lỗi khi hủy quyền nhân viên."
+      );
+    }
+  }
 
   function OpenModalGetId(id: string) {
     setIsPermissionModalOpen(true);
@@ -155,15 +177,23 @@ const TableEmployee = ({ employee }: IEmployees) => {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
                         <DropdownMenuSeparator />
+                        {/* phân quyền && hủy quyền */}
+                        <EmployeeRoleAction
+                          OpenModalGetId={OpenModalGetId}
+                          RemoveEmployeeRole={RemoveEmployeeRole}
+                          employee={employee}
+                        />
+                        {/* chỉnh sửa nhân viên */}
                         <DropdownMenuItem
-                          onClick={() =>
-                            OpenModalGetId(employee.employee?.id ?? "")
-                          }
+                          onClick={() => {
+                            setIsOpen(true);
+                            setSubEmployee(employee);
+                          }}
                         >
-                          Cấp Quyền
+                          Chỉnh sửa
                         </DropdownMenuItem>
-                        <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
 
+                        {/* vô hiệu hóa  */}
                         <DisabledUser employee={employee} />
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -184,6 +214,11 @@ const TableEmployee = ({ employee }: IEmployees) => {
         idEmployee={idEmployee ?? ""}
         isOpen={isPermissionModalOpen}
         setIsOpen={setIsPermissionModalOpen}
+      />
+      <UpdateEmployee
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        employee={subEmployee}
       />
     </div>
   );
