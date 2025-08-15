@@ -2,9 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import SearchForm from "./SearchForm";
 import RoomCard from "./RoomCard";
-import axios from "axios";
-import { URL_API } from "@/lib/fetcher";
-import toast from "react-hot-toast";
 
 const SearchRoomPage = () => {
   const [availableRooms, setAvailableRooms] = useState([]);
@@ -23,32 +20,32 @@ const SearchRoomPage = () => {
     }
   }, [availableRooms]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchParams.checkInDate || !searchParams.checkOutDate) {
-      console.log("Thiếu ngày check-in hoặc check-out");
-      toast.error(
-        "Vui lòng chọn đầy đủ ngày nhận và ngày trả phòng trước khi tìm!"
-      );
-      return;
-    }
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!searchParams.checkInDate || !searchParams.checkOutDate) {
+  //     console.log("Thiếu ngày check-in hoặc check-out");
+  //     toast.error(
+  //       "Vui lòng chọn đầy đủ ngày nhận và ngày trả phòng trước khi tìm!"
+  //     );
+  //     return;
+  //   }
 
-    setLoading(true);
+  //   setLoading(true);
 
-    try {
-      const res = await axios.get(
-        `${URL_API}/api/room/customer?customer=${searchParams.customer}&checkIn=${searchParams.checkInDate}&checkOut=${searchParams.checkOutDate}&roomType=${searchParams.roomType}`
-      );
-      if (res.data) {
-        setAvailableRooms(res?.data || []);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     const res = await axios.get(
+  //       `${URL_API}/api/room/customer?customer=${searchParams.customer}&checkIn=${searchParams.checkInDate}&checkOut=${searchParams.checkOutDate}&roomType=${searchParams.roomType}`
+  //     );
+  //     if (res.data) {
+  //       setAvailableRooms(res?.data || []);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleReset = () => {
     setSearchParams({
       checkInDate: "",
@@ -66,7 +63,8 @@ const SearchRoomPage = () => {
       <SearchForm
         searchParams={searchParams}
         setSearchParams={setSearchParams}
-        onSubmit={handleSubmit}
+        setAvailableRooms={setAvailableRooms}
+        setLoading={setLoading}
       />
 
       {!loading && (

@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import TableAuditLog from "./components/TableAuditLog";
 import { Button } from "@/components/ui/button";
-import useAuth from "@/lib/authUser";
 
 const Page = () => {
   const today = new Date();
@@ -28,12 +27,9 @@ const Page = () => {
   const { data, isLoading } = useSWR(
     `${URL_API}/api/auth/auditlog${getDisplayDate()}`
   );
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
 
   // Nếu còn loading
-  if (loadingLog) {
-    return <div>đang kiểm tra quyền truy cập...</div>;
-  }
+
   if (isLoading) return <div>loading....</div>;
   return (
     <div className="bg-white p-5">
@@ -46,7 +42,7 @@ const Page = () => {
               variant={"outline"}
               className="cursor-pointer"
               value={mode}
-              onClick={(e) => setMode(item)}
+              onClick={() => setMode(item)}
             >
               {item}
             </Button>

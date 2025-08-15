@@ -50,7 +50,7 @@ const TableCustomer = ({
   // Filter customers based on search term
 
   return (
-    <div className="space-y-4 bg-white p-3 border rounded-xl">
+    <div className="space-y-4 bg-white p-5 border rounded-xl">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Quản lý khách hàng</h2>
         <SearchInput

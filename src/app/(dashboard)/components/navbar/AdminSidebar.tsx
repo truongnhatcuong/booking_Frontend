@@ -6,24 +6,20 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
-  ChevronLeft,
-  ChevronRightIcon as ChevronRightDouble,
+  UserPen,
+  Settings,
+  LogOut,
 } from "lucide-react";
 import { adminMenu, IListItemAdmin } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
 import useAuth from "@/lib/authUser";
-
-const ALLOWED_ROLES: ("CUSTOMER" | "EMPLOYEE" | "ADMIN")[] = [
-  "EMPLOYEE",
-  "ADMIN",
-];
 
 const AdminSidebar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<number[]>([]);
   const pathname = usePathname();
   const { isCollapsed, toggleCollapse } = useSidebar();
-  const { user } = useAuth(ALLOWED_ROLES);
+  const { user } = useAuth();
 
   const toggleMobileMenu = () => {
     setIsMobileOpen(!isMobileOpen);
@@ -70,20 +66,40 @@ const AdminSidebar = () => {
             } items-center`}
           >
             {!isCollapsed && (
-              <h2 className="text-xl font-semibold text-gray-800">
-                <Link href={"/admin"}>Admin</Link>
-              </h2>
+              <div className="flex flex-col gap-2">
+                <div className="text-md font-semibold text-gray-800 flex flex-col items-center gap-3 max-w-xs text-center break-words">
+                  <p>
+                    <Link href="/admin">
+                      {user && `${user.firstName} ${user.lastName}`}
+                    </Link>
+                  </p>
+                  <p className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 shadow-sm w-fit">
+                    {user && user.employee.position}
+                  </p>
+                  <p className="text-xs text-gray-600">{user && user.email}</p>
+                </div>
+
+                {/* profile */}
+                <div className="flex items-center justify-between ">
+                  <div className=" hover:rounded-full hover:bg-gray-200 p-2 mt-1 text-gray-600 text-sm hover:text-gray-800">
+                    <Link href={"/admin/profile"}>
+                      {" "}
+                      <UserPen />
+                    </Link>
+                  </div>
+                  <div className=" hover:rounded-full hover:bg-gray-200 p-2 mt-1 text-gray-600 text-sm hover:text-gray-800">
+                    <Link href={"#"}>
+                      <Settings />
+                    </Link>
+                  </div>
+                  <div className=" hover:rounded-full hover:bg-gray-200 p-2 mt-1 text-gray-600 text-sm hover:text-gray-800">
+                    <Link href={"/"}>
+                      <LogOut />
+                    </Link>
+                  </div>
+                </div>
+              </div>
             )}
-            <button
-              onClick={toggleCollapse}
-              className="p-1 rounded-md hover:bg-gray-100 transition-colors"
-            >
-              {isCollapsed ? (
-                <ChevronRightDouble className="h-5 w-5" />
-              ) : (
-                <ChevronLeft className="h-5 w-5" />
-              )}
-            </button>
           </div>
 
           {/* Sidebar menu */}
@@ -162,7 +178,7 @@ const AdminSidebar = () => {
             </ul>
           </nav>
 
-          {/* Sidebar footer */}
+          {/* Sidebar footer
           {!isCollapsed && (
             <div className="px-3 py-4 border-t flex items-center">
               <div className="flex items-center gap-3 text-gray-700">
@@ -186,7 +202,7 @@ const AdminSidebar = () => {
                 <span className="text-sm font-medium">AD</span>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </aside>
 

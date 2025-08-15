@@ -5,7 +5,6 @@ import CardStatistical from "../components/statistical/CardStatistical";
 import RevenueTotalMonth from "../components/statistical/RevenueTotalMonth";
 import CustomerBarChart from "../components/statistical/CustomerBarChart";
 import BookingResourceChart from "../components/statistical/BookingResourceChart";
-import useAuth from "@/lib/authUser";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 
@@ -18,10 +17,6 @@ interface CustomerDatatype {
   months: string[];
   counts: number[];
 }
-const ALLOWED_ROLES: ("CUSTOMER" | "EMPLOYEE" | "ADMIN")[] = [
-  "EMPLOYEE",
-  "ADMIN",
-];
 
 const Page = () => {
   const emptyRevenueData: RevenueDataType = { months: [], data: [] };
@@ -34,8 +29,6 @@ const Page = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const { loadingLog } = useAuth(ALLOWED_ROLES);
 
   const fetchData = async () => {
     try {
@@ -72,10 +65,6 @@ const Page = () => {
       })) || []
     );
   }, [bookingResource]);
-
-  if (loadingLog) {
-    return <div>Đang kiểm tra quyền</div>;
-  }
 
   if (loading) {
     return (

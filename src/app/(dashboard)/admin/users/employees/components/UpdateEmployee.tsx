@@ -5,6 +5,10 @@ import { X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { Employee } from "./TableEmployee";
+import axios from "axios";
+import { URL_API } from "@/lib/fetcher";
+import { mutate } from "swr";
+import toast from "react-hot-toast";
 interface IUpdateEmployee {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -58,9 +62,24 @@ const UpdateEmployee = ({ isOpen, setIsOpen, employee }: IUpdateEmployee) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      const res = await axios.put(
+        `${URL_API}/api/auth/employee/${employee?.employee?.id}`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.status === 200) {
+        setIsOpen(false);
+        mutate(`${URL_API}/api/auth/employee`);
+        toast.success("Cập nhật nhân viên thành công");
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message || "Cập nhật nhân viên thất bại");
+    }
   };
 
   return (

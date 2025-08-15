@@ -6,7 +6,7 @@ interface SearchFormProps {
   setPage: (page: number) => void;
 }
 const SearchForm = ({ search, setPage, setSearch }: SearchFormProps) => {
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setPage(1);
   };
@@ -14,7 +14,7 @@ const SearchForm = ({ search, setPage, setSearch }: SearchFormProps) => {
     <>
       <input
         type="text"
-        placeholder="Tìm phòng..."
+        placeholder="nhập số phòng ..."
         value={search}
         onChange={handleSearch}
         className="border px-3 py-2 rounded-md shadow-sm w-64"

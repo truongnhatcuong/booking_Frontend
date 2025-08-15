@@ -8,7 +8,6 @@ import useSWR from "swr";
 
 import { fetcher } from "@/lib/fetcher";
 import TableListBooking, { IBooking } from "./components/TableListBooking";
-import useAuth from "@/lib/authUser";
 
 const API_URL = process.env.NEXT_PUBLIC_URL_API;
 
@@ -30,12 +29,6 @@ const BookingManagementForm = () => {
       );
     }
   }, [data, selectedRange]);
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
-
-  // Nếu còn loading
-  if (loadingLog) {
-    return <div>đang kiểm tra quyền truy cập...</div>;
-  }
 
   return (
     <div className="container mx-auto p-6">

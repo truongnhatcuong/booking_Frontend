@@ -1,29 +1,46 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EmployeeTable from "./components/TableEmployee";
 import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
-import useAuth from "@/lib/authUser";
+import { fetcher, URL_API } from "@/lib/fetcher";
+import { useDebounce } from "../../../../../../hook/Debounce";
+import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
+import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
 
 const Page = () => {
-  const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/auth/employee`,
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const debouncedSearch = useDebounce(search, 400); // gọi API sau khi ngừng gõ 0.4s
+  const { data, isLoading } = useSWR(
+    `${URL_API}/api/auth/employee?search=${encodeURIComponent(
+      debouncedSearch || ""
+    )}&page=${currentPage}&limit=${limit}`,
     fetcher
   );
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
   // Kiểm tra trạng thái loading và hiển thị thông báo
   if (isLoading) {
     return <div>Đang tải dữ liệu...</div>;
   }
 
-  // Nếu còn loading
-  if (loadingLog) {
-    return <div>đang kiểm tra quyền truy cập...</div>;
-  }
   return (
     <div className="bg-white p-6 rounded-xl">
-      {<EmployeeTable employee={data?.employee || []} />}
+      <EmployeeTable
+        employee={data?.employee.result || []}
+        search={search}
+        setSearchTerm={setSearch}
+      />
+      <Pagination
+        page={currentPage}
+        setPage={setCurrentPage}
+        totalPages={data?.employee?.totalPages || 1}
+      />
+      <LimitSelector onChange={setLimit} value={limit} />
     </div>
   );
 };

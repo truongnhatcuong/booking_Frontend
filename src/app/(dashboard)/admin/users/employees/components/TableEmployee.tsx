@@ -12,7 +12,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -30,7 +29,6 @@ import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 import { mutate } from "swr";
 import EmployeeRoleAction from "./EmployeeRoleAction";
-import UpdateEmployee from "./UpdateEmployee";
 
 interface EmployeeDetails {
   id: string;
@@ -59,14 +57,13 @@ const departmentMap: Record<string, string> = {
 
 interface IEmployees {
   employee: Employee[];
+  search: string;
+  setSearchTerm: (value: string) => void;
 }
 
-const TableEmployee = ({ employee }: IEmployees) => {
-  const [searchTerm, setSearchTerm] = useState("");
+const TableEmployee = ({ employee, search, setSearchTerm }: IEmployees) => {
   const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
   const [idEmployee, setIdEmployee] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [subEmployee, setSubEmployee] = useState<Employee | null>(null);
   async function RemoveEmployeeRole(id: string) {
     try {
       await axios.delete(`${URL_API}/api/role/${id}`, {
@@ -94,7 +91,7 @@ const TableEmployee = ({ employee }: IEmployees) => {
           <Input
             placeholder="Tìm kiếm nhân viên..."
             className="pl-8"
-            value={searchTerm}
+            value={search}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
@@ -183,15 +180,6 @@ const TableEmployee = ({ employee }: IEmployees) => {
                           RemoveEmployeeRole={RemoveEmployeeRole}
                           employee={employee}
                         />
-                        {/* chỉnh sửa nhân viên */}
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setIsOpen(true);
-                            setSubEmployee(employee);
-                          }}
-                        >
-                          Chỉnh sửa
-                        </DropdownMenuItem>
 
                         {/* vô hiệu hóa  */}
                         <DisabledUser employee={employee} />
@@ -214,11 +202,6 @@ const TableEmployee = ({ employee }: IEmployees) => {
         idEmployee={idEmployee ?? ""}
         isOpen={isPermissionModalOpen}
         setIsOpen={setIsPermissionModalOpen}
-      />
-      <UpdateEmployee
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        employee={subEmployee}
       />
     </div>
   );

@@ -38,7 +38,7 @@ const CardStatistical = () => {
   const translateRange = (range: string) => {
     switch (range) {
       case "day":
-        return "ngày";
+        return "hôm nay";
       case "week":
         return "tuần";
       case "month":

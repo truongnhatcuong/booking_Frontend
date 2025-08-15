@@ -1,19 +1,34 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import useSWR from "swr";
-import { fetcher, URL_API } from "@/lib/fetcher";
+import { URL_API } from "@/lib/fetcher";
 import ListRoom, { RoomCustomer } from "./ListRoom";
 import ButtonSeclectType from "./ButtonSeclectType";
+import axios from "axios";
 
 const RoomShow = () => {
   const [typeRoom, setTypeRoom] = useState("");
-  const { data, isLoading } = useSWR<RoomCustomer[]>(
-    `${URL_API}/api/room/customer?roomType=${typeRoom}`,
-    fetcher
-  );
+  const [data, setData] = useState<RoomCustomer[]>([]);
 
-  if (!data || isLoading) return <div>Đang tải dữ liệu...</div>;
+  // const { data, isLoading } = useSWR<RoomCustomer[]>(
+  //   `${URL_API}/api/room/customer?roomType=${typeRoom}`,
+  //   fetcher
+  // );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${URL_API}/api/room/customer?roomType=${typeRoom ? typeRoom : ""}`
+        );
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching room data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  if (!data) return <div>Đang tải dữ liệu...</div>;
 
   return (
     <div className="space-y-8 text-center pt-9">
@@ -27,7 +42,7 @@ const RoomShow = () => {
               <ListRoom roomtype={room} key={`single-${index}`} />
             ))
           ) : (
-            <div>Phòng Không Có Sẵn</div>
+            <div className="">Phòng Không Có Sẵn</div>
           )}
         </div>
       </div>

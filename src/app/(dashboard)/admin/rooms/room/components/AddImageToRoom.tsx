@@ -25,7 +25,7 @@ const AddImageToRoom = ({ roomId }: AddImageToRoomProps) => {
                   { imageUrls: urls }
                 );
                 if (response.data) {
-                  toast.success("Ảnh đã được lưu vào phòng!");
+                  toast.success("Ảnh đã được lưu !");
                   mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
                 }
               } catch (error) {

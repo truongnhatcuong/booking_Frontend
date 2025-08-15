@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import AdminBookingForm from "./components/AdminBookingForm";
 import NewCustomerForm from "./components/newCustomerForm";
-import useAuth from "@/lib/authUser";
 
 interface Room {
   id: string;
@@ -108,12 +107,6 @@ const Page = () => {
       }
     }
   }, [formData.roomId, roomData, formData.checkInDate, formData.checkOutDate]);
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
-
-  // Nếu còn loading
-  if (loadingLog) {
-    return <div>đang kiểm tra quyền truy cập...</div>;
-  }
 
   if (isLoadingRoomData) {
     return <div>đang tải ....</div>;

@@ -2,17 +2,12 @@
 import React from "react";
 import TableBlog from "./components/TableBlog";
 import useSWR from "swr";
-import useAuth from "@/lib/authUser";
+
 import { fetcher, URL_API } from "@/lib/fetcher";
 
 const Page = () => {
   const { data, isLoading } = useSWR(`${URL_API}/api/blog/employee`, fetcher);
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
 
-  // Nếu còn loading
-  if (loadingLog) {
-    return <div>đang kiểm tra quyền truy cập...</div>;
-  }
   if (isLoading) return <>...</>;
   return (
     <div>

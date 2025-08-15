@@ -5,19 +5,15 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 import AddAmenies from "./components/AddAmenies";
 import { Input } from "@/components/ui/input";
-import useAuth from "@/lib/authUser";
 
 const Page = () => {
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_URL_API}/api/amenity`,
     fetcher
   );
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
 
   // Nếu còn loading
-  if (loadingLog) {
-    return <div>đang kiểm tra quyền truy cập...</div>;
-  }
+
   if (error) {
     return <div>Đã xảy ra lỗi: {error.message}</div>;
   }

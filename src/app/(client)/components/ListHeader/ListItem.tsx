@@ -2,6 +2,7 @@
 import { HoverCardContent } from "@/components/ui/hover-card";
 import { fetcher } from "@/lib/fetcher";
 import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
@@ -52,7 +53,11 @@ const ListItem = () => {
                     pathname === item.link ? "bg-teal-500 rounded-full" : ""
                   }`}
                 >
-                  {item.title}
+                  {" "}
+                  <div className="flex items-center ">
+                    <p>{item.title}</p>
+                    <ChevronDown />
+                  </div>
                 </div>
               </HoverCardTrigger>
               <HoverCardContent className="w-48 mt-2 p-2 bg-white shadow-lg rounded-lg hidden md:block">

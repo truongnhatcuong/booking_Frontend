@@ -1,102 +1,164 @@
 "use client";
-
-import React, { useState } from "react";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
+import ReactMarkdown from "react-markdown";
+import { URL_API } from "@/lib/fetcher";
+import axios from "axios";
+import { useState, useRef, useEffect } from "react";
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { Bot, X } from "lucide-react";
 
 export default function ChatBox() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
+    []
+  );
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    const newMessages: Message[] = [
-      ...messages,
-      { role: "user", content: input },
-    ];
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  async function sendMessage(e?: React.FormEvent) {
+    e?.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const newMessages = [...messages, { role: "user", content: input }];
     setMessages(newMessages);
     setInput("");
-    setLoading(true);
+    setIsLoading(true);
 
     try {
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer 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`,
-          "HTTP-Referer": "http://localhost:3000", // đổi URL của bạn
-          "X-Title": "My Chat App",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "deepseek/deepseek-r1-0528:free",
-          messages: newMessages,
-        }),
+      const res = await axios.post(`${URL_API}/api/chatai`, {
+        message: input,
       });
 
-      const data = await res.json();
-
-      // Lấy nội dung phản hồi
-      const reply = data?.choices?.[0]?.message?.content || "No response";
-
-      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
-    } catch (err) {
-      console.error(err);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Error: could not fetch response." },
+      const data = res.data.data;
+      setMessages([...newMessages, { role: "assistant", content: data }]);
+    } catch (error) {
+      setMessages([
+        ...newMessages,
+        {
+          role: "assistant",
+          content: "Sorry, there was an error processing your request.",
+        },
       ]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  };
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
       sendMessage();
     }
   };
 
   return (
-    <div className="flex flex-col max-w-lg mx-auto h-screen p-4">
-      <div className="flex-1 overflow-y-auto border p-2 rounded bg-white">
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`my-2 p-2 rounded ${
-              m.role === "user"
-                ? "bg-blue-100 self-end"
-                : "bg-gray-100 self-start"
-            }`}
-          >
-            <strong>{m.role === "user" ? "You" : "AI"}: </strong>
-            {m.content}
-          </div>
-        ))}
-        {loading && <div className="text-gray-500 italic">AI is typing...</div>}
+    <>
+      {/* Floating action button - shows on mobile and desktop */}
+      <div
+        className="absolute rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 hover:cursor-pointer w-fit   bottom-5 right-12 "
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <X className="w-6 h-6" /> : <Bot className="w-6 h-6" />}
       </div>
 
-      <div className="mt-2 flex">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 border rounded p-2"
-          placeholder="Type your message..."
-        />
-        <button
-          onClick={sendMessage}
-          className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
-          disabled={loading}
+      {isOpen && (
+        <div
+          className="fixed flex flex-col bg-white rounded-xl shadow-lg overflow-hidden z-40 md:mb-6 md:mr-14 "
+          style={{
+            height: "calc(100vh - 8rem)",
+            width: "calc(100vw - 2rem)",
+            maxWidth: "32rem",
+            bottom: "5rem",
+            right: "1rem",
+          }}
         >
-          Send
-        </button>
-      </div>
-    </div>
+          {/* Chat header */}
+          <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold">Trợ Lý Ai</h2>
+              <p className="text-sm opacity-80">Tôi có thể giúp gì cho bạn?</p>
+            </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="p-1 rounded-full hover:bg-blue-400 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Messages area */}
+          <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+            {messages.length === 0 ? (
+              <div className="flex items-center justify-center h-full text-gray-500 text-center px-4">
+                <p>Bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới</p>
+              </div>
+            ) : (
+              messages.map((m, i) => (
+                <div
+                  key={i}
+                  className={`mb-4 flex ${
+                    m.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-lg p-3 ${
+                      m.role === "user"
+                        ? "bg-blue-500 text-white rounded-br-none"
+                        : "bg-gray-200 text-gray-800 rounded-bl-none"
+                    }`}
+                  >
+                    <div className="text-xs font-semibold mb-1">
+                      {m.role === "user" ? "Bạn" : "Trợ lý"}
+                    </div>
+                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                  </div>
+                </div>
+              ))
+            )}
+            <div ref={messagesEndRef} />
+            {isLoading && (
+              <div className="flex justify-start mb-4">
+                <div className="bg-gray-200 text-gray-800 rounded-lg rounded-bl-none p-3 max-w-[80%]">
+                  <div className="flex space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce"></div>
+                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-100"></div>
+                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-200"></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input area */}
+          <form onSubmit={sendMessage} className="border-t p-4 bg-white">
+            <div className="flex gap-2">
+              <input
+                className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type your message..."
+                disabled={isLoading}
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 w-10 h-10 flex items-center justify-center transition-colors disabled:opacity-50"
+                disabled={!input.trim() || isLoading}
+              >
+                <PaperAirplaneIcon className="w-5 h-5" />
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </>
   );
 }

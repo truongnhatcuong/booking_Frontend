@@ -8,6 +8,7 @@ import RoomShow from "./components/main/RoomShow";
 import HotelShow from "./components/main/HotelShow";
 import ShearchRoomPage from "./components/main/SearchRoom";
 import { jwtDecode } from "jwt-decode";
+import ChatBoxAL from "./components/main/ChatBoxAl";
 
 const Page = () => {
   function isTokenEpire(token: string | null) {
@@ -39,6 +40,7 @@ const Page = () => {
       <BeanHotel />
       <RoomShow />
       <HotelShow />
+      <ChatBoxAL />
     </div>
   );
 };

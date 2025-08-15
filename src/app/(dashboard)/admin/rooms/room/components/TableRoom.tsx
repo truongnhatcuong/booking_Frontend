@@ -73,7 +73,7 @@ const TableRoom = ({ rooms, data }: TableRoomProps) => {
                     className="h-16 w-16 rounded-full "
                   />
                 </TableCell>
-                <TableCell>{room.roomNumber}</TableCell>
+                <TableCell>P {room.roomNumber}</TableCell>
                 <TableCell> Tầng {room.floor}</TableCell>
                 <TableCell>
                   <span
