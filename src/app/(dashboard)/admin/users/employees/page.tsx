@@ -6,6 +6,7 @@ import { fetcher, URL_API } from "@/lib/fetcher";
 import { useDebounce } from "../../../../../../hook/Debounce";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
+import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 const Page = () => {
   const [search, setSearch] = useState("");
@@ -19,10 +20,6 @@ const Page = () => {
     fetcher
   );
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search]);
-
   // Kiểm tra trạng thái loading và hiển thị thông báo
   if (isLoading) {
     return <div>Đang tải dữ liệu...</div>;
@@ -30,10 +27,12 @@ const Page = () => {
 
   return (
     <div className="bg-white p-6 rounded-xl">
+      <ElegantTitle title="Quản Lý Nhân Viên" className="mb-5" />
       <EmployeeTable
         employee={data?.employee.result || []}
         search={search}
         setSearchTerm={setSearch}
+        setCurrentPage={setCurrentPage}
       />
       <Pagination
         page={currentPage}

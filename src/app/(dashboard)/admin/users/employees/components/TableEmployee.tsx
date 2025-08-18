@@ -29,6 +29,7 @@ import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 import { mutate } from "swr";
 import EmployeeRoleAction from "./EmployeeRoleAction";
+import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 
 interface EmployeeDetails {
   id: string;
@@ -59,9 +60,15 @@ interface IEmployees {
   employee: Employee[];
   search: string;
   setSearchTerm: (value: string) => void;
+  setCurrentPage: (value: number) => void;
 }
 
-const TableEmployee = ({ employee, search, setSearchTerm }: IEmployees) => {
+const TableEmployee = ({
+  employee,
+  search,
+  setSearchTerm,
+  setCurrentPage,
+}: IEmployees) => {
   const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
   const [idEmployee, setIdEmployee] = useState<string | null>(null);
   async function RemoveEmployeeRole(id: string) {
@@ -86,15 +93,13 @@ const TableEmployee = ({ employee, search, setSearchTerm }: IEmployees) => {
   return (
     <div className="space-y-4 bg-white p-5 rounded border">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Tìm kiếm nhân viên..."
-            className="pl-8"
-            value={search}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <SearchForm
+          placeholder="Tìm Theo Tên Nhân Viên .... "
+          search={search}
+          resetPage={false}
+          setSearch={setSearchTerm}
+          setPage={setCurrentPage}
+        />
         <AddEmployee />
       </div>
 

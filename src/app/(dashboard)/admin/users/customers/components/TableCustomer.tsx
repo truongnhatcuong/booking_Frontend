@@ -10,8 +10,8 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import StatusCustomer from "./StatusCustomer";
-import SearchInput from "@/app/(dashboard)/components/searchPage/SearchInput";
 import { UserRound } from "lucide-react";
+import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 
 // Define types based on your Prisma schema
 type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
@@ -40,23 +40,25 @@ interface ITableCustomer {
   customers: User[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  setCurrentPage: (value: number) => void;
 }
 
 const TableCustomer = ({
   customers,
   searchTerm,
   setSearchTerm,
+  setCurrentPage,
 }: ITableCustomer) => {
   // Filter customers based on search term
 
   return (
     <div className="space-y-4 bg-white p-5 border rounded-xl">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Quản lý khách hàng</h2>
-        <SearchInput
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          placeholder="Tìm Kiếm Theo Tên / CCCD"
+        <SearchForm
+          placeholder="Tìm Kiếm Theo Tên / CCCD..."
+          search={searchTerm}
+          setSearch={setSearchTerm}
+          setPage={setCurrentPage}
         />
       </div>
 

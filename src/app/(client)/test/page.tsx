@@ -1,164 +1,98 @@
 "use client";
-import ReactMarkdown from "react-markdown";
-import { URL_API } from "@/lib/fetcher";
-import axios from "axios";
-import { useState, useRef, useEffect } from "react";
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { Bot, X } from "lucide-react";
+import socket from "@/lib/socket";
+import { useEffect, useState } from "react";
 
-export default function ChatBox() {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
-    []
-  );
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
+interface ChatMessage {
+  senderId: string;
+  receiverId: string;
+  content: string;
+}
 
-  // Auto-scroll to bottom when messages change
+export default function ChatPage() {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [receiverId, setReceiverId] = useState<string | null>(null);
+  const [onlineEmployees, setOnlineEmployees] = useState<string[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    socket.on("user_info", ({ userId, role }) => {
+      setUserId(userId);
+      setRole(role);
+    });
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+    return () => {
+      socket.off("user_info");
+    };
+  }, []);
 
-  async function sendMessage(e?: React.FormEvent) {
-    e?.preventDefault();
-    if (!input.trim() || isLoading) return;
+  useEffect(() => {
+    socket.on("receive_message", (data: ChatMessage) => {
+      setMessages((prev) => [...prev, data]);
+    });
 
-    const newMessages = [...messages, { role: "user", content: input }];
-    setMessages(newMessages);
-    setInput("");
-    setIsLoading(true);
+    socket.on("online_employees", (list: string[]) => {
+      setOnlineEmployees(list);
+      setReceiverId(
+        (prev) =>
+          prev ??
+          (list.length > 0 ? list[0] : "c78d9576-4ef3-45dc-a3de-dbe71a36f7a6")
+      );
+    });
 
-    try {
-      const res = await axios.post(`${URL_API}/api/chatai`, {
-        message: input,
-      });
+    socket.on("new_customer_chat", (customerId: string) => {
+      setReceiverId(customerId);
+    });
 
-      const data = res.data.data;
-      setMessages([...newMessages, { role: "assistant", content: data }]);
-    } catch (error) {
-      setMessages([
-        ...newMessages,
-        {
-          role: "assistant",
-          content: "Sorry, there was an error processing your request.",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+    return () => {
+      socket.off("receive_message");
+      socket.off("online_employees");
+      socket.off("new_customer_chat");
+    };
+  }, [receiverId]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      sendMessage();
-    }
+  const sendMessage = () => {
+    if (!message) return;
+    socket.emit("send_message", { receiverId, content: message });
+    setMessage("");
   };
 
   return (
-    <>
-      {/* Floating action button - shows on mobile and desktop */}
-      <div
-        className="absolute rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 hover:cursor-pointer w-fit   bottom-5 right-12 "
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <Bot className="w-6 h-6" />}
+    <div className="p-4 space-y-4">
+      <h2 className="font-bold text-lg">
+        {" "}
+        Chat {role === "EMPLOYEE" ? "với khách hàng" : "với nhân viên"}
+      </h2>
+      <div>
+        <p>ID của bạn: {userId || "Đang lấy..."}</p>
+
+        <p>Nhân viên online: {onlineEmployees.join(", ") || "Không có"}</p>
+        <p>Đang chat với: {receiverId || "Chưa có"}</p>
       </div>
 
-      {isOpen && (
-        <div
-          className="fixed flex flex-col bg-white rounded-xl shadow-lg overflow-hidden z-40 md:mb-6 md:mr-14 "
-          style={{
-            height: "calc(100vh - 8rem)",
-            width: "calc(100vw - 2rem)",
-            maxWidth: "32rem",
-            bottom: "5rem",
-            right: "1rem",
-          }}
+      <div className="border rounded p-2 h-60 overflow-y-auto">
+        {messages.map((m, i) => (
+          <p key={i}>
+            <b>{m.senderId}</b>: {m.content}
+          </p>
+        ))}
+      </div>
+
+      <div className="flex space-x-2">
+        <input
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Nhập tin nhắn..."
+          className="border p-2 flex-1"
+        />
+        <button
+          onClick={sendMessage}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          {/* Chat header */}
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold">Trợ Lý Ai</h2>
-              <p className="text-sm opacity-80">Tôi có thể giúp gì cho bạn?</p>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-1 rounded-full hover:bg-blue-400 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Messages area */}
-          <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-            {messages.length === 0 ? (
-              <div className="flex items-center justify-center h-full text-gray-500 text-center px-4">
-                <p>Bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới</p>
-              </div>
-            ) : (
-              messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={`mb-4 flex ${
-                    m.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      m.role === "user"
-                        ? "bg-blue-500 text-white rounded-br-none"
-                        : "bg-gray-200 text-gray-800 rounded-bl-none"
-                    }`}
-                  >
-                    <div className="text-xs font-semibold mb-1">
-                      {m.role === "user" ? "Bạn" : "Trợ lý"}
-                    </div>
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
-                  </div>
-                </div>
-              ))
-            )}
-            <div ref={messagesEndRef} />
-            {isLoading && (
-              <div className="flex justify-start mb-4">
-                <div className="bg-gray-200 text-gray-800 rounded-lg rounded-bl-none p-3 max-w-[80%]">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-100"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-200"></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input area */}
-          <form onSubmit={sendMessage} className="border-t p-4 bg-white">
-            <div className="flex gap-2">
-              <input
-                className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type your message..."
-                disabled={isLoading}
-              />
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 w-10 h-10 flex items-center justify-center transition-colors disabled:opacity-50"
-                disabled={!input.trim() || isLoading}
-              >
-                <PaperAirplaneIcon className="w-5 h-5" />
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </>
+          Gửi
+        </button>
+      </div>
+    </div>
   );
 }

@@ -19,7 +19,6 @@ interface RoomType {
   description: string;
   basePrice: number;
   maxOccupancy: number;
-
   photoUrls?: string;
   amenities: {
     amenity: { id: string; name: string };
@@ -35,12 +34,10 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
   const [formData, setFormData] = useState({
     name: roomTypes.name,
     description: roomTypes.description,
-    basePrice: Number(roomTypes.basePrice),
-    maxOccupancy: roomTypes.maxOccupancy,
+    basePrice: Number(roomTypes.basePrice || 0),
+    maxOccupancy: Number(roomTypes.maxOccupancy || 0),
     photoUrls: roomTypes.photoUrls,
   });
-
-  console.log(formData.photoUrls);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -48,7 +45,8 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]:
+        name === "basePrice" || name === "maxOccupancy" ? Number(value) : value,
     }));
   };
   useEffect(() => {
@@ -139,12 +137,10 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
                       Giá cơ bản <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      id="basePrice"
                       name="basePrice"
                       type="number"
                       min="0"
-                      step="0.01"
-                      value={formData.basePrice || ""}
+                      value={Number(formData.basePrice) || ""}
                       onChange={handleChange}
                     />
                   </div>

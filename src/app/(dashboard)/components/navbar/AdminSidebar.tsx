@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -18,23 +18,23 @@ const AdminSidebar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<number[]>([]);
   const pathname = usePathname();
-  const { isCollapsed, toggleCollapse } = useSidebar();
+  const { isCollapsed, toggleCollapse, countCustomer } = useSidebar();
   const { user } = useAuth();
 
   const toggleMobileMenu = () => {
     setIsMobileOpen(!isMobileOpen);
   };
+  // Sau khi setWaitingCustomers từ socket
 
   const toggleSubMenu = (id: number) => {
     setExpandedMenus((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-
   const isMenuActive = (menuItem: IListItemAdmin) => {
     return (
       pathname === menuItem.link ||
-      menuItem.subMenuItem.some((subItem) => pathname === subItem.link)
+      menuItem.subMenuItem?.some((subItem) => pathname === subItem.link)
     );
   };
 
@@ -138,21 +138,36 @@ const AdminSidebar = () => {
                         }`}
                         onClick={() => toggleSubMenu(menuItem.id)}
                       >
-                        <div className="flex items-center gap-3">
-                          <menuItem.icon className="h-5 w-5" />
-                          <span className="font-medium">{menuItem.title}</span>
-                        </div>
-                        {expandedMenus.includes(menuItem.id) ? (
-                          <ChevronDown className="h-4 w-4" />
+                        {menuItem.link === "/admin/message" ? (
+                          <Link
+                            href="/admin/message"
+                            className="flex items-center gap-3 relative "
+                          >
+                            <menuItem.icon className="h-5 w-5" />
+                            <div className="font-medium">{menuItem.title}</div>
+                            <div className="absolute -right-5 bottom-2 rounded-full bg-blue-600 text-white px-1 text-sm ">
+                              {countCustomer != 0 ? countCustomer : 0}
+                            </div>
+                          </Link>
                         ) : (
-                          <ChevronRight className="h-4 w-4" />
+                          <div className="flex items-center gap-3">
+                            <menuItem.icon className="h-5 w-5" />
+                            <div className="font-medium">{menuItem.title}</div>
+                          </div>
                         )}
+
+                        {menuItem.link !== "/admin/message" &&
+                          (expandedMenus.includes(menuItem.id) ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          ))}
                       </div>
 
                       {/* Submenu */}
                       {expandedMenus.includes(menuItem.id) && (
                         <ul className="mt-1 ml-6 space-y-1 border-l-2 border-gray-200 pl-2">
-                          {menuItem.subMenuItem.map((subItem) => (
+                          {menuItem.subMenuItem?.map((subItem) => (
                             <li key={subItem.id}>
                               <Link
                                 href={subItem.link}

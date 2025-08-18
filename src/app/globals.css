@@ -219,3 +219,10 @@
   color: white;
   border-radius: 0.3rem;
 }
+
+.titleFont {
+  font-family: "Josefin Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}

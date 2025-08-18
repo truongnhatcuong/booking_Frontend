@@ -11,17 +11,13 @@ import { Label } from "@/components/ui/label";
 import { ImageDownIcon, PlusCircle, X } from "lucide-react";
 import { UploadButton } from "@/utils/uploadthing";
 import toast from "react-hot-toast";
-import { fetcher } from "@/lib/fetcher";
 
 interface Amenity {
   id: string;
   name: string;
 }
 const CreateRoomtype = () => {
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/amenity`,
-    fetcher
-  );
+  const { data } = useSWR(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState<undefined | string>(undefined);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -93,7 +89,7 @@ const CreateRoomtype = () => {
         onClick={() => setIsOpen(true)}
       >
         <PlusCircle className="h-4 w-4" />
-        Add Room Type
+        Thêm Loại Phòng
       </Button>
       {isOpen && (
         <Modal

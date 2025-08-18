@@ -11,20 +11,22 @@ import {
   ChartBarIcon,
   ChatBubbleLeftIcon,
   PencilIcon,
-  ChartPieIcon,
 } from "@heroicons/react/24/outline";
+import { MessageCircleCode } from "lucide-react";
+
+export interface ISubMenuItem {
+  id: number;
+  link: string;
+  title: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
 
 export interface IListItemAdmin {
   id: number;
   link: string;
   title: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  subMenuItem: {
-    id: number;
-    link: string;
-    title: string;
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  }[];
+  subMenuItem?: ISubMenuItem[]; // optional
 }
 
 export const adminMenu: IListItemAdmin[] = [
@@ -176,23 +178,9 @@ export const adminMenu: IListItemAdmin[] = [
     ],
   },
   {
-    id: 11,
-    link: "/admin/thongke",
-    title: "Thống Kê Doanh Thu",
-    icon: ChartPieIcon,
-    subMenuItem: [
-      {
-        id: 1101,
-        link: "/admin/thongke/thong_ke_phong",
-        title: "thống kê Phòng",
-        icon: ChartPieIcon,
-      },
-      // {
-      //   id: 1102,
-      //   link: "/admin/thongke/thong_ke",
-      //   title: "thống kê Phòng",
-      //   icon: ChartPieIcon,
-      // },
-    ],
+    id: 12,
+    link: "/admin/message",
+    title: "Nhắn Tin",
+    icon: MessageCircleCode,
   },
 ];

@@ -6,17 +6,13 @@ import { fetcher, URL_API } from "@/lib/fetcher";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
 import { useDebounce } from "../../../../../../hook/Debounce";
+import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 const Page = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400); // gọi API sau khi ngừng gõ 0.4s
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  useEffect(() => {
-    if (searchTerm) {
-      setCurrentPage(1);
-    }
-  }, [searchTerm]);
 
   const { data, isLoading } = useSWR(
     `${URL_API}/api/auth/customer?search=${debouncedSearch}&page=${currentPage}&limit=${limit}`,
@@ -30,10 +26,12 @@ const Page = () => {
 
   return (
     <div className="bg-white p-6 rounded-xl">
+      <ElegantTitle title="Quản Lý Khách Hàng" />
       <TableCustomer
         customers={data.customer.result || []}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        setCurrentPage={setCurrentPage}
       />
       <Pagination
         page={currentPage}

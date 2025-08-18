@@ -48,6 +48,7 @@
     "react-qr-code": "^2.0.15",
     "react-quill": "^2.0.0",
     "recharts": "^3.0.2",
+    "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.19.1",
     "sweetalert2-react-content": "^5.1.0",
     "swiper": "^11.2.6",

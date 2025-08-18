@@ -16,7 +16,6 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { formatPrice } from "@/lib/formatPrice";
 import UpdateRoomType from "./UpdateRoomType";
-import CreateRoomtype from "./CreateRoomtype";
 import DeleteRoomtype from "./DeleteRoomtype";
 
 interface Amenity {
@@ -50,11 +49,6 @@ export default function RoomTypesAdminPage({ roomTypes }: MockRoomType) {
 
   return (
     <div className="container mx-auto py-8 bg-white">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Room Types Management</h1>
-        <CreateRoomtype />
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
