@@ -4,7 +4,8 @@ import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { Bot, X } from "lucide-react";
+import { BotMessageSquare, X } from "lucide-react";
+import Link from "next/link";
 
 export default function ChatBoxAL() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -66,7 +67,11 @@ export default function ChatBoxAL() {
         className="fixed rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 hover:cursor-pointer w-fit z-50   bottom-5 right-12 "
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? <X className="w-6 h-6" /> : <Bot className="w-6 h-6" />}
+        {isOpen ? (
+          <X className="w-6 h-6" />
+        ) : (
+          <BotMessageSquare className="w-6 h-6" />
+        )}
       </div>
 
       {isOpen && (
@@ -118,7 +123,74 @@ export default function ChatBoxAL() {
                     <div className="text-xs font-semibold mb-1">
                       {m.role === "user" ? "Bạn" : "Trợ lý"}
                     </div>
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
+
+                    <ReactMarkdown
+                      components={{
+                        div: ({ children }) => (
+                          <p className="text-base my-6">{children}</p>
+                        ),
+                        p: ({ children }) => (
+                          <p className="text-lg leading-relaxed my-2 josefin-sans ">
+                            {children}
+                          </p>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="text-blue-600 font-bold">
+                            {children}
+                          </strong>
+                        ),
+                        em: ({ children }) => (
+                          <em className="italic text-orange-500">{children}</em>
+                        ),
+                        a: ({ href, children }) => (
+                          <Link
+                            href={href || "#"}
+                            className="underline text-red-600 font-bold my-5"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {children}
+                          </Link>
+                        ),
+                        h1: ({ children }) => (
+                          <h1 className="text-2xl font-bold text-gray-900 ">
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ children }) => (
+                          <h2 className="text-xl font-semibold text-gray-800 mt-4">
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ children }) => (
+                          <h3 className="text-lg font-semibold text-gray-700 mt-3">
+                            {children}
+                          </h3>
+                        ),
+                        ul: ({ children }) => (
+                          <ul
+                            className="list-disc list-inside ml-4 mt-2"
+                            style={{
+                              listStyleType: "revert-layer", // bullet kiểu chấm
+                              paddingLeft: "20px",
+                              marginTop: "8px",
+                            }}
+                          >
+                            {children}
+                          </ul>
+                        ),
+                        li: ({ children }) => (
+                          <li className="mb-1 josefin-sans">{children}</li>
+                        ),
+                        code: ({ children }) => (
+                          <code className="bg-gray-100 text-sm text-gray-800 px-1 py-0.5 rounded">
+                            {children}
+                          </code>
+                        ),
+                      }}
+                    >
+                      {m.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
               ))

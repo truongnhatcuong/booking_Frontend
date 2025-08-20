@@ -42,7 +42,7 @@ const CardRoom = ({ room }: RoomCardProps) => {
 
   if (!room || room.rooms.length === 0) {
     return (
-      <div className="text-center text-gray-500 md:mt-20 mt-0">
+      <div className="text-center text-gray-500 md:mt-5 mt-0">
         <h1 className="text-2xl md:text-3xl font-bold text-yellow-600 mb-4">
           {room.name}
         </h1>
@@ -51,7 +51,7 @@ const CardRoom = ({ room }: RoomCardProps) => {
     );
   }
   return (
-    <section className="my-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+    <section className="my-2 px-4 md:px-8 lg:px-16 bg-gray-50">
       <h1 className="text-center text-2xl md:text-3xl font-bold text-yellow-600 mb-12 uppercase tracking-widest pt-2">
         {room.name}
       </h1>
@@ -103,17 +103,17 @@ const CardRoom = ({ room }: RoomCardProps) => {
                 </ul>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-lg font-bold text-yellow-600 mb-4">
+                <p className="text-2xl titleFont text-red-600/80 ">
                   {formatPrice(Number(room.basePrice))} / đêm
                 </p>
                 <Button
                   variant="default"
-                  className=" font-semibold  text-center bg-red-500 text-white hover:bg-red-600 cursor-pointer"
+                  className=" font-semibold  text-center bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"
                   onClick={() =>
                     router.push(`/rooms/${room.id}/${roomDetail.id}`)
                   }
                 >
-                  Xem Chi Tiêt
+                  Đặt ngay
                 </Button>
               </div>
             </div>

@@ -1,6 +1,8 @@
 "use client";
 
 import socket from "@/lib/socket";
+import { jwtDecode } from "jwt-decode";
+
 import {
   createContext,
   useContext,
@@ -34,7 +36,28 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
+  // checktoken
+  function isTokenEpire(token: string | null) {
+    if (!token) return true;
+    const decode: { exp: number } = jwtDecode(token);
+    console.log("thời gian còn lại", decode.exp);
 
+    return decode.exp * 1000 < Date.now();
+  }
+
+  function checkTokenAndRemove() {
+    const token = localStorage.getItem("token");
+    if (isTokenEpire(token)) {
+      localStorage.removeItem("token");
+      console.log("Token hết hạn → auto logout");
+    } else {
+      console.log("Token hợp lệ");
+    }
+  }
+
+  useEffect(() => {
+    checkTokenAndRemove();
+  }, []);
   // đếm
   useEffect(() => {
     const waitingCustomerStr = localStorage.getItem("waiting_customers");

@@ -5,10 +5,6 @@ import { Button } from "@/components/ui/button";
 
 const ItemButton = [
   {
-    label: "Tất cả",
-    value: "",
-  },
-  {
     label: "Phòng Đơn",
     value: "Phòng Đơn",
   },
@@ -23,21 +19,28 @@ const ItemButton = [
 ];
 interface IButton {
   setTypeRoom: (value: string) => void;
+  typeRoom: string;
 }
-const ButtonSeclectType = ({ setTypeRoom }: IButton) => {
+const ButtonSeclectType = ({ setTypeRoom, typeRoom }: IButton) => {
   return (
-    <div className="flex gap-2 items-center justify-center mb-5">
-      {ItemButton.map((item) => (
-        <Button
-          key={item.value}
-          variant="outline"
-          className="rounded-2xl"
-          onClick={() => setTypeRoom(item.value)}
-        >
-          {item.label}
-        </Button>
-      ))}
-    </div>
+    <>
+      <div className="flex gap-2 items-center justify-start ml-5 ">
+        {ItemButton.map((item) => (
+          <Button
+            key={item.value}
+            variant="ghost"
+            className={` ${
+              item.value === typeRoom
+                ? "underline decoration-blue-500 decoration-2 underline-offset-4 text-2xl roboto-mono"
+                : "text-2xl roboto-mono"
+            }`}
+            onClick={() => setTypeRoom(item.value)}
+          >
+            {item.label}
+          </Button>
+        ))}
+      </div>
+    </>
   );
 };
 

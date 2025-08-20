@@ -5,6 +5,7 @@ import { URL_API } from "@/lib/fetcher";
 import ListRoom, { RoomCustomer } from "./ListRoom";
 import ButtonSeclectType from "./ButtonSeclectType";
 import axios from "axios";
+import Link from "next/link";
 
 const RoomShow = () => {
   const [typeRoom, setTypeRoom] = useState("");
@@ -27,26 +28,44 @@ const RoomShow = () => {
     };
 
     fetchData();
-  }, []);
+  }, [typeRoom]);
   if (!data) return <div>Đang tải dữ liệu...</div>;
 
   return (
-    <div className="space-y-8 text-center pt-9">
-      {/* Phòng Đơn */}
-      <div>
-        <ButtonSeclectType setTypeRoom={setTypeRoom} />
-        <div className="text-5xl font-semibold regular mt-6">{typeRoom}</div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
-          {data && data.length > 0 ? (
-            data.map((room, index) => (
-              <ListRoom roomtype={room} key={`single-${index}`} />
-            ))
-          ) : (
-            <div className="">Phòng Không Có Sẵn</div>
-          )}
+    <>
+      {" "}
+      <div className="py-6 text-2xl text-center my-4 uppercase roboto">
+        Những chỗ nghỉ nổi bật được đề xuất cho quý khách
+      </div>
+      <div className="space-y-8 text-center ">
+        {/* Phòng Đơn */}
+        <div>
+          <div className="flex justify-between items-center mb-5 mx-2">
+            {" "}
+            <ButtonSeclectType setTypeRoom={setTypeRoom} typeRoom={typeRoom} />
+            {typeRoom && data.length > 0 && (
+              <Link
+                href={`/rooms/${data[0].roomTypeId}`}
+                className="text-blue-600 font-semibold underline "
+              >
+                Xem thêm các phòng của ({typeRoom})
+              </Link>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
+            {data && data.length > 0 ? (
+              data
+                .slice(0, 4)
+                .map((room, index) => (
+                  <ListRoom roomtype={room} key={`single-${index}`} />
+                ))
+            ) : (
+              <div className="">Phòng Không Có Sẵn</div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

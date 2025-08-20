@@ -1,11 +1,12 @@
 "use client";
+
 import { HoverCardContent } from "@/components/ui/hover-card";
 import { fetcher } from "@/lib/fetcher";
 import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 
 interface IListHeader {
@@ -41,34 +42,35 @@ const ListItem = () => {
   };
 
   return (
-    <div className="flex items-center md:flex-row flex-col space-x-2 md:space-x-0">
+    <div className="flex items-center md:flex-row flex-col md:space-x-2 space-y-2 md:space-y-0 w-full md:w-auto">
       {ListItems.map((item) =>
         item.hasDropdown ? (
-          <div key={item.id} className="relative">
+          <div key={item.id} className="relative w-full md:w-auto">
             {/* Desktop: HoverCard for md and larger */}
             <HoverCard>
               <HoverCardTrigger asChild className="hidden md:block">
                 <div
-                  className={`px-6 py-2 text-white text-base font-medium cursor-pointer hover:text-teal-500 ${
+                  className={`px-6 py-2 text-white text-base font-medium cursor-pointer hover:text-teal-500 transition-colors duration-200 ${
                     pathname === item.link ? "bg-teal-500 rounded-full" : ""
                   }`}
                 >
-                  {" "}
-                  <div className="flex items-center ">
+                  <div className="flex  items-center gap-1">
                     <p>{item.title}</p>
-                    <ChevronDown />
+                    <ChevronDown className="w-4 h-4" />
                   </div>
                 </div>
               </HoverCardTrigger>
-              <HoverCardContent className="w-48 mt-2 p-2 bg-white shadow-lg rounded-lg hidden md:block">
-                {isLoading && <p className="text-gray-500">Loading...</p>}
+              <HoverCardContent className="w-48 mt-2 p-2 bg-white shadow-lg rounded-lg border hidden md:block">
+                {isLoading && (
+                  <p className="text-gray-500 text-sm">Loading...</p>
+                )}
                 {data && data.length > 0 ? (
-                  <ul className="space-y-2">
+                  <ul className="space-y-1">
                     {data.map((room: IRoomtype) => (
                       <li key={room.id}>
                         <Link
                           href={`/rooms/${room.id}`}
-                          className="block text-gray-700 hover:bg-black/10 p-1.5 hover:border-l-4 hover:border-amber-400 transition-all duration-150 hover:ease-in-out"
+                          className="block text-gray-700 hover:bg-gray-50 p-2 rounded hover:border-l-4 hover:border-amber-400 transition-all duration-150"
                         >
                           {room.name}
                         </Link>
@@ -77,35 +79,45 @@ const ListItem = () => {
                   </ul>
                 ) : (
                   !isLoading && (
-                    <p className="text-gray-500">No rooms available.</p>
+                    <p className="text-gray-500 text-sm">No rooms available.</p>
                   )
                 )}
               </HoverCardContent>
             </HoverCard>
 
             {/* Mobile: Clickable dropdown for sm and smaller */}
-            <div className="md:hidden">
+            <div className="md:hidden w-full">
               <button
                 onClick={toggleMobileDropdown}
-                className={`px-6 py-2 text-base font-medium ${
+                className={`w-full px-6 py-3 text-base font-medium rounded-lg transition-colors duration-200 flex items-center justify-center ${
                   pathname === item.link
-                    ? "bg-teal-500 rounded-full text-white"
-                    : "text-white hover:text-teal-500"
+                    ? "bg-teal-500 text-white"
+                    : "text-white hover:text-teal-500 hover:bg-white/10"
                 }`}
               >
-                {item.title}
+                <span>{item.title}</span>
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-200  ${
+                    isMobileDropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
+
               {isMobileDropdownOpen && (
-                <div className="mt-2 p-2 bg-white shadow-lg rounded-lg w-full">
-                  {isLoading && <p className="text-gray-500">Loading...</p>}
+                <div className="mt-2 w-full bg-white shadow-lg rounded-lg border overflow-hidden">
+                  {isLoading && (
+                    <div className="p-4">
+                      <p className="text-gray-500 text-sm">Loading...</p>
+                    </div>
+                  )}
                   {data && data.length > 0 ? (
-                    <ul className="space-y-2">
+                    <ul className="py-2">
                       {data.map((room: IRoomtype) => (
                         <li key={room.id}>
                           <Link
                             href={`/rooms/${room.id}`}
-                            className="block text-gray-700 hover:bg-black/10 p-1.5 hover:border-l-4 hover:border-amber-400 transition-all duration-150 hover:ease-in-out"
-                            onClick={() => setIsMobileDropdownOpen(false)} // Close dropdown on click
+                            className="block text-gray-700 hover:bg-gray-50 px-4 py-3 hover:border-l-4 hover:border-amber-400 transition-all duration-150"
+                            onClick={() => setIsMobileDropdownOpen(false)}
                           >
                             {room.name}
                           </Link>
@@ -114,7 +126,11 @@ const ListItem = () => {
                     </ul>
                   ) : (
                     !isLoading && (
-                      <p className="text-gray-500">No rooms available.</p>
+                      <div className="p-4">
+                        <p className="text-gray-500 text-sm">
+                          No rooms available.
+                        </p>
+                      </div>
                     )
                   )}
                 </div>
@@ -125,10 +141,10 @@ const ListItem = () => {
           <Link
             href={item.link}
             key={item.id}
-            className={`px-6 py-2 text-base font-medium ${
+            className={`w-full md:w-auto px-6 py-3 md:py-2 text-base font-medium rounded-lg md:rounded-full transition-colors duration-200 text-center md:text-left ${
               pathname === item.link
-                ? "bg-teal-500 rounded-full text-white"
-                : "text-white hover:text-teal-500"
+                ? "bg-teal-400/60 text-white"
+                : "text-white hover:text-teal-300 hover:bg-white/10 md:hover:bg-transparent"
             }`}
           >
             {item.title}

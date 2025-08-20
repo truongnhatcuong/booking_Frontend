@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "XTRAVEL - Travel Agency",
   description: "Your trusted travel agency for unforgettable experiences",
   icons: {
-    icon: "/next.svg",
+    icon: "/logotittle.svg",
   },
 };
 export default function RootLayout({

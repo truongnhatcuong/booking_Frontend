@@ -63,13 +63,6 @@ export default function CustomerChat() {
       socket.off("chat_assigned", handleChatAssigned);
     };
   }, []);
-  useEffect(() => {
-    // Khi component mount, load tin nhắn từ localStorage
-    const savedMessages = localStorage.getItem("chat_messages");
-    if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
-    }
-  }, []);
 
   const sendMessage = () => {
     if (!input.trim() || !userInfo) return;
@@ -98,7 +91,7 @@ export default function CustomerChat() {
 
       {/* Chat box - hiển thị khi isOpen = true */}
       {isOpen && (
-        <div className="fixed bottom-6 left-20 w-96 bg-white h-96 shadow-xl rounded-xl border border-gray-200 flex flex-col overflow-hidden z-50">
+        <div className="fixed bottom-3 md:bottom-6 left-8 md:left-20 w-96 bg-white h-96 shadow-xl rounded-xl border border-gray-200 flex flex-col overflow-hidden z-50">
           {/* Header */}
           <div className="bg-blue-600 text-white p-3 rounded-t-xl font-semibold flex items-center justify-between">
             Hỗ trợ khách hàng ({role || "đang tải..."})

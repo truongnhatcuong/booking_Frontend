@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import SWRProvider from "@/components/ui/SWRProvider";
+import { SidebarProvider } from "./(dashboard)/context/contextAdmin";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <Toaster />
         <main className="" id="root">
-          <SWRProvider>{children}</SWRProvider>
+          <SidebarProvider>
+            <SWRProvider>{children}</SWRProvider>
+          </SidebarProvider>
         </main>
       </body>
     </html>

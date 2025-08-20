@@ -41,7 +41,7 @@ const SearchForm = ({
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerWidth >= 768) {
-        setIsSticky(window.scrollY > 1500);
+        setIsSticky(window.scrollY > 2000);
       } else {
         setIsSticky(false);
       }
@@ -96,9 +96,9 @@ const SearchForm = ({
       `}
     >
       <form
-        className={`flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 ${
-          isSticky ? "text-sm" : ""
-        }`}
+        className={`flex flex-col md:grid ${
+          isSticky ? "md:grid-cols-5" : "md:grid-cols-4"
+        } lg:grid-cols-${isSticky ? "5" : "4"} gap-4`}
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col">
@@ -193,13 +193,27 @@ const SearchForm = ({
           </select>
         </div>
 
-        <button
-          className="col-span-1 md:col-span-2 lg:col-span-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
-          type="submit"
-        >
-          Tìm phòng trống
-        </button>
+        {isSticky && (
+          <div className="flex flex-col">
+            <button
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
+              type="submit"
+            >
+              Tìm phòng trống
+            </button>
+          </div>
+        )}
       </form>
+      {!isSticky && (
+        <div className="flex flex-col mt-4">
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
+            type="submit"
+          >
+            Tìm phòng trống
+          </button>
+        </div>
+      )}
     </div>
   );
 };

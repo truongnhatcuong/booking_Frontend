@@ -3,9 +3,9 @@ import React from "react";
 
 const AboutPage = () => {
   return (
-    <section className="my-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+    <section className=" my-5 px-4 md:px-8 lg:px-16 pt-2 bg-gray-50">
       {/* Heading */}
-      <h1 className="text-center text-sm md:text-base font-bold text-yellow-600 mb-6 uppercase tracking-widest">
+      <h1 className="text-center text-sm md:text-2xl font-bold text-yellow-600 mb-6 uppercase tracking-widest">
         Về chúng tôi
       </h1>
 

@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 interface AccountUserProps {
   userType: string | null;
@@ -22,31 +23,30 @@ const AccountUser = ({
   setIsLoggedIn,
 }: AccountUserProps) => {
   return (
-    <div className="">
+    <div className="flex justify-start">
       <DropdownMenu>
-        <DropdownMenuTrigger className="cursor-pointer ">
-          Tài Khoản của {lastName ? lastName : "Bạn"}{" "}
+        <DropdownMenuTrigger className="cursor-pointer flex items-center gap-1">
+          <span className="text-start">
+            Tài Khoản của {lastName ? lastName : "Bạn"}
+          </span>
+          <ChevronDown size={18} />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>Thông Tin Tài Khoản</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {userType === "EMPLOYEE" || userType === "ADMIN" ? (
-            <Link href="/admin" className=" cursor-pointer">
-              <DropdownMenuItem className="cursor-pointer hover:text-yellow-600 transition-colors duration-100">
+            <Link href="/admin">
+              <DropdownMenuItem className="hover:text-yellow-600 transition-colors duration-100">
                 Quản Lý
               </DropdownMenuItem>
             </Link>
           ) : (
             <>
-              <Link href="/profile" className=" cursor-pointer">
-                <DropdownMenuItem className=" cursor-pointer">
-                  Thông Tin
-                </DropdownMenuItem>
+              <Link href="/profile">
+                <DropdownMenuItem>Thông Tin</DropdownMenuItem>
               </Link>
-              <Link href="/profile/bookings" className=" cursor-pointer">
-                <DropdownMenuItem className=" cursor-pointer">
-                  Đơn Đặt Phòng
-                </DropdownMenuItem>
+              <Link href="/profile/bookings">
+                <DropdownMenuItem>Đơn Đặt Phòng</DropdownMenuItem>
               </Link>
             </>
           )}
@@ -57,9 +57,7 @@ const AccountUser = ({
               localStorage.removeItem("token");
             }}
           >
-            <DropdownMenuItem className=" cursor-pointer">
-              Đăng Xuất
-            </DropdownMenuItem>
+            <DropdownMenuItem>Đăng Xuất</DropdownMenuItem>
           </Link>
         </DropdownMenuContent>
       </DropdownMenu>

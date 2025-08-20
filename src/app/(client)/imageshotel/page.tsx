@@ -9,7 +9,7 @@ const GalleryPage = () => {
   );
 
   return (
-    <section className="my-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+    <section className="my-5 p-4 md:px-8 lg:px-16 bg-gray-50">
       {/* Heading */}
       <h1 className="text-center text-2xl md:text-3xl font-bold text-yellow-600 mb-10 uppercase tracking-widest">
         Thư viện ảnh

@@ -102,6 +102,17 @@ export default function ChatPage() {
           [msg.senderId]: [...prevMsgs, msg],
         };
       });
+      // Nếu sender chưa có trong activeCustomers, thêm họ
+
+      setActiveCustomers((prev) => {
+        if (!prev.includes(msg.senderId)) {
+          return [...prev, msg.senderId];
+        }
+        return prev;
+      });
+      // Nếu chưa có currentCustomer, chuyển sang sender
+
+      setCurrentCustomer((curr) => curr || msg.senderId);
     });
 
     socket.on("chat_assigned", ({ customerId }: { customerId: string }) => {
@@ -143,6 +154,7 @@ export default function ChatPage() {
       receiverId: currentCustomer,
       content: input,
     });
+
     setMessages((prev) => ({
       ...prev,
       [currentCustomer]: [
@@ -150,8 +162,10 @@ export default function ChatPage() {
         { senderId: "ME", receiverId: currentCustomer, content: input },
       ],
     }));
+
     setInput("");
   };
+
   const removeCustomerFromLocalStorage = (customerId: string) => {
     // Xóa customer khỏi activeCustomers
     const updatedCustomers = activeCustomers.filter((c) => c !== customerId);
@@ -163,19 +177,32 @@ export default function ChatPage() {
       const newMessages: Record<string, Message[]> = {};
 
       Object.entries(prev).forEach(([key, msgs]) => {
+        // Lọc tất cả tin nhắn mà sender hoặc receiver là customerId
         const filteredMsgs = msgs.filter(
-          (msg) => msg.receiverId !== customerId && msg.senderId !== customerId
+          (msg) => msg.senderId !== customerId && msg.receiverId !== customerId
         );
+
         if (filteredMsgs.length > 0) {
           newMessages[key] = filteredMsgs;
         }
       });
 
-      // Xóa key chính xác trùng customerId (nếu tồn tại)
-      if (newMessages[customerId]) delete newMessages[customerId];
-
+      // Lưu lại
       localStorage.setItem("chat_messages", JSON.stringify(newMessages));
       return newMessages;
+    });
+
+    setCurrentCustomer((prev) => {
+      if (prev === customerId) {
+        const nextWithMessages = updatedCustomers.find(
+          (c) => (messages[c] || []).length > 0
+        );
+        return (
+          nextWithMessages ||
+          (updatedCustomers.length > 0 ? updatedCustomers[0] : null)
+        );
+      }
+      return prev;
     });
   };
 
@@ -221,17 +248,17 @@ export default function ChatPage() {
             {waitingCustomers.map((c) => (
               <div
                 key={c}
-                className="flex justify-between items-center mb-3 p-3 bg-orange-50 border border-orange-100 rounded-xl hover:bg-orange-100 transition-colors relative"
+                className="flex justify-between items-center mb-3 p-3 bg-orange-50 border border-orange-100 rounded-xl hover:bg-orange-100 transition-colors relative hover:cursor-pointer"
               >
-                <div className=" flex items-center gap-3 hover:cursor-pointer ">
+                <div
+                  className=" flex items-center gap-3  "
+                  onClick={() => acceptCustomer(c)}
+                >
                   <div className=" w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold text-sm ">
                     {c.charAt(0).toUpperCase()}
                   </div>
 
-                  <button
-                    className="font-medium text-gray-700"
-                    onClick={() => acceptCustomer(c)}
-                  >
+                  <button className="font-medium text-gray-700 hover:cursor-pointer">
                     guest_{c.split("_")[2]}
                   </button>
                 </div>

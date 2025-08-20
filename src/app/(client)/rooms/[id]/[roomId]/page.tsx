@@ -119,8 +119,8 @@ export default function Page({
   const { room } = data;
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-[1400px]">
-      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
+    <div className="container mx-auto px-4  mt-0.5 max-w-[1400px]">
+      <div className="bg-white  shadow-2xl overflow-hidden border border-gray-100">
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8 lg:p-12">
           {" "}

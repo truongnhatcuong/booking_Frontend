@@ -30,13 +30,13 @@ const NavBar = ({ open, setOpen }: INavBar) => {
               open ? "translate-x-0" : "translate-x-full"
             } flex flex-col h-full `}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b">
+        <div className="flex items-center justify-between px-4 py-3 border-b ">
           <button
-            className="flex items-center space-x-1 text-white hover:text-black transition-colors cursor-pointer"
+            className="flex items-center space-x-1 text-white hover:text-blue-600 transition-colors cursor-pointer"
             onClick={() => setOpen(false)}
           >
             <ChevronLeft size={35} />
-            <span className="font-medium">Trở Lại</span>
+            <span className="font-medium ">Trở Lại</span>
           </button>
         </div>
         <div className="flex flex-col gap-5">
