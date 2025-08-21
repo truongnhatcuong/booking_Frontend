@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import socket from "@/lib/socket";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSidebar } from "../../context/contextAdmin";
 
 interface Message {
   senderId: string;
@@ -10,6 +12,8 @@ interface Message {
 }
 
 export default function ChatPage() {
+  const { setCountCustomer } = useSidebar();
+
   // Khởi tạo trạng thái với giá trị từ localStorage hoặc giá trị mặc định
   const [messages, setMessages] = useState<Record<string, Message[]>>(() => {
     try {
@@ -209,6 +213,7 @@ export default function ChatPage() {
   const removeWaittingCustomer = (customer: string) => {
     const updatedCustomers = waitingCustomers.filter((c) => c !== customer);
     setWaitingCustomers(updatedCustomers);
+    setCountCustomer(updatedCustomers.length);
 
     localStorage.setItem("waiting_customers", JSON.stringify(updatedCustomers));
   };
@@ -216,8 +221,8 @@ export default function ChatPage() {
   const chatList = currentCustomer ? messages[currentCustomer] || [] : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4">
-      <div className="flex gap-6 h-[calc(100vh-2rem)] max-w-7xl mx-auto">
+    <div className=" bg-gradient-to-br from-slate-50 to-blue-50 p-4">
+      <div className="flex gap-6 h-[calc(100vh-2rem)]  mx-auto">
         {/* Sidebar khách chờ */}
         <div className="w-80 bg-white/80 backdrop-blur-sm border border-white/20 rounded-2xl shadow-xl p-6">
           <div className="mb-6">

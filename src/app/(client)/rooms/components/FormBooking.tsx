@@ -12,14 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Square } from "lucide-react";
 
-import axios from "axios";
 interface BookedRange {
   start: string; // "YYYY-MM-DD"
   end: string; // "YYYY-MM-DD"
   status: string;
 }
-
-const fetcher1 = (url: string) => axios.get(url).then((res) => res.data);
 interface RoomBooking {
   room: {
     id: string;
@@ -94,10 +91,8 @@ const FormBooking = ({
   const { data } = useSWR(`${URL_API}/api/room/${room.id}/booked-dates`);
   console.log("Booked Dates Data:", data);
   const { data: discount } = useSWR(
-    discountCode ? `${URL_API}/api/discount?code=${discountCode}` : null,
-    fetcher1
+    discountCode ? `${URL_API}/api/discount?code=${discountCode}` : null
   );
-  console.log("Discount Data:", discount);
 
   function handleDiscountCode() {
     if (!formData.checkInDate || !formData.checkOutDate) return;

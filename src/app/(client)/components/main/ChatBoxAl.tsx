@@ -40,12 +40,12 @@ export default function ChatBoxAL() {
       });
 
       const data = res.data.data;
-      setMessages([...newMessages, { role: "assistant", content: data }]);
+      setMessages([...newMessages, { role: "system", content: data }]);
     } catch (error) {
       setMessages([
         ...newMessages,
         {
-          role: "assistant",
+          role: "system",
           content: "Sorry, there was an error processing your request.",
         },
       ]);

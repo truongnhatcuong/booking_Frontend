@@ -66,8 +66,11 @@ const TableRoom = ({ rooms, data }: TableRoomProps) => {
               <TableRow key={room.id}>
                 <TableCell>
                   <Image
-                    src={room.images[0].imageUrl}
+                    src={room?.images[0]?.imageUrl || "/anhdaidien.jpg"}
                     alt={room.roomType.name}
+                    onError={(e) => {
+                      e.currentTarget.src = "/anhdaidien.jpg";
+                    }}
                     height={100}
                     width={100}
                     className="h-16 w-16 rounded-full "
@@ -93,8 +96,8 @@ const TableRoom = ({ rooms, data }: TableRoomProps) => {
                 </TableCell>
                 <TableCell>{room.roomType.name}</TableCell>
                 <TableCell className="flex items-center mt-2 gap-3">
-                  <UpdateRoom data={data} rooms={room} />
-                  <DeleteRoom roomTypeId={room.id} />
+                  <UpdateRoom data={data || []} rooms={room} />
+                  <DeleteRoom roomId={room.id || ""} />
                   <CreateMaintenanceForm
                     RoomNumber={room.roomNumber}
                     roomId={room.id}

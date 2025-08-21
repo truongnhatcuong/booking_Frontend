@@ -42,9 +42,7 @@ const CreateMaintenanceForm = ({ roomId, RoomNumber }: MaintenanceProps) => {
     try {
       await mutate(
         async (currentData = []) => {
-          const res = await axiosInstance.post(`/api/maintenance`, formData, {
-            withCredentials: true,
-          });
+          const res = await axiosInstance.post(`/api/maintenance`, formData);
           return [...currentData, res.data];
         },
         {

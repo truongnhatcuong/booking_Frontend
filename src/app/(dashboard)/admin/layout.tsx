@@ -1,9 +1,10 @@
 "use client";
 import type React from "react";
-import { SidebarProvider, useSidebar } from "../context/contextAdmin";
+import { useSidebar } from "../context/contextAdmin";
 import AdminSidebar from "../components/navbar/AdminSidebar";
 import AdminHeader from "../components/navbar/AdminHeader";
 import useAuth from "@/lib/authUser";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // This component will dynamically adjust based on sidebar state
 function MainContent({ children }: { children: React.ReactNode }) {
@@ -11,7 +12,15 @@ function MainContent({ children }: { children: React.ReactNode }) {
   const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
 
   if (loadingLog) {
-    return <div>Đang kiểm tra quyền truy cập...</div>;
+    return (
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
   }
 
   return (

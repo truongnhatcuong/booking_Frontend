@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { mutate } from "swr";
+import Mutate from "../../../../../../../hook/Mutate";
 
 const DeleteAmenies = ({ id }: { id: string }) => {
   const MySwal = withReactContent(Swal);
@@ -26,7 +27,7 @@ const DeleteAmenies = ({ id }: { id: string }) => {
         );
         if (res.data) {
           toast.success("Xóa tiện nghi thành công");
-          mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
+          Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
         }
       }
     } catch (error: any) {

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, ArrowDown, ArrowUp } from "lucide-react";
 import Image from "next/image";
 import { formatPrice } from "@/lib/formatPrice";
 import UpdateRoomType from "./UpdateRoomType";
@@ -32,9 +32,15 @@ interface RoomType {
 }
 interface MockRoomType {
   roomTypes: RoomType[];
+  setOrder: (value: "asc" | "desc") => void;
+  order: "asc" | "desc";
 }
 
-export default function RoomTypesAdminPage({ roomTypes }: MockRoomType) {
+export default function RoomTypesAdminPage({
+  roomTypes,
+  setOrder,
+  order,
+}: MockRoomType) {
   if (!roomTypes || roomTypes.length === 0) {
     return <div className="text-center py-8">No room types available</div>;
   }
@@ -57,7 +63,20 @@ export default function RoomTypesAdminPage({ roomTypes }: MockRoomType) {
               <TableHead className="w-[80px]">STT</TableHead>
               <TableHead className="w-[100px]">Hình ảnh</TableHead>
               <TableHead>Tên</TableHead>
-              <TableHead>Giá</TableHead>
+              <TableHead className="flex items-center gap-1">
+                Giá{" "}
+                {order === "asc" ? (
+                  <ArrowUp
+                    onClick={() => setOrder("desc")}
+                    className="hover:cursor-pointer h-5 w-5"
+                  />
+                ) : (
+                  <ArrowDown
+                    onClick={() => setOrder("asc")}
+                    className="hover:cursor-pointer h-5 w-5"
+                  />
+                )}
+              </TableHead>
               <TableHead>Sức chứa tối đa</TableHead>
               <TableHead className="text-right">Hành động</TableHead>
             </TableRow>

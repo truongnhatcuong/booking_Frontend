@@ -1,7 +1,6 @@
 "use client";
 
 import { HoverCardContent } from "@/components/ui/hover-card";
-import { fetcher } from "@/lib/fetcher";
 import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
@@ -32,9 +31,9 @@ const ListItems: IListHeader[] = [
 const ListItem = () => {
   const pathname = usePathname();
   const { data, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`,
-    fetcher
+    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype?page=1&limit=999`
   );
+
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
 
   const toggleMobileDropdown = () => {
@@ -64,9 +63,9 @@ const ListItem = () => {
                 {isLoading && (
                   <p className="text-gray-500 text-sm">Loading...</p>
                 )}
-                {data && data.length > 0 ? (
+                {data && data?.roomType?.length > 0 ? (
                   <ul className="space-y-1">
-                    {data.map((room: IRoomtype) => (
+                    {data?.roomType?.map((room: IRoomtype) => (
                       <li key={room.id}>
                         <Link
                           href={`/rooms/${room.id}`}

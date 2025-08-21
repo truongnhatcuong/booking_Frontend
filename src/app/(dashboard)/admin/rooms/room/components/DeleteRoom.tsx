@@ -6,15 +6,15 @@ import React from "react";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { mutate } from "swr";
-interface DeleteRoomtypeProps {
-  roomTypeId: string;
+import Mutate from "../../../../../../../hook/Mutate";
+interface DeleteRoomProps {
+  roomId: string;
 }
-const DeleteRoom = ({ roomTypeId }: DeleteRoomtypeProps) => {
+const DeleteRoom = ({ roomId }: DeleteRoomProps) => {
   const MySwal = withReactContent(Swal);
   const handleDelete = async () => {
     const confirm = MySwal.fire({
-      title: "Bạn có muốn xóa tiện nghi này không ?",
+      title: "Bạn có muốn xóa Phòng này không ?",
       showCancelButton: true,
       confirmButtonText: "Có",
       cancelButtonText: "Không",
@@ -22,13 +22,13 @@ const DeleteRoom = ({ roomTypeId }: DeleteRoomtypeProps) => {
     });
     if ((await confirm).isConfirmed) {
       try {
-        const res = await axiosInstance.delete(`/api/roomtype/${roomTypeId}`);
+        const res = await axiosInstance.delete(`/api/room/${roomId}`);
         if (res.data) {
           toast.success("Xóa thành công!");
-          mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
+          Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
         }
       } catch (error: any) {
-        toast.error(error.response.data.message || "Xóa không thành công!");
+        toast.error(error?.response?.data?.message || "Xóa không thành công!");
       }
     }
   };

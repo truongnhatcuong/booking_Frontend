@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { fetcher } from "@/lib/fetcher";
 import { PlusCircle, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import Modal from "react-modal";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Mutate from "../../../../../../../hook/Mutate";
 interface Amenity {
   id: string;
   name: string;
@@ -34,10 +36,7 @@ const AddAmenityToRoomtype = ({
       );
     }
   };
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/amenity`,
-    fetcher
-  );
+  const { data } = useSWR(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
   useEffect(() => {
     if (data) {
       setAmenity(data.amenity);
@@ -62,7 +61,7 @@ const AddAmenityToRoomtype = ({
         toast.success("Thêm tiện nghi thành công!");
         setIsOpen(false);
         setSelectedAmenities([]);
-        mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
+        Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
       }
     } catch (error: any) {
       toast.error(`${error.response.data.message}` || "Thêm không thành công!");
@@ -88,14 +87,14 @@ const AddAmenityToRoomtype = ({
               </h2>
               <X
                 onClick={() => setIsOpen(false)}
-                className="text-red-500 hover:text-red-600"
+                className="text-red-500 hover:text-red-700"
               />
             </div>
 
             <div className="flex flex-col gap-2">
               {filteredAmenities.map((item) => (
                 <div key={item.id} className="flex items-center gap-2">
-                  <input
+                  <Input
                     type="checkbox"
                     id={item.id}
                     name={item.name}
@@ -104,18 +103,20 @@ const AddAmenityToRoomtype = ({
                     checked={selectedAmenities.includes(item.id)}
                     className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor={item.id}>{item.name}</label>
+                  <Label htmlFor={item.id}>{item.name}</Label>
                 </div>
               ))}
             </div>
           </div>
-          <Button
-            onClick={handleAddAmenity}
-            disabled={selectedAmenities.length === 0}
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded cursor-pointer"
-          >
-            Lưu
-          </Button>
+          <div className="flex justify-end">
+            <Button
+              onClick={handleAddAmenity}
+              disabled={selectedAmenities.length === 0}
+              className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded cursor-pointer "
+            >
+              Lưu
+            </Button>
+          </div>
         </Modal>
       )}
     </>

@@ -6,7 +6,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { mutate } from "swr";
+import Mutate from "../../../../../../../hook/Mutate";
 interface DeleteRoomtypeProps {
   roomTypeId: string;
   amenityId: string;
@@ -35,7 +35,7 @@ const DeleteAmenityToRoomtype = ({
         );
         if (res.data) {
           toast.success("Xóa thành công!");
-          mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
+          Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
         }
       } catch (error: any) {
         toast.error(error.response.data.message || "Xóa không thành công!");

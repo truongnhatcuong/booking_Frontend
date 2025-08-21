@@ -19,6 +19,8 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios";
+import Mutate from "../../../../../../../hook/Mutate";
+import { URL_API } from "@/lib/fetcher";
 
 const statuses = ["SCHEDULED", "IN_PROGRESS", "COMPLETED", "CANCELLED"];
 
@@ -84,6 +86,7 @@ const UpdateStatus = ({ status, id }: { status: string; id: string }) => {
                           s
                         )}`
                       );
+                      Mutate(`${URL_API}/api/maintenance`);
                     } catch (error: any) {
                       toast.error(
                         error.response?.data?.message ||

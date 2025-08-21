@@ -50,14 +50,6 @@ const SearchForm = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const selectedRoom = roomType?.find(
-    (r: IRoomType) => r.id === searchParams.roomType
-  );
-
-  const maxOccupancy =
-    selectedRoom?.maxOccupancy ||
-    Math.max(...(roomType?.map((r: IRoomType) => r.maxOccupancy) || [1]));
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchParams.checkInDate || !searchParams.checkOutDate) {
@@ -67,19 +59,20 @@ const SearchForm = ({
       );
       return;
     }
-
     setLoading(true);
-
     try {
       const res = await axios.get(
         `${URL_API}/api/room/customer?customer=${searchParams.customer}&checkIn=${searchParams.checkInDate}&checkOut=${searchParams.checkOutDate}&roomType=${searchParams.roomType}`
       );
-      if (res.data) {
+      if (res.data && res.data.length > 0) {
         setAvailableRooms(res?.data || []);
         setLoading(false);
+      } else {
+        toast.error(`Hiện Tại Phòng Chúng Tôi Chưa có`);
       }
     } catch (error) {
       console.log(error);
+      toast.error("Có lỗi xảy ra khi tìm phòng");
     } finally {
       setLoading(false);
     }
@@ -160,7 +153,7 @@ const SearchForm = ({
             onChange={handleChange}
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            {[...Array(maxOccupancy)].map((_, i) => (
+            {[...Array(6)].map((_, i) => (
               <option key={i + 1} value={i + 1}>
                 {i + 1} khách
               </option>
@@ -185,7 +178,7 @@ const SearchForm = ({
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Tất cả</option>
-            {roomType?.map((item: IRoomType) => (
+            {roomType?.roomType?.map((item: IRoomType) => (
               <option value={item.name} key={item.id}>
                 {item.name}
               </option>
@@ -193,27 +186,26 @@ const SearchForm = ({
           </select>
         </div>
 
-        {isSticky && (
+        {isSticky ? (
           <div className="flex flex-col">
             <button
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
               type="submit"
+              className="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
+            >
+              Tìm phòng trống
+            </button>
+          </div>
+        ) : (
+          <div className="col-span-full w-full ">
+            <button
+              type="submit"
+              className="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-md transition duration-200 w-full"
             >
               Tìm phòng trống
             </button>
           </div>
         )}
       </form>
-      {!isSticky && (
-        <div className="flex flex-col mt-4">
-          <button
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
-            type="submit"
-          >
-            Tìm phòng trống
-          </button>
-        </div>
-      )}
     </div>
   );
 };

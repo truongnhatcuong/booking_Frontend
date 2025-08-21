@@ -21,9 +21,12 @@ const Page = () => {
 
   selectedRoomTypes.forEach((item) => params.append("roomType", item));
   const { data: dataRoom } = useSWR(
-    `${URL_API}/api/room?search=${search}&limit=${limit}&page=${page}&${params.toString()}`
+    `${URL_API}/api/room?search=${search}&limit=${limit}&page=${page}&${params.toString()}&status=${selectedStatuses}`
   );
-  const { data: DataTypeRoom } = useSWR(`${URL_API}/api/roomtype`);
+  const { data: DataTypeRoom } = useSWR(
+    `${URL_API}/api/roomtype?page=1&limit=9999`
+  );
+
   const totalPages: number = dataRoom?.room.pagination?.totalPages || 1;
 
   return (
@@ -38,7 +41,7 @@ const Page = () => {
           placeholder="Nhập Số Phòng Tại Đây ...."
         />
 
-        <CreateRoom data={DataTypeRoom ?? []} />
+        <CreateRoom data={DataTypeRoom?.roomType ?? []} />
       </div>
       <div className="mb-5 flex items-center gap-6">
         <RoomTypeFilter
@@ -46,7 +49,7 @@ const Page = () => {
           placeholder="Chọn loại phòng"
           showCapacity={true}
           showPrice={true}
-          options={DataTypeRoom}
+          options={DataTypeRoom?.roomType}
           onTypeChange={setSelectedRoomTypes}
           selectedTypes={selectedRoomTypes}
         />
@@ -58,7 +61,10 @@ const Page = () => {
           multiple={false}
         />
       </div>
-      <TableRoom rooms={dataRoom?.room.data ?? []} data={DataTypeRoom} />
+      <TableRoom
+        rooms={dataRoom?.room.data ?? []}
+        data={DataTypeRoom?.roomType || []}
+      />
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </div>
   );

@@ -7,6 +7,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 export default function SignInForm() {
   const [formData, setFormData] = useState({
@@ -40,8 +41,19 @@ export default function SignInForm() {
       });
 
       if (res.data && res.data.accessToken) {
-        localStorage.setItem("token", res.data.accessToken);
-        document.location.href = "/";
+        const token = res.data.accessToken;
+        localStorage.setItem("token", token);
+
+        const decoded: any = jwtDecode(token);
+        if (
+          decoded.userType === "EMPLOYEE" ||
+          decoded.userType === "ADMIN" ||
+          decoded.role !== null
+        ) {
+          document.location.href = "/admin";
+        } else {
+          document.location.href = "/";
+        }
       }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Đăng nhập không thành công");

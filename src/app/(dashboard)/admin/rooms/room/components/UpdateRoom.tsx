@@ -8,10 +8,9 @@ import Image from "next/image";
 import React from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
-import { mutate } from "swr";
-
 import AddImageToRoom from "./AddImageToRoom";
 import ImageToRoom from "./DeleteImageToRoom";
+import Mutate from "../../../../../../../hook/Mutate";
 
 interface Room {
   id: string;
@@ -30,7 +29,7 @@ interface RoomProps {
 const UpdateRoom = ({ data, rooms }: RoomProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [formData, setFormData] = React.useState({
-    roomNumber: rooms.roomNumber,
+    roomNumber: rooms.roomNumber || "",
     floor: rooms.floor,
     status: rooms.status,
     notes: rooms.notes,
@@ -58,7 +57,7 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
       if (res.data) {
         toast.success("Cập nhật thành công!");
         setIsOpen(false);
-        mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
+        Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
       }
     } catch (error: any) {
       toast.error(error.response.data.message || "Cập nhật không thành công!");
@@ -145,38 +144,37 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="AVAILABLE">AVAILABLE</option>
-                    <option value="OCCUPIED">OCCUPIED</option>
-                    <option value="MAINTENANCE">MAINTENANCE</option>
+                    <option value="AVAILABLE">Trống</option>
+                    <option value="OCCUPIED">Đang sử dụng</option>
+                    <option value="MAINTENANCE">Bảo trì</option>
                   </select>
                 </div>
 
                 {/* Room Type ID */}
+
                 <div className="">
-                  <div className="w-full max-w-md">
-                    <label
-                      htmlFor="roomTypeId"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Loại phòng
-                    </label>
-                    <select
-                      id="roomTypeId"
-                      name="roomTypeId"
-                      value={formData.roomTypeId}
-                      onChange={handleChange}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="" disabled>
-                        Chọn Loại Phòng
+                  <label
+                    htmlFor="roomTypeId"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Loại phòng
+                  </label>
+                  <select
+                    id="roomTypeId"
+                    name="roomTypeId"
+                    value={formData.roomTypeId}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="" disabled>
+                      Chọn Loại Phòng
+                    </option>
+                    {data.map((item) => (
+                      <option value={item.id} key={item.id}>
+                        {item.name}
                       </option>
-                      {data.map((item) => (
-                        <option value={item.id} key={item.id}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                    ))}
+                  </select>
                 </div>
               </div>
 

@@ -22,10 +22,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { MoreHorizontal } from "lucide-react";
 import toast from "react-hot-toast";
-import { mutate } from "swr";
 import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
+import Mutate from "../../../../../../../hook/Mutate";
 interface IUpdateStatus {
   id: string;
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "CHECKED_IN" | "CHECKED_OUT";
@@ -36,10 +36,10 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
 
     if (res.data) {
       if (res.data.data.status === "CHECKED_IN") {
-        mutate(`${URL_API}/api/booking?idNumber=`);
+        Mutate(`${URL_API}/api/booking`);
         toast.success("Đã nhận phòng");
       } else if (res.data.data.status === "CHECKED_OUT") {
-        mutate(`${URL_API}/api/booking?idNumber=`);
+        Mutate(`${URL_API}/api/booking`);
         toast.success("Đã trả phòng");
       }
     }
@@ -57,7 +57,7 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
       console.log(res.data);
 
       if (res.data) {
-        mutate(`${URL_API}/api/booking?idNumber=`);
+        Mutate(`${URL_API}/api/booking`);
         toast.success("Phòng Đã Được Hủy");
       }
     } catch (error: any) {

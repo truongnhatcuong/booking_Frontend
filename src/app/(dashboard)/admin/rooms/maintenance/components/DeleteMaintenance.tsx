@@ -44,10 +44,10 @@ const DeleteMaintenance = ({ id }: { id: string }) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Xóa Bảo Trì</AlertDialogTitle>
+          <AlertDialogTitle>Xóa Bảng Ghi</AlertDialogTitle>
           <AlertDialogDescription>
-            Bạn có chắc chắn muốn xóa bảo trì này? Hành động này không thể hoàn
-            tác.
+            Bạn có chắc chắn muốn xóa Dữ liệu này không ? Hành động này không
+            thể hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

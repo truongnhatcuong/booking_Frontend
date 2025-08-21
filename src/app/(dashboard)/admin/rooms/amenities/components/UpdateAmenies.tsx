@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
 import { mutate } from "swr";
+import Mutate from "../../../../../../../hook/Mutate";
 
 interface IUpdateAmenies {
   id: string;
@@ -46,7 +47,7 @@ const UpdateAmenies = ({ amenities }: IUpdateAmeniesProps) => {
         formData
       );
       if (res.data) {
-        mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
+        Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
         toast.success("Cập nhật tiện nghi thành công");
         setIsOpen(false);
       }

@@ -4,7 +4,7 @@ import { ImageDownIcon } from "lucide-react";
 
 import React from "react";
 import toast from "react-hot-toast";
-import { mutate } from "swr";
+import Mutate from "../../../../../../../hook/Mutate";
 
 interface AddImageToRoomProps {
   roomId: string;
@@ -26,7 +26,7 @@ const AddImageToRoom = ({ roomId }: AddImageToRoomProps) => {
                 );
                 if (response.data) {
                   toast.success("Ảnh đã được lưu !");
-                  mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
+                  Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
                 }
               } catch (error) {
                 toast.error("Lưu ảnh thất bại!");

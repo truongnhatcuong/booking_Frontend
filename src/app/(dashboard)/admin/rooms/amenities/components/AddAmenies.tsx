@@ -9,6 +9,7 @@ import { PlusCircle, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
+import Mutate from "../../../../../../../hook/Mutate";
 
 const AddAmenies = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,6 +42,7 @@ const AddAmenies = () => {
           description: "",
         });
         toast.success("Thêm tiện nghi thành công");
+        Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
         setIsOpen(false);
       }
     } catch (error: any) {

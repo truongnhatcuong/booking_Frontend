@@ -6,7 +6,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { mutate } from "swr";
+import Mutate from "../../../../../../../hook/Mutate";
 
 interface Room {
   images: { id: string; imageUrl: string }[];
@@ -39,7 +39,7 @@ const ImageToRoom = ({ rooms }: RoomProps) => {
 
         if (res.data) {
           toast.success("Xóa hình ảnh thành công!");
-          mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
+          Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/room`);
         }
       } catch (error) {
         console.error("Error deleting image:", error);

@@ -11,8 +11,8 @@ import { UploadButton } from "@/utils/uploadthing";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import axios from "axios";
-import { mutate } from "swr";
 import DeleteAmenityToRoomtype from "./DeleteAmenityToRoomtype";
+import Mutate from "../../../../../../../hook/Mutate";
 interface RoomType {
   id: string;
   name: string;
@@ -64,7 +64,7 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
       if (res.data) {
         toast.success("Cập nhật loại phòng thành công!");
         setIsOpen(false);
-        mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
+        Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
       }
     } catch (error: any) {
       toast.error(

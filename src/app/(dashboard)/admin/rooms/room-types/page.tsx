@@ -1,16 +1,21 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import RoomTypesAdminPage from "./components/TableRoomtype";
-import { fetcher } from "@/lib/fetcher";
 import useSWR from "swr";
 import CreateRoomtype from "./components/CreateRoomtype";
 import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
+import { useDebounce } from "../../../../../../hook/Debounce";
+import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 
 const Page = () => {
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const debouncedSearch = useDebounce(search, 800);
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
   const { data, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`,
-    fetcher
+    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype?search=${debouncedSearch}&page=${page}&limit=${limit}&order=${order}`
   );
 
   if (isLoading) {
@@ -24,13 +29,22 @@ const Page = () => {
         {" "}
         <SearchForm
           placeholder="Tìm Kiếm Loại Phòng"
-          search=""
-          setPage={() => {}}
-          setSearch={() => {}}
+          search={search}
+          setPage={setPage}
+          setSearch={setSearch}
         />
         <CreateRoomtype />
       </div>
-      <RoomTypesAdminPage roomTypes={data} />
+      <RoomTypesAdminPage
+        roomTypes={data?.roomType || []}
+        setOrder={setOrder}
+        order={order}
+      />
+      <Pagination
+        page={page}
+        setPage={setPage}
+        totalPages={data?.pagination?.totalPages || 1}
+      />
     </div>
   );
 };
