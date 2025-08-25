@@ -99,6 +99,9 @@ export default function ChatPage() {
     });
 
     socket.on("receive_message", (msg: Message) => {
+      if (msg.senderId === currentCustomer) {
+        return;
+      }
       setMessages((prev) => {
         const prevMsgs = prev[msg.senderId] || [];
         return {
@@ -132,6 +135,7 @@ export default function ChatPage() {
     if (!socket.connected) socket.connect();
 
     return () => {
+      socket.off("user_info");
       socket.off("waiting_customers");
       socket.off("receive_message");
       socket.off("chat_assigned");

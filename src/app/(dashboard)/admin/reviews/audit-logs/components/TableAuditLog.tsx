@@ -6,10 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDistanceToNow } from "date-fns";
 import React from "react";
 import moment from "moment";
-import { Button } from "@/components/ui/button";
 export interface AuditLog {
   id: string;
   action: string;
@@ -42,17 +40,27 @@ const TableAuditLog = ({ auditLogs }: IAuditLogProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {auditLogs.map((log) => (
-              <TableRow key={log.id}>
-                <TableCell className="font-medium">{log.action}</TableCell>
-                <TableCell>{log.userType || "Hệ thống"}</TableCell>
-                <TableCell>
-                  {log.firstName + " " + log.lastName || "Hệ thống"}
-                </TableCell>
-                <TableCell>{log.details || "-"}</TableCell>
-                <TableCell>{moment(log.createdAt).fromNow()}</TableCell>
-              </TableRow>
-            ))}
+            {
+              auditLogs && auditLogs.length > 0 ? (
+                auditLogs.map((log) => (
+                  <TableRow key={log.id}>
+                    <TableCell className="font-medium">{log.action}</TableCell>
+                    <TableCell>{log.userType || "Hệ thống"}</TableCell>
+                    <TableCell>
+                      {log.firstName + " " + log.lastName || "Hệ thống"}
+                    </TableCell>
+                    <TableCell>{log.details || "-"}</TableCell>
+                    <TableCell>{moment(log.createdAt).fromNow()}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-7">
+                    Hôm Nay Chưa Có Hoạt Động Nào
+                  </TableCell>
+                </TableRow>
+              ) // ✅ dùng null nếu không render gì
+            }
           </TableBody>
         </Table>
       </div>

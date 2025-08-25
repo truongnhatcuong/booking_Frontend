@@ -46,11 +46,12 @@ const Page = () => {
   });
 
   const { data: customerData } = useSWR(
-    idNumber ? `/api/auth/customer?idNumber=${idNumber}` : null,
+    idNumber ? `/api/auth/customer?search=${idNumber}&limit=20` : null,
     {
       dedupingInterval: 200,
     }
   );
+  console.log(customerData);
 
   const { data: roomData, isLoading: isLoadingRoomData } =
     useSWR(`/api/room?limit=9999`);

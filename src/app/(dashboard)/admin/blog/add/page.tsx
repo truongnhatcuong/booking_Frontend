@@ -10,7 +10,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { URL_API } from "@/lib/fetcher";
-import useAuth from "@/lib/authUser";
 
 export interface PostData {
   title: string;
@@ -58,12 +57,6 @@ const PostBlog = () => {
       toast.error(error.response.data.message || "error");
     }
   };
-  const { loadingLog } = useAuth(["EMPLOYEE", "ADMIN"]);
-
-  // Nếu còn loading
-  if (loadingLog) {
-    return <div>đang kiểm tra quyền truy cập...</div>;
-  }
 
   return (
     <div className=" mx-auto p-4 bg-white">

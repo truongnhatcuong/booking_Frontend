@@ -60,6 +60,13 @@ export default function SignInForm() {
     }
   };
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      document.location.href = "/";
+    }
+  }, []);
+
+  useEffect(() => {
     if (message) {
       const timeout = setTimeout(() => {
         setMessage("");
@@ -69,7 +76,7 @@ export default function SignInForm() {
   }, [message]);
 
   return (
-    <div className="min-h-screen  flex items-center justify-center p-3">
+    <div className="min-h-screen  flex items-center justify-center p-3 ">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl flex flex-col md:flex-row">
         {/* Left side - Image */}
         <div

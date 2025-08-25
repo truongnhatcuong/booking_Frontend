@@ -103,7 +103,7 @@ const ModalPayment = ({ isOpen, setIsOpen, formData }: ModalPaymentProps) => {
           withCredentials: true,
         });
         if (res.data) {
-          router.push("/profile/bookings");
+          // router.push("/profile/bookings");
           toast.success("Đặt phòng thành công!");
           setIsOpen(false);
           const resPayment = await axios.post(`${URL_API}/api/payment`, {
@@ -120,6 +120,7 @@ const ModalPayment = ({ isOpen, setIsOpen, formData }: ModalPaymentProps) => {
             ) {
               const { url } = resPayment.data;
               window.location.href = url;
+              console.log(url);
             }
           }
         }

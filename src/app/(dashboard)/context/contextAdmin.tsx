@@ -2,6 +2,7 @@
 
 import socket from "@/lib/socket";
 import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 
 import {
   createContext,
@@ -31,33 +32,38 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
       return [];
     }
   });
+  const router = useRouter();
 
   // thay đổi
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
-  // checktoken
-  function isTokenEpire(token: string | null) {
-    if (!token) return true;
-    const decode: { exp: number } = jwtDecode(token);
-    console.log("thời gian còn lại", decode.exp);
-
-    return decode.exp * 1000 < Date.now();
-  }
-
-  function checkTokenAndRemove() {
-    const token = localStorage.getItem("token");
-    if (isTokenEpire(token)) {
-      localStorage.removeItem("token");
-      console.log("Token hết hạn → auto logout");
-    } else {
-      console.log("Token hợp lệ");
-    }
+  // Trả về số mili giây còn lại của token, hoặc 0 nếu token không tồn tại / hết hạn
+  function getTokenRemainingTime(token: string | null): number {
+    if (!token) return 0;
+    const decoded: { exp: number } = jwtDecode(token);
+    const remaining = decoded.exp * 1000 - Date.now();
+    return remaining > 0 ? remaining : 0;
   }
 
   useEffect(() => {
-    checkTokenAndRemove();
-  }, []);
+    const token = localStorage.getItem("token");
+    const remainingTime = getTokenRemainingTime(token);
+
+    if (remainingTime <= 0) {
+      localStorage.removeItem("token");
+      router.push("/");
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      localStorage.removeItem("token");
+      router.push("/login");
+    }, remainingTime);
+
+    return () => clearTimeout(timer);
+  }, [router]);
+
   // đếm
   useEffect(() => {
     const waitingCustomerStr = localStorage.getItem("waiting_customers");

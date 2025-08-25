@@ -1,102 +1,159 @@
 "use client";
-import { formatDate } from "@/lib/formatDate";
+import { calculateNights, formatDate } from "@/lib/formatDate";
 import { formatPrice } from "@/lib/formatPrice";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
 import { Label } from "@/components/ui/label";
-import QrCodePayment from "../../add-booking/components/QrCodePayment";
-import { BookingFormData } from "../page";
+
 import { URL_API } from "@/lib/fetcher";
+import QrCodePayment from "./QrCodePayment";
+import { BookingFormData } from "./BookingForm";
+import { CustomerForm } from "../page";
+import {
+  BookingToEmployee,
+  CustomerFromEmployee,
+  PaymentForBooking,
+} from "@/services/ApiService";
 
 interface IPaymen {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  formCustomer: CustomerForm;
   formBooking: BookingFormData;
   setFormBooking: React.Dispatch<React.SetStateAction<BookingFormData>>;
-  totalAmount: number;
 }
 
-const ModalPaymentAdmin = ({
+const FormPaymentBooking = ({
+  formCustomer,
   isOpen,
   setIsOpen,
   formBooking,
   setFormBooking,
-  totalAmount,
 }: IPaymen) => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-
+  const [nights, setNights] = useState(0);
+  const [discount, setDiscount] = useState<number>(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
   useEffect(() => {
     Modal.setAppElement("#root");
   }, []);
 
-  const calculateNights = () => {
-    if (!formBooking.checkInDate || !formBooking.checkOutDate) return 0;
-
-    const checkIn = new Date(formBooking.checkInDate);
-    const checkOut = new Date(formBooking.checkOutDate);
-
-    const diffTime = checkOut.getTime() - checkIn.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    return diffDays;
-  };
-
-  const nights = calculateNights();
-
-  const handlePaymentMethodChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPaymentMethod(e.target.value);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  async function ApplyDisCount() {
     try {
-      const res = await axios.post(
-        `${URL_API}/api/booking/employee`,
-        formBooking,
+      const res = await axios.get(
+        `${URL_API}/api/discount?code=${formBooking.discountCode}`,
         {
           withCredentials: true,
         }
       );
-
-      console.log("Response booking:", res.data);
-
       if (res.data) {
-        if (res.data.data && res.data.data.id) {
-          const resPayment = await axios.post(`${URL_API}/api/payment`, {
-            amount: totalAmount,
-            paymentMethod: paymentMethod,
-            bookingId: res.data.data.id,
-            status: "COMPLETED",
-          });
-
-          if (resPayment.data) {
-            toast.success("Thanh toán thành công");
-            setIsOpen(false);
-          } else {
-            toast.error("Thanh toán thất bại, vui lòng thử lại!");
-          }
-        } else {
-          toast.error("Không lấy được ID booking từ server");
-        }
-        setFormBooking({
-          bookingSource: "DIRECT",
-          checkInDate: "",
-          checkOutDate: "",
-          totalGuests: 1,
-          specialRequests: "",
-          discountCode: "",
-          pricePerNight: 0,
-          roomId: "",
-          customerId: "",
-        });
+        setDiscount(Number(res?.data?.data?.percentage ?? 0));
+        toast.success("Áp dụng mã giảm giá thành công!");
+      } else {
+        setDiscount(0);
+        toast.error("Mã giảm giá không hợp lệ");
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Có lỗi xảy ra");
+      toast.error(error?.response?.data?.message || "Mã giảm giá không hợp lệ");
     }
+  }
+
+  useEffect(() => {
+    if (formBooking.checkInDate && formBooking.checkOutDate) {
+      const calculatedNights =
+        calculateNights(formBooking.checkInDate, formBooking.checkOutDate) || 0;
+
+      setNights(calculatedNights);
+      const totalNights = calculatedNights * formBooking.pricePerNight;
+      const totalDiscount = (totalNights * discount) / 100 || 0;
+      setDiscountAmount(totalDiscount);
+      setFormBooking((prev) => ({
+        ...prev,
+        totalAmount: totalNights - totalDiscount,
+      }));
+    } else {
+      setNights(0);
+      setFormBooking((prev) => ({
+        ...prev,
+        totalAmount: 0,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    formBooking.checkInDate,
+    formBooking.checkOutDate,
+    formBooking.pricePerNight,
+    discount,
+  ]);
+
+  console.log("khách hàng", formCustomer);
+  console.log("giá cuối", formBooking);
+  console.log("discount", discount);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    let idCustomer = formCustomer.id; // nếu đã có id => khách hàng cũ
+
+    try {
+      // Nếu chưa có khách hàng thì tạo mới
+      if (!idCustomer) {
+        const newCustomerId = await CustomerFromEmployee(formCustomer);
+        if (!newCustomerId) {
+          toast.error("Không tạo được khách hàng");
+          return;
+        }
+        idCustomer = newCustomerId;
+      }
+
+      // Tạo booking
+      const resBooking = await BookingToEmployee({
+        ...formBooking,
+        customerId: idCustomer, // gắn id khách hàng vào
+      });
+      if (!resBooking) {
+        toast.error("Không tạo được booking");
+        return;
+      }
+
+      // Thanh toán
+      const payment = await PaymentForBooking(
+        resBooking,
+        formBooking.totalAmount,
+        paymentMethod
+      );
+
+      if (payment) {
+        toast.success("Thanh toán thành công");
+      } else {
+        toast.error("Thanh toán thất bại, vui lòng thử lại!");
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Có lỗi xảy ra");
+    } finally {
+      setIsOpen(false);
+      setFormBooking({
+        customerId: "",
+        checkInDate: null,
+        checkOutDate: null,
+        totalGuests: 1,
+        bookingSource: "DIRECT",
+        specialRequests: "",
+        discountCode: "",
+        pricePerNight: 0,
+        roomId: "",
+        totalAmount: 0,
+      });
+    }
+  };
+
+  const handlePaymentMethodChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    console.log("la :", e.target.value);
+
+    setPaymentMethod(e.target.value);
   };
 
   return (
@@ -138,16 +195,20 @@ const ModalPaymentAdmin = ({
 
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span>Ngày Check In:</span>
+                <span>Ngày Nhận Phòng:</span>
                 <span className="font-medium">
-                  {formatDate(formBooking.checkInDate)}
+                  {formBooking.checkOutDate
+                    ? formatDate(String(formBooking.checkInDate))
+                    : null}
                 </span>
               </div>
 
               <div className="flex justify-between">
-                <span>Ngày Check Out:</span>
+                <span>Ngày Trả Phòng:</span>
                 <span className="font-medium">
-                  {formatDate(formBooking.checkOutDate)}
+                  {formBooking.checkOutDate
+                    ? formatDate(String(formBooking.checkOutDate))
+                    : null}
                 </span>
               </div>
 
@@ -160,17 +221,40 @@ const ModalPaymentAdmin = ({
 
               <div className="flex justify-between">
                 <span>Tổng Số Khách Hàng:</span>
-                <span className="font-medium">{formBooking.totalGuests}</span>
+                <span className="font-medium">
+                  {formBooking.totalGuests} khách
+                </span>
               </div>
 
               {formBooking.specialRequests && (
                 <div className="pt-2">
-                  <span className="block mb-1">Special Requests:</span>
+                  <span className="block mb-1">yêu cầu :</span>
                   <p className="text-sm bg-white p-2 rounded border">
                     {formBooking.specialRequests}
                   </p>
                 </div>
               )}
+              <div className="p-2 bg-gray-50">
+                <input
+                  type="text"
+                  className="p-2 border"
+                  placeholder="nhập mã giảm giá "
+                  value={formBooking.discountCode.toUpperCase()}
+                  onChange={(e) =>
+                    setFormBooking((prev) => ({
+                      ...prev,
+                      discountCode: e.target.value,
+                    }))
+                  }
+                />
+                <button
+                  className="p-2 text-white bg-green-600 "
+                  type="button"
+                  onClick={ApplyDisCount}
+                >
+                  Áp Dụng
+                </button>
+              </div>
             </div>
 
             <div className="mt-4 pt-4 border-t">
@@ -181,17 +265,17 @@ const ModalPaymentAdmin = ({
                 </span>
               </div>
 
-              {formBooking.discountCode && (
-                <div className="flex justify-between text-green-600">
+              {discountAmount && (
+                <div className="flex justify-between text-green-600 text-base">
                   <span>mã Giảm Giá:</span>
-                  <span>{formBooking.discountCode}</span>
+                  <span>{formatPrice(discountAmount)}</span>
                 </div>
               )}
 
               <div className="flex justify-between font-bold text-xl mt-2">
                 <span>Tổng Số Tiền:</span>
                 <span className="text-blue-500">
-                  {formatPrice(totalAmount)}
+                  {formatPrice(formBooking.totalAmount)}
                 </span>
               </div>
             </div>
@@ -227,8 +311,12 @@ const ModalPaymentAdmin = ({
 
                 <span className="ml-3 text-gray-700">Thẻ Ngân Hàng</span>
               </Label>
+              {/* Render QR code bên ngoài label */}
+
               {paymentMethod === "QR_CODE" && (
-                <QrCodePayment Amount={totalAmount} />
+                <div className="mt-2">
+                  <QrCodePayment Amount={formBooking.totalAmount} />
+                </div>
               )}
 
               <Label className="flex items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
@@ -269,4 +357,4 @@ const ModalPaymentAdmin = ({
   );
 };
 
-export default ModalPaymentAdmin;
+export default FormPaymentBooking;

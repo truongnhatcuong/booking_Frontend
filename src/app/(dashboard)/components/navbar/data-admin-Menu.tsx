@@ -101,6 +101,12 @@ export const adminMenu: IListItemAdmin[] = [
         title: "Đặt phòng ",
         icon: CalendarIcon,
       },
+      {
+        id: 303,
+        link: "/admin/bookings/add-booking",
+        title: "Đặt phòng ",
+        icon: CalendarIcon,
+      },
     ],
   },
   {

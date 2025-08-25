@@ -8,9 +8,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatPrice } from "@/lib/formatPrice";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import UpdateStatus from "./UpdateStatus";
-import { Filter } from "lucide-react";
+import { FilterDropdown } from "./FilterDropdown";
+import { ArrowDown, ArrowDownUp, ArrowUp } from "lucide-react";
 
 export interface IBooking {
   id: string;
@@ -39,72 +40,31 @@ interface BookingProps {
   booking: IBooking[];
   selectedStatus: string;
   setSelectedStatus: (value: string) => void;
+  order: "default" | "asc" | "desc";
+  setOrder: (value: "default" | "asc" | "desc") => void;
 }
 
 const TableListBooking = ({
   booking,
   selectedStatus,
   setSelectedStatus,
+  order,
+  setOrder,
 }: BookingProps) => {
   const [filterOpen, setFilterOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+
   const statusOptions = [
     { value: "PENDING", label: "Đang chờ" },
     { value: "CHECKED_IN", label: "Đã nhận phòng" },
     { value: "CHECKED_OUT", label: "Đã trả phòng" },
     { value: "CANCELLED", label: "Đã hủy" },
   ];
+  const handleToggleOrder = () => {
+    if (order === "default") setOrder("asc");
+    else if (order === "asc") setOrder("desc");
+    else setOrder("default"); // cycles back to default
+  };
 
-  function getCurrentBookingVisualStatus(
-    checkIn: string,
-    checkOut: string
-  ): "check-in" | "in-use" | "check-out" | "clean" | null {
-    const today = new Date();
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
-
-    // Normalize ngày để so sánh (bỏ phần giờ phút giây)
-    const normalize = (date: Date) =>
-      new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-    const todayNorm = normalize(today);
-    const checkInNorm = normalize(checkInDate);
-    const checkOutNorm = normalize(checkOutDate);
-
-    if (todayNorm.getTime() === checkInNorm.getTime()) {
-      return "check-in";
-    }
-
-    if (todayNorm > checkInNorm && todayNorm < checkOutNorm) {
-      return "in-use";
-    }
-
-    if (todayNorm.getTime() === checkOutNorm.getTime()) {
-      return "check-out";
-    }
-
-    if (todayNorm.getTime() > checkOutNorm.getTime()) {
-      return "clean";
-    }
-
-    return null;
-  }
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setFilterOpen(false);
-      }
-    }
-
-    if (filterOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [filterOpen]);
   return (
     <div className="bg-white rounded-lg shadow-md overflow-x-auto">
       <Table className="w-full divide-y divide-gray-200">
@@ -120,71 +80,39 @@ const TableListBooking = ({
               Loại Phòng
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ngày nhận phòng - Ngày trả phòng
+              Ngày nhận phòng{"_ "}Ngày trả phòng
             </TableHead>
-            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
               Tổng tiền
-            </TableHead>
-            <TableHead className="relative px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <div className="flex items-center gap-1">
-                Trạng thái
-                <button
-                  onClick={() => setFilterOpen(!filterOpen)}
-                  className="ml-1"
-                >
-                  <Filter className="h-5 w-5" />
-                </button>
-              </div>
-
-              {filterOpen && (
-                <div
-                  ref={menuRef}
-                  className="absolute left-0 mt-2 w-40 bg-white border rounded shadow p-2 z-50"
-                >
-                  {statusOptions.map((status) => (
-                    <label
-                      key={status.value}
-                      className="flex items-center space-x-2 text-xs p-1"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedStatus === status.value}
-                        onChange={() => {
-                          if (selectedStatus === status.value) {
-                            setSelectedStatus("");
-                          } else {
-                            setSelectedStatus(status.value);
-                          }
-                        }} // set trạng thái này
-                      />
-                      <span>{status.label}</span>
-                    </label>
-                  ))}
-                  <div className="flex justify-between mt-2">
-                    <button
-                      className="px-2 py-1 bg-gray-200 rounded text-xs text-red-500"
-                      onClick={() => setSelectedStatus("")}
-                    >
-                      xóa
-                    </button>
-                    <button
-                      className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
-                      onClick={() => {
-                        setFilterOpen(false);
-                      }}
-                    >
-                      Lọc
-                    </button>
-                  </div>
-                </div>
+              {order === "asc" ? (
+                <ArrowUp
+                  onClick={handleToggleOrder}
+                  className="hover:cursor-pointer h-5 w-5"
+                />
+              ) : order === "desc" ? (
+                <ArrowDown
+                  onClick={handleToggleOrder}
+                  className="hover:cursor-pointer h-5 w-5"
+                />
+              ) : (
+                <ArrowDownUp
+                  onClick={handleToggleOrder}
+                  className="hover:cursor-pointer h-5 w-5"
+                />
               )}
             </TableHead>
-
-            <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Lịch
+            <TableHead className="relative px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <FilterDropdown
+                filterOpen={filterOpen}
+                label="Trạng Thái Phòng"
+                onChange={setSelectedStatus}
+                selected={selectedStatus}
+                setFilterOpen={setFilterOpen}
+                options={statusOptions}
+              />
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Thanh toán
+              Thanh Toán
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Hành động
@@ -212,11 +140,11 @@ const TableListBooking = ({
                 </TableCell>
 
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex items-center gap-20 ">
-                  <p>
+                  <p className="text-right ">
                     {" "}
                     {new Date(booking.checkInDate).toLocaleDateString("vi-VN")}
                   </p>
-                  <p>
+                  <p className="text-left">
                     {new Date(booking.checkOutDate).toLocaleDateString("vi-VN")}
                   </p>
                 </TableCell>
@@ -237,34 +165,6 @@ const TableListBooking = ({
                   >
                     {booking.status}
                   </span>
-                </TableCell>
-                <TableCell className="px-6 py-4 whitespace-nowrap text-sm">
-                  {booking.status === "CANCELLED"
-                    ? null
-                    : (() => {
-                        const status = getCurrentBookingVisualStatus(
-                          booking.checkInDate,
-                          booking.checkOutDate
-                        );
-
-                        const color =
-                          status === "check-in"
-                            ? "bg-green-500"
-                            : status === "in-use"
-                            ? "bg-yellow-400"
-                            : status === "check-out"
-                            ? "bg-blue-500"
-                            : status === "clean"
-                            ? "bg-gray-400"
-                            : "bg-transparent"; // fallback nếu null
-
-                        return (
-                          <div
-                            className={`w-5 h-5 rounded-full ${color}`}
-                            title={status ?? ""}
-                          ></div>
-                        );
-                      })()}
                 </TableCell>
 
                 <td className="px-6 py-4 whitespace-nowrap text-sm">

@@ -54,13 +54,13 @@ const HeaderTop = () => {
             ) : (
               <div className="flex items-center space-x-4">
                 <Link href={"/signIn"}>
-                  <button className="hover:text-yellow-200 transition-colors duration-200">
+                  <button className="hover:text-yellow-200 transition-colors duration-200 hover:cursor-pointer">
                     Đăng Nhập
                   </button>
                 </Link>
                 <div className="h-4 border-r border-white" />
                 <Link href={"/signUp"}>
-                  <button className="hover:text-yellow-200 transition-colors duration-200">
+                  <button className="hover:text-yellow-200 transition-colors duration-200 hover:cursor-pointer">
                     Đăng Kí
                   </button>
                 </Link>

@@ -72,7 +72,7 @@ const UpdateStatus = ({ id, status }: IUpdateStatus) => {
       });
 
       if (res.data) {
-        mutate(`${URL_API}/api/booking?idNumber=`);
+        Mutate(`${URL_API}/api/booking?idNumber=`);
         toast.success("Phòng Đã Được xóa");
       }
     } catch (error: any) {

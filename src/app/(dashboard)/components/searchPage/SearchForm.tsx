@@ -1,13 +1,15 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import React from "react";
 
 interface SearchFormProps {
-  search: string;
+  search: string | number;
   setSearch: (search: string) => void;
   setPage: (page: number) => void;
   placeholder: string;
   resetPage?: boolean;
+  className?: string;
 }
 const SearchForm = ({
   search,
@@ -15,6 +17,7 @@ const SearchForm = ({
   setSearch,
   placeholder,
   resetPage = true,
+  className = "",
 }: SearchFormProps) => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -23,11 +26,11 @@ const SearchForm = ({
     }
   };
   return (
-    <div className="relative w-full sm:w-64">
-      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+    <div className={`relative w-full sm:w-lg  `}>
+      <Search className="absolute left-2 top-4 h-5 w-5 text-muted-foreground" />
       <Input
         placeholder={placeholder}
-        className="pl-8 w-lg"
+        className={`pl-8  ${className ?? "w-lg"} py-6`}
         value={search}
         onChange={handleSearch}
       />

@@ -79,7 +79,6 @@ const AdminBookingForm = ({
   // Hàm kiểm tra tính hợp lệ của form
   const isFormValid = () => {
     const requiredFields = [
-      formData.customerId,
       formData.checkInDate,
       formData.checkOutDate,
       formData.roomId,
@@ -94,7 +93,7 @@ const AdminBookingForm = ({
     );
   };
 
-  const { data: code, error } = useSWR(
+  const { data: code } = useSWR(
     formData.discountCode
       ? `${URL_API}/api/discount?code=${formData.discountCode}`
       : null,
@@ -104,10 +103,10 @@ const AdminBookingForm = ({
   useEffect(() => {
     if (code) {
       setDiscount(code?.data?.percentage);
-    } else if (error) {
+    } else {
       setDiscount(0); // hoặc null tùy bạn
     }
-  }, [code, error]);
+  }, [code]);
 
   // Tính totalAmount
   useEffect(() => {
@@ -301,9 +300,7 @@ const AdminBookingForm = ({
                   Đã Áp Dụng Mã Giảm Giá{" "}
                 </span>
               ) : (
-                <span className="text-sm  text-red-500">
-                  {error?.response.data.error}
-                </span>
+                <span className="text-sm  text-red-500"></span>
               )}
             </p>
           </div>
@@ -327,18 +324,8 @@ const AdminBookingForm = ({
         </div>
 
         <Button
-          onClick={() => {
-            if (!isFormValid()) {
-              toast.error("Vui lòng nhập đầy đủ thông tin bắt buộc.");
-              return;
-            }
-            if (totalAmount <= 0) {
-              toast.error("Tổng số tiền phải lớn hơn 0.");
-              return;
-            }
-            setIsOpen(true);
-          }}
           type="button"
+          onClick={() => setIsOpen(true)}
           className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
         >
           Đặt Phòng
@@ -347,8 +334,8 @@ const AdminBookingForm = ({
 
       <ModalPaymentAdmin
         totalAmount={totalAmount}
-        setFormData={setFormData}
-        formData={formData}
+        setFormBooking={setFormData}
+        formBooking={formData}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />

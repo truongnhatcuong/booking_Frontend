@@ -1,6 +1,7 @@
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
 import React from "react";
+
 interface IQrCode {
   Amount: number;
 }

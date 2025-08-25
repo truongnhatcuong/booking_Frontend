@@ -127,8 +127,7 @@
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+  font-variation-settings: "wdth" 100;
 }
 
 .regular {
@@ -136,7 +135,6 @@
   font-weight: 800;
   font-style: normal;
 }
-
 
 @keyframes fadeIn {
   from {
@@ -239,4 +237,10 @@
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: normal;
+}
+
+.react-datepicker__input-container input {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
