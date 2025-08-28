@@ -10,9 +10,7 @@ const Page = () => {
   //   `${process.env.NEXT_PUBLIC_URL_API}/api/auth/user`,
   //   fetcher
   // );
-  const { user, loadingLog } = useAuth(["CUSTOMER"]);
-
-  if (loadingLog) return <div>đang tải</div>;
+  const { user } = useAuth();
 
   return (
     <div>

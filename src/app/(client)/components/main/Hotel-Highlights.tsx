@@ -87,7 +87,7 @@ const HotelHighlightsCarousel = () => {
           }}
           pagination={true}
           modules={[EffectCoverflow, Pagination]}
-          className="mySwiper max-w-5xl"
+          className="mySwiper "
         >
           {highlights.map((highlight) => (
             <SwiperSlide

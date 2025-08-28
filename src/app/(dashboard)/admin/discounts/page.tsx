@@ -22,8 +22,8 @@ const Page = () => {
     return <div>Dữ Liệu Đang Cập Nhật</div>;
   }
   return (
-    <div>
-      <div className="flex justify-end mb-4">
+    <div className="p-6 bg-white">
+      <div className="flex justify-end mb-4 ">
         {" "}
         <CreateDiscount />
       </div>

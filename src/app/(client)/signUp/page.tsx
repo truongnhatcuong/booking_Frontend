@@ -3,13 +3,27 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
+interface IProvide {
+  code: number;
+  name: string;
+}
+const fetcher = (url: string) =>
+  fetch(url, { credentials: "omit" }).then((res) => res.json());
+
 export default function SignUpForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -24,6 +38,10 @@ export default function SignUpForm() {
     idNumber: "",
   });
 
+  const { data: dataProvide } = useSWR<IProvide[]>(
+    `https://provinces.open-api.vn/api/v1/p`,
+    fetcher
+  );
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -48,6 +66,8 @@ export default function SignUpForm() {
       toast.error(error.response.data.message);
     }
   };
+  console.log(formData);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -173,19 +193,33 @@ export default function SignUpForm() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="animate-slide-in-left">
+                <div className="w-full">
                   <Label
-                    htmlFor="city"
-                    className="text-gray-700 font-medium block mb-1"
+                    htmlFor="roomType"
+                    className="text-sm font-medium text-gray-700"
                   >
-                    Thành phố
+                    Vui Lòng Chọn Thành Phố*
                   </Label>
-                  <Input
-                    name="city"
-                    className="w-full px-4 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all"
-                    placeholder="Thành phố"
-                    onChange={handleChange}
-                  />
+                  <Select
+                    value={formData.city}
+                    onValueChange={(val) =>
+                      setFormData((prev) => ({ ...prev, city: val }))
+                    }
+                  >
+                    <SelectTrigger className="w-full text-sm font-medium text-gray-700  border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all">
+                      <SelectValue placeholder="chọn Thành Phố" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {dataProvide?.map((item) => (
+                        <SelectItem
+                          key={item.code}
+                          value={item.name.toString()}
+                        >
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="animate-slide-in-right">
                   <Label

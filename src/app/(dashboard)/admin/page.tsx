@@ -7,6 +7,7 @@ import CustomerBarChart from "../components/statistical/CustomerBarChart";
 import BookingResourceChart from "../components/statistical/BookingResourceChart";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
+import CalendarBooking from "../components/statistical/CalendaBooking";
 
 interface RevenueDataType {
   months: string[];
@@ -83,8 +84,10 @@ const Page = () => {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       <CardStatistical />
+      {/* lichj ddt phong */}
+      <CalendarBooking />
       <h2 className="text-lg font-bold mt-4 mb-2">
         Biểu đồ doanh thu theo tháng và khách hàng
       </h2>

@@ -1,6 +1,5 @@
 "use client";
-import { format } from "date-fns";
-import { Edit } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,6 +12,7 @@ import {
 import { IDiscount } from "../page";
 import DeleteDisCount from "./DeleteDisCount";
 import { formatDate } from "@/lib/formatDate";
+import UpdateDisCount from "./UpdateDisCount";
 
 interface TableDiscountProps {
   discounts: IDiscount[];
@@ -28,7 +28,7 @@ const TableDiscount = ({ discounts }: TableDiscountProps) => {
             <TableHead>Phần Trăm Giảm Giá (%)</TableHead>
             <TableHead>Ngày Bắt Đầu</TableHead>
             <TableHead>Ngày Kết Thúc</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -48,6 +48,7 @@ const TableDiscount = ({ discounts }: TableDiscountProps) => {
 
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
+                  <UpdateDisCount discounts={discount} />
                   <DeleteDisCount id={discount.id} />
                 </div>
               </TableCell>

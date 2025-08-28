@@ -12,6 +12,10 @@ export default function useAuth(
 
   useEffect(() => {
     const checkUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/");
+      }
       const data = await getUser();
 
       if (!data) {

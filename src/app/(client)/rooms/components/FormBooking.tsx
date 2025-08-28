@@ -172,7 +172,7 @@ const FormBooking = ({
   };
 
   return (
-    <div className="lg:col-span-1">
+    <div>
       <div className="bg-gray-50 p-8 rounded-xl shadow-md sticky top-6 border border-gray-100">
         <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
           Đặt phòng
@@ -203,7 +203,7 @@ const FormBooking = ({
                   onChange={(date) => handleDateChange(date, "checkInDate")}
                   excludeDates={bookedDates}
                   highlightDates={highlightedDates}
-                  placeholderText="Chọn ngày nhận phòng"
+                  placeholderText=" ngày nhận phòng"
                   dateFormat="yyyy-MM-dd"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                   minDate={new Date()} // Disable past dates
@@ -220,7 +220,7 @@ const FormBooking = ({
                   onChange={(date) => handleDateChange(date, "checkOutDate")}
                   excludeDates={bookedDates}
                   highlightDates={highlightedDates}
-                  placeholderText="Chọn ngày trả phòng"
+                  placeholderText=" ngày trả phòng"
                   dateFormat="yyyy-MM-dd"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                   minDate={formData.checkInDate || new Date()} // Ensure checkOutDate is after checkInDate

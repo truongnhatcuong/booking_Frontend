@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { URL_API } from "@/lib/fetcher";
 import { getUser } from "@/lib/getUser";
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
@@ -113,6 +114,12 @@ const LoginModal = ({ isLogin, setIsLogin, setIsProcessing }: ILoginModal) => {
           >
             Đăng nhập
           </button>
+          <Link
+            href={"/signUp"}
+            className="text-sm text-blue-500 underline hover:text-blue-600 text-end"
+          >
+            chua co tai khoan ?
+          </Link>
         </form>
         <button
           onClick={() => {

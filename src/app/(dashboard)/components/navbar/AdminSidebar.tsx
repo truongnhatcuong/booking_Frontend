@@ -69,11 +69,13 @@ const AdminSidebar = () => {
                 <div className="text-center  space-y-3.5">
                   <p>
                     <Link href="/admin">
-                      {user && `${user.firstName} ${user.lastName}`}
+                      {user &&
+                        user.employee &&
+                        `${user.firstName} ${user.lastName}`}
                     </Link>
                   </p>
                   <p className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 shadow-sm w-fit">
-                    {user && user.employee.position}
+                    {user && user.employee && user?.employee?.position}
                   </p>
                 </div>
 

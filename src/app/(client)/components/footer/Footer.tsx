@@ -205,7 +205,7 @@ const Footer: React.FC = () => {
       {/* Bottom Section */}
       <div className="container mx-auto px-6 pt-4 mt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
         <p className="text-gray-400 text-sm mb-4 md:mb-0">
-          Thiết Kế WebSite ©𝙏𝙧𝙪̛𝙤̛𝙣𝙜 𝙉𝙝𝙖̣̂𝙩 𝘾𝙪̛𝙤̛̀𝙣𝙜
+          Thiết Kế WebSite ©Trương Nhật Cường
         </p>
         <div className="flex space-x-4">
           <Link

@@ -48,17 +48,19 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (!token) return; // Page public sẽ không làm gì
+
     const remainingTime = getTokenRemainingTime(token);
 
     if (remainingTime <= 0) {
       localStorage.removeItem("token");
-      router.push("/");
+      router.push("/"); // hoặc "/" tuỳ bạn chọn 1
       return;
     }
 
     const timer = setTimeout(() => {
       localStorage.removeItem("token");
-      router.push("/login");
+      router.push("/");
     }, remainingTime);
 
     return () => clearTimeout(timer);

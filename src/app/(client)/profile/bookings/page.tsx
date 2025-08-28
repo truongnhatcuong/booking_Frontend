@@ -10,7 +10,6 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import useAuth from "@/lib/authUser";
 
 interface Amenity {
   amenity: {
@@ -77,12 +76,10 @@ const Page = () => {
     `${process.env.NEXT_PUBLIC_URL_API}/api/booking/bookingUser`,
     fetcher
   );
-  const { loadingLog } = useAuth(["CUSTOMER"]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  if (loadingLog) return <div>Đang kiểm tra quyền...</div>;
 
   return (
     <>

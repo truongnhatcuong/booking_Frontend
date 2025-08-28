@@ -19,9 +19,13 @@ const RoomShow = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${URL_API}/api/room/customer?roomType=${typeRoom ? typeRoom : ""}`
+          `${URL_API}/api/room/customer?roomType=${typeRoom ?? ""}`
         );
-        setData(response.data);
+        if (response.data) {
+          setData(response.data);
+        } else {
+          return null;
+        }
       } catch (error) {
         console.error("Error fetching room data:", error);
       }
@@ -34,8 +38,14 @@ const RoomShow = () => {
   return (
     <>
       {" "}
-      <div className="py-6 text-2xl text-center my-4 uppercase roboto">
-        Những chỗ nghỉ nổi bật được đề xuất cho quý khách
+      <div className="text-center my-12 ">
+        <h1 className="text-5xl font-bold  mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          Resort Paradise
+        </h1>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Khám phá những phòng nghỉ tuyệt đẹp với thiết kế hiện đại và tiện nghi
+          đẳng cấp
+        </p>
       </div>
       <div className="space-y-8 text-center ">
         {/* Phòng Đơn */}
@@ -54,11 +64,16 @@ const RoomShow = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
             {data && data.length > 0 ? (
-              data
-                .slice(0, 4)
-                .map((room, index) => (
-                  <ListRoom roomtype={room} key={`single-${index}`} />
-                ))
+              data.slice(0, 4).map((room, index) => (
+                <div
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 200}ms` }}
+                  key={`single-${index}`}
+                >
+                  {" "}
+                  <ListRoom roomtype={room} />
+                </div>
+              ))
             ) : (
               <div className="">Phòng Không Có Sẵn</div>
             )}

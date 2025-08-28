@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CardItemTotalProps {
   title: string;
@@ -18,18 +12,16 @@ const CardItemTotal: React.FC<CardItemTotalProps> = ({
   description,
 }) => {
   return (
-    <Card className=" bg-white  shadow-xl hover:shadow-2xl  duration-300 rounded-2xl ">
-      <CardHeader className="">
-        <CardTitle className="text-lg font-semibold text-blue-700">
-          {title}
+    <Card className="bg-card border-border">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium text-card-foreground">
+          {title}{" "}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex items-center justify-center ">
-        <span className="text-3xl font-bold text-blue-900">{total ?? 0}</span>
+      <CardContent>
+        <div className="text-2xl font-bold text-primary">{total}</div>
+        <p className="text-xs text-muted-foreground">{description} </p>
       </CardContent>
-      <CardFooter className="pt-2">
-        <p className="text-sm text-gray-500">{description}</p>
-      </CardFooter>
     </Card>
   );
 };

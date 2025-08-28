@@ -80,7 +80,8 @@ export default function BookingForm({
     if (
       !booking.checkInDate ||
       !booking.checkOutDate ||
-      !booking.pricePerNight
+      !booking.pricePerNight ||
+      !formCustomer.lastName
     ) {
       toast.error("Vui lòng nhập đầy đủ thông tin trước khi thanh toán!");
       return;
