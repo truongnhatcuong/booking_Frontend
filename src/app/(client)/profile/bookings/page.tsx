@@ -93,7 +93,7 @@ const Page = () => {
         modules={[EffectFade, Navigation, Pagination]}
         className="mySwiper"
       >
-        {data && data.data.length > 0 ? (
+        {data && data?.data?.length > 0 ? (
           <>
             {data?.data.map((item: Booking, index: number) => (
               <SwiperSlide key={index} className="">

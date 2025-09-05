@@ -29,7 +29,7 @@ interface CheckReviewUserProps {
 
 export default function CheckReviewUser({ reviews }: CheckReviewUserProps) {
   return (
-    <div className="space-y-6  mx-auto scroll-auto relative bg-white p-8">
+    <div className="space-y-6  mx-auto scroll-auto  bg-white p-8">
       <div>
         <h1 className="text-2xl font-semibold mb-2">
           Danh Sách Đánh Giá của Hotel
@@ -39,7 +39,7 @@ export default function CheckReviewUser({ reviews }: CheckReviewUserProps) {
         reviews.map((review) => (
           <div
             key={review.id}
-            className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 border border-gray-100"
+            className="relative bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 border border-gray-100"
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
               <div className="mb-4 sm:mb-0">
@@ -68,12 +68,14 @@ export default function CheckReviewUser({ reviews }: CheckReviewUserProps) {
                   </svg>
                 ))}
               </div>
-            </div>
+            </div>{" "}
             <p className="text-gray-600 leading-relaxed">
               <span className="font-medium text-gray-800">Đánh giá: </span>
               {review.comment}
             </p>
-            <DeleteReview id={review.id} />
+            <div className="absolute top-0 right-0">
+              <DeleteReview id={review.id} />
+            </div>
           </div>
         ))
       ) : (

@@ -41,11 +41,7 @@ const DeleteReview = ({ id }: DeleteReviewProps) => {
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button
-            variant="outline"
-            aria-haspopup="dialog"
-            className="mt-4 absolute -top-4 right-0 cursor-pointer"
-          >
+          <Button variant="outline" aria-haspopup="dialog">
             <X className="w-5 h-5 text-red-500" />
           </Button>
         </AlertDialogTrigger>

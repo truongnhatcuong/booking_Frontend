@@ -140,20 +140,17 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
                 >
                   {translateStatus(booking.status)}
                 </Badge>
-                <span className="text-sm text-gray-500">
-                  {formatDate(booking.bookingDate)}
-                </span>
               </div>
             </div>
             {booking.status === "CHECKED_OUT" ? (
-              <>
+              <div className="flex flex-col md:flex-row gap-2">
                 {" "}
                 <Button variant="outline" size="sm" className="cursor-pointer">
                   <Printer className="h-4 w-4 mr-2" />
-                  In hóa đơn
+                  <span className="hidden md:block">In hóa đơn</span>
                 </Button>
                 <ReviewCusTomer bookingId={booking.id} />
-              </>
+              </div>
             ) : booking.status === "PENDING" ? (
               <RemoveBooking bookingId={booking.id} />
             ) : (
@@ -165,7 +162,7 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
         {/* Booking Details */}
         <div className="p-4 space-y-4">
           {/* Stay Info */}
-          <div className="grid grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
             <div>
               <p className="text-gray-500">Nhận phòng</p>
               <p className="font-medium">{formatDate(booking.checkInDate)}</p>

@@ -109,13 +109,13 @@ const ListItem = () => {
                       <p className="text-gray-500 text-sm">Loading...</p>
                     </div>
                   )}
-                  {data && data.length > 0 ? (
+                  {data && data?.roomType?.length > 0 ? (
                     <ul className="py-2">
-                      {data.map((room: IRoomtype) => (
+                      {data?.roomType.map((room: IRoomtype) => (
                         <li key={room.id}>
                           <Link
                             href={`/rooms/${room.id}`}
-                            className="block text-gray-700 hover:bg-gray-50 px-4 py-3 hover:border-l-4 hover:border-amber-400 transition-all duration-150"
+                            className="block text-gray-700 hover:bg-gray-50 px-4 py-3 hover:border-l-4  transition-all duration-150"
                             onClick={() => setIsMobileDropdownOpen(false)}
                           >
                             {room.name}

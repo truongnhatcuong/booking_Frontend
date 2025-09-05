@@ -6,23 +6,32 @@ import { Star } from "lucide-react";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import Modal from "react-modal";
+import useSWR from "swr";
+import Mutate from "../../../../../hook/Mutate";
 interface Booking {
   bookingId: string;
 }
+interface BookingReviewStatus {
+  bookings: {
+    reviewed: boolean;
+  };
+  message: string;
+}
 const ReviewCusTomer = ({ bookingId }: Booking) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
-  const [hasReviewed, setHasReviewed] = React.useState(false);
   const [formData, setFormData] = React.useState({
     bookingId: bookingId,
     rating: 0,
     comment: "",
   });
+
+  const { data } = useSWR<BookingReviewStatus>(
+    `/api/review/status?bookingId=${bookingId}`
+  );
+
   useEffect(() => {
     Modal.setAppElement("#root");
-    const reviewed =
-      localStorage.getItem(`hasReviewed-${bookingId}`) === "true";
-    setHasReviewed(reviewed);
-  }, [bookingId]);
+  }, []);
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -32,12 +41,11 @@ const ReviewCusTomer = ({ bookingId }: Booking) => {
         { withCredentials: true }
       );
       if (res.data) {
-        console.log(res.data);
-        localStorage.setItem(`hasReviewed-${bookingId}`, "true");
+        Mutate(`/api/review/status`);
+
         setModalIsOpen(false);
         setFormData({ bookingId: bookingId, rating: 0, comment: "" });
         toast.success("Cảm ơn bạn đã đánh giá dịch vụ của chúng tôi!");
-        setHasReviewed(true);
       }
     } catch (error: any) {
       toast.error(
@@ -45,19 +53,21 @@ const ReviewCusTomer = ({ bookingId }: Booking) => {
       );
     }
   };
+  if (data?.bookings.reviewed) {
+    return null;
+  }
   return (
     <>
-      {!hasReviewed && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="cursor-pointer"
-          onClick={() => setModalIsOpen(true)}
-        >
-          <Star className="h-4 w-4 mr-2 text-yellow-500" />
-          Đánh Giá
-        </Button>
-      )}
+      <Button
+        variant="outline"
+        size="sm"
+        className="cursor-pointer"
+        onClick={() => setModalIsOpen(true)}
+      >
+        <Star className="h-4 w-4 mr-2 text-yellow-500" />
+        <span className="hidden md:block">Đánh Giá</span>
+      </Button>
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
@@ -99,7 +109,11 @@ const ReviewCusTomer = ({ bookingId }: Booking) => {
               setFormData({ ...formData, comment: e.target.value })
             }
           ></textarea>
-          <Button variant="default" className="mt-4" type="submit">
+          <Button
+            variant="default"
+            className="mt-4 cursor-pointer"
+            type="submit"
+          >
             Gửi Đánh Giá
           </Button>
         </form>
