@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "bizweb.dktcdn.net",
+      },
+      {
+        protocol: "https",
         hostname: "img.vietqr.io",
         port: "",
         pathname: "/**",

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import TableCustomer from "./components/TableCustomer";
 import useSWR from "swr";
-import { fetcher, URL_API } from "@/lib/fetcher";
+import { URL_API } from "@/lib/fetcher";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
 import { useDebounce } from "../../../../../../hook/Debounce";
@@ -15,8 +15,7 @@ const Page = () => {
   const [limit, setLimit] = useState(10);
 
   const { data, isLoading } = useSWR(
-    `${URL_API}/api/auth/customer?search=${debouncedSearch}&page=${currentPage}&limit=${limit}`,
-    fetcher
+    `${URL_API}/api/auth/customer?search=${debouncedSearch}&page=${currentPage}&limit=${limit}`
   );
 
   // Kiểm tra trạng thái loading và hiển thị thông báo

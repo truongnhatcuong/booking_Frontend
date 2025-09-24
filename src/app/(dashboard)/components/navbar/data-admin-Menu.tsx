@@ -183,10 +183,10 @@ export const adminMenu: IListItemAdmin[] = [
       },
     ],
   },
-  {
-    id: 12,
-    link: "/admin/message",
-    title: "Nhắn Tin",
-    icon: MessageCircleCode,
-  },
+  // {
+  //   id: 12,
+  //   link: "/admin/message",
+  //   title: "Nhắn Tin",
+  //   icon: MessageCircleCode,
+  // },
 ];

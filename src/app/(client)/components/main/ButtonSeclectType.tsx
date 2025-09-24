@@ -33,8 +33,8 @@ interface IButton {
 
 const ButtonSelectType = ({ setTypeRoom, typeRoom }: IButton) => {
   return (
-    <div className="flex gap-4 items-center justify-center p-6">
-      <div className="flex gap-3 bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-gray-200/50">
+    <div className="flex gap-4 items-center justify-center py-6 px-3  ">
+      <div className=" md:flex gap-3 bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-gray-200/50">
         {ItemButton.map((item) => {
           const IconComponent = item.icon;
           const isSelected = item.value === typeRoom;

@@ -36,10 +36,10 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room }) => {
   return (
     <>
       {/* Main Content */}
-      <div className="lg:col-span-2 space-y-10">
+      <div className="space-y-10">
         {/* Enhanced Header Section */}
         <div className="relative">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-8 border-gray-200">
+          <div className="flex flex-row justify-between items-start md:items-center border-b pb-8 border-gray-200">
             <div className="mb-4 md:mb-0">
               <h1 className="text-3xl lg:text-4xl font-serif text-gray-900 mb-2 text-balance">
                 {room.roomType.name}
@@ -48,8 +48,8 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room }) => {
                 Phòng {room.roomNumber} • Tầng {room.floor}
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-3xl lg:text-4xl font-bold text-blue-600 mb-1">
+            <div className="text-right flex mt-6">
+              <p className="text-2xl lg:text-4xl font-bold text-blue-600 mb-1">
                 {formatPrice(Number(room.roomType.basePrice))}
               </p>
               <span className="text-lg font-normal text-gray-500">/đêm</span>

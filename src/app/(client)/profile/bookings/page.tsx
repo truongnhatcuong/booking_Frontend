@@ -86,7 +86,6 @@ const Page = () => {
       <Swiper
         spaceBetween={30}
         effect={"fade"}
-        navigation={true}
         pagination={{
           clickable: true,
         }}

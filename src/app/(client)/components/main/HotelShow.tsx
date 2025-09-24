@@ -2,6 +2,7 @@
 "use client";
 import React from "react";
 import { Building2, Users, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 // Định nghĩa kiểu dữ liệu cho tab
 type TabType = "hotel" | "meeting" | "beautiful";
@@ -69,7 +70,7 @@ const HotelShow = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-      <div className="flex justify-center space-x-2 mb-8 max-w-4xl mx-auto">
+      <div className="flex flex-col md:flex-row gap-5  justify-center space-x-2 mb-8  md:max-w-4xl mx-auto">
         {(Object.keys(tabData) as TabType[]).map((tabKey) => {
           const tab = tabData[tabKey];
           const isActive = hotel === tabKey;
@@ -109,7 +110,7 @@ const HotelShow = () => {
         })}
       </div>
 
-      <div className="bg-gradient-to-br from-white to-gray-50 py-16 max-w-7xl mx-auto rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
+      <div className="bg-gradient-to-br from-white to-gray-50  max-w-7xl mx-auto rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
         <div
           className={`transition-all duration-500 ${
             isTransitioning
@@ -117,10 +118,12 @@ const HotelShow = () => {
               : "opacity-100 transform translate-y-0"
           }`}
         >
-          <div className="flex flex-col lg:flex-row gap-8 px-8">
+          <div className="flex flex-col lg:flex-row gap-8 px-1">
             <div className="flex-1 group">
               <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                <img
+                <Image
+                  width={500}
+                  height={400}
                   src={currentTab.image || "/placeholder.svg"}
                   alt={currentTab.title}
                   className="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110"

@@ -173,7 +173,7 @@ const FormBooking = ({
 
   return (
     <div>
-      <div className="bg-gray-50 p-8 rounded-xl shadow-md sticky top-6 border border-gray-100">
+      <div className="bg-gray-50 py-8 px-4 rounded-xl shadow-md sticky top-6 border border-gray-100">
         <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
           Đặt phòng
         </h2>

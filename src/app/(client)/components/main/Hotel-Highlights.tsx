@@ -62,8 +62,8 @@ const highlights: Highlight[] = [
 ];
 const HotelHighlightsCarousel = () => {
   return (
-    <section className="py-16 bg-gradient-to-br from-background to-muted">
-      <div className="container mx-auto px-4">
+    <section className="py-10 bg-gradient-to-br from-background to-muted bg-white ">
+      <div className="container max-w-md md:max-w-none md:mx-auto ">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-foreground mb-4 animate-fade-in-up">
             Tiện Nghi Đẳng Cấp
@@ -90,14 +90,11 @@ const HotelHighlightsCarousel = () => {
           className="mySwiper "
         >
           {highlights.map((highlight) => (
-            <SwiperSlide
-              key={highlight.id}
-              className="relative max-w-6xl mx-auto"
-            >
+            <SwiperSlide key={highlight.id} className="relative max-w-6xl">
               <div key={highlight.id} className="w-full flex-shrink-0">
-                <div className="grid md:grid-cols-2 gap-0 min-h-[500px]">
+                <div className="grid md:grid-cols-2 gap-4  ">
                   {/* Image section */}
-                  <div className="relative overflow-hidden group">
+                  <div className="relative overflow-hidden group ">
                     <Image
                       width={500}
                       height={500}
@@ -109,7 +106,7 @@ const HotelHighlightsCarousel = () => {
                   </div>
 
                   {/* Content section */}
-                  <div className="p-8 md:p-12 flex flex-col justify-center bg-card">
+                  <div className="  flex flex-col justify-center bg-card pb-8 px-4  ">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="p-3 rounded-full bg-primary text-primary-foreground">
                         {highlight.icon}

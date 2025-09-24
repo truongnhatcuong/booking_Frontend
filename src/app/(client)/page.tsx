@@ -9,6 +9,7 @@ import ShearchRoomPage from "./components/main/SearchRoom";
 import ChatBoxAL from "./components/main/ChatBoxAl";
 import CustomerChat from "./components/main/CustomerChat";
 import HotelHighlightsCarousel from "./components/main/Hotel-Highlights";
+import ChatBox from "./components/main/ChatBox";
 
 const Page = () => {
   return (
@@ -21,7 +22,8 @@ const Page = () => {
       <HotelShow />
       <HotelHighlightsCarousel />
       <ChatBoxAL />
-      <CustomerChat />
+      {/* <CustomerChat /> */}
+      <ChatBox />
     </div>
   );
 };

@@ -55,7 +55,11 @@ const ListRoom = ({ roomtype }: RoomType) => {
         <title>{roomtype.roomType.name}</title>
       </Head>
 
-      <div className="group relative bg-gradient-to-br from-slate-50 to-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 w-full max-w-md overflow-hidden border border-slate-200/50 hover:border-slate-300/70 transform hover:-translate-y-2">
+      <div
+        className="group relative bg-gradient-to-br from-slate-50 to-white rounded-xl shadow-xl 
+      hover:shadow-2xl transition-all duration-500 w-full  max-w-md overflow-hidden border border-slate-200/50
+       hover:border-slate-300/70 transform hover:-translate-y-2 "
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
         <div className="relative overflow-hidden">
