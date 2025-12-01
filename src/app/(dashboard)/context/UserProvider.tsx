@@ -28,7 +28,7 @@ export default function UserProvider({
         } catch (err) {
           console.error("Refresh token thất bại:", err);
           logout();
-          router.push("/login");
+          
         }
       } else {
         initUser(); // token còn hạn, khởi tạo store
