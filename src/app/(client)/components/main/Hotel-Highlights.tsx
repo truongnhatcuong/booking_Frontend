@@ -90,14 +90,11 @@ const HotelHighlightsCarousel = () => {
           className="mySwiper "
         >
           {highlights.map((highlight) => (
-            <SwiperSlide
-              key={highlight.id}
-              className="relative max-w-full lg:max-w-6xl"
-            >
+            <SwiperSlide key={highlight.id} className="relative  max-w-6xl">
               <div key={highlight.id} className="w-full flex-shrink-0">
                 <div className="grid md:grid-cols-2 gap-4  ">
                   {/* Image section */}
-                  <div className="relative overflow-hidden group ">
+                  <div className="relative overflow-hidden group h-80 lg:h-120 ">
                     <Image
                       width={500}
                       height={500}

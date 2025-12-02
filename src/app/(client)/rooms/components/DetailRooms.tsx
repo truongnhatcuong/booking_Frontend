@@ -47,7 +47,7 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
         <div className="relative">
           <div className="flex flex-row justify-between items-start md:items-center border-b pb-8 border-gray-200">
             <div className="mb-4 md:mb-0">
-              <h1 className="text-3xl lg:text-4xl font-serif text-gray-900 mb-2 text-balance">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif text-gray-900 mb-2 text-balance">
                 {room.roomType.name}
               </h1>
               <p className="text-lg text-gray-600 font-light">

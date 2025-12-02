@@ -44,7 +44,7 @@ interface RoomBooking {
 }
 
 const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
-  const { formData, setFormData, } = useBookingStore();
+  const { formData, setFormData } = useBookingStore();
   const { user } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -157,7 +157,7 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
           {/* Booking Details */}
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4">
-              <div>
+              <div className="w-full">
                 <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Calendar size={16} className="mr-2 text-blue-600" />
                   Ngày nhận *
@@ -192,7 +192,7 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 mx-5  items-center gap-6">
+            <div className="grid grid-cols-2 xl:grid-cols-2 mx-5  items-center gap-6">
               <div className=" flex flex-col xl:flex-row items-center gap-2 mt-1">
                 <Square className="w-4 h-4 text-gray-400 bg-gray-400" />
                 <span>Đã có người đặt</span>

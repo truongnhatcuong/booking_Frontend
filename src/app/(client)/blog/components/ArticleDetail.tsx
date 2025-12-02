@@ -90,7 +90,7 @@ const ArticleDetail = ({ slug }: Props) => {
             </div>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 text-balance leading-tight">
+          <h1 className="text-2xl md:text-5xl font-bold text-gray-900 mb-6 text-balance leading-tight">
             {article.title}
           </h1>
         </div>
@@ -110,7 +110,7 @@ const ArticleDetail = ({ slug }: Props) => {
         )}
 
         {/* Tóm tắt */}
-        <div className="mb-8 p-6 bg-blue-50 rounded-2xl border-l-4 border-blue-600">
+        <div className="mb-8 px-4 py-2 bg-blue-50 rounded-2xl border-l-4 border-blue-600">
           <h2 className="font-semibold text-blue-900 mb-2">Tóm tắt</h2>
           <p className="text-blue-800 leading-relaxed text-lg">
             {article.summary}
@@ -118,7 +118,7 @@ const ArticleDetail = ({ slug }: Props) => {
         </div>
 
         {/* Nội dung bài viết */}
-        <div className="bg-white rounded-2xl p-8 shadow-sm">
+        <div className="bg-white rounded-2xl ">
           <MarkDown>{article.content}</MarkDown>
         </div>
 

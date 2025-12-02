@@ -309,3 +309,7 @@
 .animate-bounce-light {
   animation: bounce-light 1s ease-in-out infinite;
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
