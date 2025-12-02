@@ -55,14 +55,14 @@ const highlights: Highlight[] = [
     id: 5,
     title: "Quán Cà Phê Thư Giãn",
     description: "Không gian yên tĩnh để thưởng thức cà phê và làm việc",
-    image: "/image/cafe-Đà-Nẵng-view-biển.jpg",
+    image: "/image/danangviewbien.jpg",
     icon: <Coffee className="w-6 h-6" />,
     features: ["Cà phê premium", "Wifi tốc độ cao", "Không gian yên tĩnh"],
   },
 ];
 const HotelHighlightsCarousel = () => {
   return (
-    <section className="py-10 bg-gradient-to-br from-background to-muted bg-white ">
+    <section className="py-15 bg-gradient-to-br from-background to-muted bg-white mx-4 lg:mx-0">
       <div className="container max-w-md md:max-w-none md:mx-auto ">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-foreground mb-4 animate-fade-in-up">
@@ -90,7 +90,10 @@ const HotelHighlightsCarousel = () => {
           className="mySwiper "
         >
           {highlights.map((highlight) => (
-            <SwiperSlide key={highlight.id} className="relative max-w-6xl">
+            <SwiperSlide
+              key={highlight.id}
+              className="relative max-w-full lg:max-w-6xl"
+            >
               <div key={highlight.id} className="w-full flex-shrink-0">
                 <div className="grid md:grid-cols-2 gap-4  ">
                   {/* Image section */}

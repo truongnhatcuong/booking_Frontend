@@ -18,7 +18,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ menuItems }) => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col  space-y-1 ">
+    <div className="flex  flex-row justify-between lg:flex-col  space-y-1 ">
       {menuItems.map((item) => (
         <Link
           key={item.id}

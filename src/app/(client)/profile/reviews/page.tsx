@@ -9,9 +9,9 @@ const ReviewsPage = () => {
   );
 
   return (
-    <>
+    <div className="px-4 lg:px-0 py-10">
       <ReviewOfCustomer review={reviews || []} />
-    </>
+    </div>
   );
 };
 

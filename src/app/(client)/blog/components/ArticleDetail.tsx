@@ -31,7 +31,7 @@ const ArticleDetail = ({ slug }: Props) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className=" lg:min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Đang tải bài viết...</p>
@@ -60,7 +60,7 @@ const ArticleDetail = ({ slug }: Props) => {
   }
 
   return (
-    <div className="overflow-auto max-h-screen">
+    <div className="  lg:overflow-auto lg:max-h-screen">
       <article className=" mx-auto px-4 lg:px-10 py-4 ">
         <div className="text-base md:text-xl text-gray-700 font- gap-2 cursor-pointer my-4 md:my-8 flex items-center ">
           <p

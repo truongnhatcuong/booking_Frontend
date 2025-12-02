@@ -28,10 +28,12 @@ export const CounterCircle: React.FC<CounterProps> = ({
 
   return (
     <div
-      className={`flex flex-col items-center justify-center rounded-full w-60 h-60 border-[1px] border-[#EAEAEA] ${borderClasses}`}
+      className={`flex flex-col items-center justify-center rounded-full w-40 h-40 lg:w-60 lg:h-60 border-[1px] border-[#EAEAEA] ${borderClasses}`}
     >
-      <span className="text-4xl font-bold text-[#94181C]">{count}</span>
-      <span className="mt-4 text-lg text-black">{label}</span>
+      <span className="text-2xl lg:text-4xl font-bold text-[#94181C]">
+        {count}
+      </span>
+      <span className="text-xs mt-4 lg:text-lg text-black">{label}</span>
     </div>
   );
 };

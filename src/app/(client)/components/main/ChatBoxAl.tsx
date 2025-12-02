@@ -58,6 +58,7 @@ export default function ChatBoxAL() {
 
   async function sendMessage(e?: React.FormEvent) {
     e?.preventDefault();
+    setIsLoading(false);
     if (!input.trim() || isLoading) return;
     const userMessage = input.trim();
     setInput("");
@@ -106,7 +107,7 @@ export default function ChatBoxAL() {
         <div className="group fixed bottom-14 right-5 z-50 w-full">
           {/* Nút chatbot */}
           <div
-            className="fixed rounded-full bg-gradient-to-r animate-bounce-light from-blue-500 to-blue-600 text-white p-1 w-fit cursor-pointer border-none outline-none bottom-14 right-5"
+            className="fixed rounded-full bg-gradient-to-r animate-bounce-light from-blue-500 to-blue-600 text-white p-1 w-fit cursor-pointer border-none outline-none bottom-7 lg:bottom-14 right-5"
             onClick={() => setIsOpen(!isOpen)}
             title="Hỗ Trợ Bạn Tìm Thông Tin Nhanh Chống Bằng Ai"
           >
@@ -152,7 +153,7 @@ export default function ChatBoxAL() {
           </div>
 
           {/* Messages area */}
-          <div className="flex-1 px-5 py-1 mt-4 overflow-y-auto bg-gray-50">
+          <div className="flex-1 px-2 md:px-4 py-1 mt-4 overflow-y-auto bg-gray-50">
             {history?.length === 0 ? (
               <div className="flex items-center justify-center h-full text-gray-500 text-center px-4">
                 <p>Bắt đầu cuộc trò chuyện bằng cách nhập tin nhắn bên dưới</p>
@@ -181,7 +182,7 @@ export default function ChatBoxAL() {
                       </div>
                     )}
                     <div
-                      className={`max-w-[80%] rounded-lg px-3 ${
+                      className={`max-w-[85%] rounded-lg px-3 ${
                         isUser
                           ? "bg-blue-500 text-white rounded-br-none text-end"
                           : "bg-gray-200 text-gray-800 rounded-bl-none text-start"
@@ -235,7 +236,7 @@ export default function ChatBoxAL() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Type your message..."
+                placeholder="nhập nội dung của bạn..."
                 disabled={isLoading}
               />
               <button

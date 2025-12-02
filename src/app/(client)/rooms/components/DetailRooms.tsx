@@ -42,7 +42,7 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
   return (
     <>
       {/* Main Content */}
-      <div className="space-y-10 max-h-screen overflow-auto">
+      <div className="space-y-10  md:max-h-screen overflow-auto">
         {/* Enhanced Header Section */}
         <div className="relative">
           <div className="flex flex-row justify-between items-start md:items-center border-b pb-8 border-gray-200">

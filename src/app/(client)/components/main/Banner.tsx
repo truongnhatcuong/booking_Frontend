@@ -7,7 +7,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 const Banner = () => {
   return (
     <Swiper
-      navigation={true}
       keyboard={true}
       autoplay={{
         delay: 5000,

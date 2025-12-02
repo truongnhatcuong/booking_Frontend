@@ -20,7 +20,7 @@ interface IReview {
 }
 
 const ReviewOfCustomer = ({ review }: { review: IReview[] }) => (
-  <div className="container mx-auto p-6 max-w-5xl">
+  <div className=" overflow-auto  lg:max-h-screen lg:max-w-5xl">
     <h1 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">
       Lịch sử đánh giá của tôi
     </h1>
@@ -41,8 +41,8 @@ const ReviewOfCustomer = ({ review }: { review: IReview[] }) => (
             className="bg-white border rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300"
           >
             <div className="flex flex-col md:flex-row gap-6">
-              {/* Room Image and Info */}
-              <div className="md:w-1/3">
+              {/* LEFT */}
+              <div className="md:w-1/3 w-full shrink-0">
                 <div className="relative h-48 md:h-40 mb-4 rounded-lg overflow-hidden">
                   <Image
                     fill
@@ -52,22 +52,20 @@ const ReviewOfCustomer = ({ review }: { review: IReview[] }) => (
                     className="object-cover"
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">
-                      Phòng {item.booking.bookingItems[0].room.roomNumber}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Tầng {item.booking.bookingItems[0].room.floor}
-                    </p>
-                  </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800">
+                    Phòng {item.booking.bookingItems[0].room.roomNumber}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Tầng {item.booking.bookingItems[0].room.floor}
+                  </p>
                 </div>
               </div>
 
-              {/* Review Content */}
-              <div className="md:w-2/3">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                  <div className="flex items-center gap-1 mb-2 md:mb-0">
+              {/* RIGHT */}
+              <div className="w-full md:w-2/3 flex-1 min-w-0">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                  <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <span
                         key={i}
@@ -79,7 +77,7 @@ const ReviewOfCustomer = ({ review }: { review: IReview[] }) => (
                       </span>
                     ))}
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-500 flex-shrink-0">
                     {new Date(item.reviewDate).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
@@ -92,7 +90,7 @@ const ReviewOfCustomer = ({ review }: { review: IReview[] }) => (
                   <h4 className="font-medium text-gray-700 mb-2">
                     Đánh giá của bạn:
                   </h4>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed break-words break-all">
                     {item.comment}
                   </p>
                 </div>

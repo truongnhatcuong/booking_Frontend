@@ -31,7 +31,7 @@ const SearchRoomPage = () => {
   };
 
   return (
-    <div className="container md:mx-auto md:px-4 py-8">
+    <div className="container md:mx-auto md:px-4 py-4 ">
       <SearchForm
         searchParams={searchParams}
         setSearchParams={setSearchParams}

@@ -82,7 +82,7 @@ const SearchForm = ({
         ${
           isSticky
             ? "fixed -top-8 left-0 p-2 right-0 z-40 max-w-full  shadow-lg"
-            : "p-15"
+            : " p-5 lg:p-15"
         }
       `}
     >

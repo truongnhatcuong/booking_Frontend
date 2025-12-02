@@ -6,7 +6,7 @@ const Footer2 = () => {
     <div className="w-full bg-white py-16 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Counter Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-center justify-items-center">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 items-center justify-items-center">
           <CounterCircle
             count="10,000+"
             label="Khách Hàng Hài Lòng"

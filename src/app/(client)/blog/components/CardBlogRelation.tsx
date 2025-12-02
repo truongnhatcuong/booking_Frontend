@@ -14,20 +14,20 @@ interface CardBlogProps {
 const CardBlogRelation = ({ article }: CardBlogProps) => {
   return (
     <Link href={`/blog/${article.slug}`}>
-      <div className="flex md:block xl:flex gap-5 mx-4 md:mx-0 lg:my-5">
+      <div className=" xl:flex gap-5 mx-4 md:mx-0 lg:my-5">
         {" "}
         <Image
           alt={article.slug}
           src={article.coverImage}
           height={200}
           width={300}
-          className="bg-cover lg:w-50 lg:h-40 w-36 rounded-2xl mb-2"
+          className="bg-contain lg:bg-cover h-70 w-full lg:w-50 lg:h-40 w-36 rounded-2xl mb-2"
         />
-        <div className="w-48 lg:w-60 ">
+        <div className="w-full top-5 lg:w-60 ">
           <p className="text-black font-semibold text-sm text-start mb-1 line-clamp-3">
             {article.title}
           </p>
-          <p className="text-base text-gray-600 mt-4">
+          <p className="text-base text-gray-600 mt-3">
             {formatDate(article.publishedAt)}
           </p>
           <button className="group flex items-center gap-2 mt-3 lg:mt-8 cursor-pointer">

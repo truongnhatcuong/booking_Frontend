@@ -24,7 +24,7 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto p-10  ">
+    <div className="max-w-6xl mx-auto px-4 lg:px-5  ">
       <div className="bg-white rounded-lg shadow-sm h-full">
         {/* Header */}
         <div className="border-b p-4">

@@ -39,7 +39,7 @@ export const profileSidebarItems: ProfileSidebarItem[] = [
 const ProfileItems = () => {
   const { user } = useUserStore();
   return (
-    <div className=" h-full md:ml-10 ml-4">
+    <div className=" h-full pt-5 lg:pt-0 md:mx-10 mx-4">
       <div className="text-base font-semibold mb-6">
         Xin chào, <span className=" text-amber-600">{user?.lastName}</span>
       </div>

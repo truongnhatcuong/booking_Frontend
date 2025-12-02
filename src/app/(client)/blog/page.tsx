@@ -54,8 +54,8 @@ const Page = () => {
           </div>
           <div className="">
             {data && data.length > 0 && (
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-                <div className="col-span-2">
+              <div className="grid grid-cols-1 xl:grid-cols-3 lg:gap-5 ">
+                <div className="col-span-2 mb-5">
                   <MainArticle article={data[0]} />
                 </div>
                 <div className="flex flex-col gap-10 ">
@@ -69,7 +69,7 @@ const Page = () => {
         </div>
       </section>
       <div className="mt-10   mx-4 lg:mx-10 ">
-        <div className="flex justify-between mb-5">
+        <div className="flex flex-col md:flex-row text-center md:text-start justify-between mb-5">
           {" "}
           <h1 className="text-red-500 text-3xl font-bold uppercase">
             Bài Báo Liên Quan

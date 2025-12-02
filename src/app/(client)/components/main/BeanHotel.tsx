@@ -25,7 +25,7 @@ export default function BeanHotel() {
           </div>
         </div>
       </div>
-      <div className="w-full  p-5  rounded-lg  mx-10 md:mx-0">
+      <div className="w-full    rounded-lg  mx-4 md:mx-0">
         <TitleText title="DTU Hotel" tilteSub="Giới thiệu về chúng tôi" />
         <p className="text-gray-600 md:my-10 leading-relaxed whitespace-pre-line">
           <strong>DTU Hotel</strong> — điểm dừng chân lý tưởng giữa trái tim TP.
@@ -52,10 +52,6 @@ export default function BeanHotel() {
             tế.
           </strong>
         </p>
-
-        <button className="bg-red-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-red-600 transition cursor-pointer">
-          Xem thêm
-        </button>
       </div>
     </div>
   );

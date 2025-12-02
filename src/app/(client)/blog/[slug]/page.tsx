@@ -16,7 +16,7 @@ const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
       <div className="col-span-3">
         <ArticleDetail slug={slug} />
       </div>
-      <div className="mt-15 space-y-10 ">
+      <div className="my-15 flex flex-col gap-10 md:gap-0">
         {data
           ?.filter((item) => item.slug !== slug)
           .map((article) => (

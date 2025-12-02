@@ -112,7 +112,7 @@ export default function Page({
             <DetailRooms room={room} seasonPrice={seasonPrice} />
           </div>
           {/* Booking Form */}
-          <div className="lg:col-span-1">
+          <div className="col-span-1">
             <FormBooking
               room={room}
               handleFormChange={handleFormChange}
