@@ -33,7 +33,7 @@ const Page = () => {
     <div className="bg-white p-4 rounded-md shadow-md">
       <ElegantTitle title="Quản Lý Danh Sách Phòng" className="mb-5 ml-5" />
 
-      <div className="flex justify-between items-center ">
+      <div className="flex justify-between items-center my-5">
         <SearchForm
           search={search}
           setSearch={setSearch}

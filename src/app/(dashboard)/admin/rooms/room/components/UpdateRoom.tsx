@@ -77,7 +77,7 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
       <Button
         variant="outline"
         size="icon"
-        className="cursor-pointer text-blue-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 mr-2"
+        className="cursor-pointer text-blue-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 "
         onClick={() => setIsOpen(true)}
       >
         <Pencil className="h-4 w-4" />

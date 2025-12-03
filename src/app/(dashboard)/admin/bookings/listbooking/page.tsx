@@ -5,6 +5,7 @@ import useSWR from "swr";
 import TableListBooking from "./components/TableListBooking";
 import FilterBooking from "./components/FilterBooking";
 import { IBooking } from "./components/bookingad";
+import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 const API_URL = process.env.NEXT_PUBLIC_URL_API;
 
@@ -27,7 +28,7 @@ const BookingManagementForm = () => {
 
   return (
     <div className="container mx-auto p-6 bg-white">
-      <h2 className="text-3xl font-bold text-gray-800 ">Quản lý đặt phòng</h2>
+      <ElegantTitle title="Quản lý đặt phòng" className="mb-5" />
       <div className="justify-center flex items-center">
         <FilterBooking
           dates={dates}

@@ -51,7 +51,7 @@ export function getMaintenanceStatusText(status: string): string {
 
 const TableMaintenance = ({ maintenance }: TableMaintenanceProps) => {
   return (
-    <Table className="w-full bg-white py-9 px-6 *:rounded-lg shadow-md">
+    <Table className="w-full bg-white py-9 px-6 *:rounded-lg shadow-md mt-5">
       <TableHeader>
         <TableRow>
           <TableHead> Ảnh Phòng</TableHead>
@@ -59,7 +59,7 @@ const TableMaintenance = ({ maintenance }: TableMaintenanceProps) => {
           <TableHead>Mô Tả</TableHead>
           <TableHead>Ngày Bắt Đầu</TableHead>
           <TableHead>Ngày Kết Thúc</TableHead>
-          <TableHead className="text-center">Trạng Thái</TableHead>
+          <TableHead className="text-start">Trạng Thái</TableHead>
           <TableHead>Chi Phí</TableHead>
           <TableHead>Ghi Chú</TableHead>
           <TableHead>Hành Động</TableHead>

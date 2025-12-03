@@ -31,7 +31,10 @@ const BookingResourceChart = ({ data }: BookingResourceChartProps) => {
     );
   }
   return (
-    <div className="bg-white p-4 rounded-2xl shadow hover:shadow-xl duration-300 mt-10">
+    <div className="bg-white p-5 rounded-2xl shadow hover:shadow-xl duration-300 mt-10">
+      <h2 className="text-2xl text-center font-bold py-6 mb-2">
+        Biểu đồ doanh thu đặt phòng online/offline
+      </h2>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={chartData}
@@ -47,8 +50,8 @@ const BookingResourceChart = ({ data }: BookingResourceChartProps) => {
           <YAxis />
           <Tooltip
             formatter={(value, name) => {
-              if (name === "online") return [value, "Đặt online"];
-              if (name === "offline") return [value, "Đặt offline"];
+              if (name === "online") return [value, "booking online"];
+              if (name === "offline") return [value, "booking khách sạn"];
               return [value, name];
             }}
           />

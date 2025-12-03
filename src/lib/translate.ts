@@ -1,3 +1,8 @@
+import {
+  Department,
+  Position,
+} from "@/app/(dashboard)/admin/profile/components/employee";
+
 // Translate status to Vietnamese
 export const translateStatus = (status: string) => {
   const statusMap: Record<string, string> = {
@@ -32,3 +37,39 @@ export const translatePaymentMethod = (method: string) => {
   };
   return methodMap[method] || method;
 };
+
+export const translateDepartment = (
+  dept: Department | null | undefined
+): string => {
+  const departments: Record<Department, string> = {
+    MANAGEMENT: "Quản Lý",
+    FRONT_DESK: "Lễ Tân",
+    MAINTENANCE: "Bảo Trì",
+  };
+  return dept ? departments[dept] || dept : "Chưa phân công";
+};
+
+// translate position with proper typing
+export const translatePosition = (pos: Position | null | undefined): string => {
+  const positions: Record<Position, string> = {
+    MANAGEMENT: "Quản Lý",
+    FRONT_DESK: "Lễ Tân",
+    MAINTENANCE: "Bảo Trì",
+  };
+  return pos ? positions[pos] || pos : "Nhân viên";
+};
+
+export function translateMaintenanceStatus(status: string): string {
+  switch (status) {
+    case "SCHEDULED":
+      return "Đã lên lịch";
+    case "IN_PROGRESS":
+      return "Đang thực hiện";
+    case "COMPLETED":
+      return "Đã hoàn thành";
+    case "CANCELLED":
+      return "Đã hủy";
+    default:
+      return "Không xác định";
+  }
+}

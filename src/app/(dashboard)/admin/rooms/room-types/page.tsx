@@ -19,10 +19,6 @@ const Page = () => {
     `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype?search=${debouncedSearch}&page=${page}&limit=${limit}`
   );
 
-  if (isLoading) {
-    return <div>Đang tải dữ liệu...</div>;
-  }
-
   return (
     <div className="bg-white p-6 rounded-xl">
       <ElegantTitle title="Quản Lý Loại Phòng" className="ml-5 mb-5" />
@@ -36,7 +32,11 @@ const Page = () => {
         />
         <CreateRoomtype />
       </div>
-      <RoomTypesAdminPage roomTypes={data?.roomType || []} />
+      {isLoading ? (
+        <div className="text-center col-span-5">Đang tải dữ liệu...</div>
+      ) : (
+        <RoomTypesAdminPage roomTypes={data?.roomType || []} />
+      )}
       <Pagination
         page={page}
         setPage={setPage}

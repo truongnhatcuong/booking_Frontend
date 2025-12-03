@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 import AddAmenies from "./components/AddAmenies";
 import { Input } from "@/components/ui/input";
+import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 const Page = () => {
   const { data, error, isLoading } = useSWR(
@@ -17,23 +18,19 @@ const Page = () => {
   if (error) {
     return <div>Đã xảy ra lỗi: {error.message}</div>;
   }
-  if (isLoading) {
-    return <div>Đang tải dữ liệu...</div>;
-  }
+
   // Kiểm tra trạng thái loading và hiển thị thông báo
   return (
     <div className="bg-white p-6 rounded-xl">
-      <div className="flex justify-between items-center mb-4">
-        <div>
-          <Input
-            type="search"
-            className="px-3 py-2"
-            placeholder="tìm kiếm ..."
-          />
-        </div>
+      <ElegantTitle title="Quản lý tiện nghi" />
+      <div className="flex justify-end items-center ">
         <AddAmenies />
       </div>
-      <TableAmenies amenities={data?.amenity || []} />
+      {isLoading ? (
+        <div className="text-center col-span-5">Đang tải dữ liệu...</div>
+      ) : (
+        <TableAmenies amenities={data?.amenity || []} />
+      )}
     </div>
   );
 };

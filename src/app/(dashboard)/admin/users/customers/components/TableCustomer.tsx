@@ -38,30 +38,13 @@ interface Customer {
 
 interface ITableCustomer {
   customers: User[];
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  setCurrentPage: (value: number) => void;
 }
 
-const TableCustomer = ({
-  customers,
-  searchTerm,
-  setSearchTerm,
-  setCurrentPage,
-}: ITableCustomer) => {
+const TableCustomer = ({ customers }: ITableCustomer) => {
   // Filter customers based on search term
 
   return (
     <div className="space-y-4 bg-white p-5 border rounded-xl">
-      <div className="flex items-center justify-between">
-        <SearchForm
-          placeholder="Tìm Kiếm Theo Tên / CCCD..."
-          search={searchTerm}
-          setSearch={setSearchTerm}
-          setPage={setCurrentPage}
-        />
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>

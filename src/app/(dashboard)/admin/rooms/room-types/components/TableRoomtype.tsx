@@ -35,7 +35,7 @@ interface MockRoomType {
 
 export default function RoomTypesAdminPage({ roomTypes }: MockRoomType) {
   if (!roomTypes || roomTypes.length === 0) {
-    return <div className="text-center py-8">No room types available</div>;
+    return <div className="text-center py-8">Không có loại phòng nào</div>;
   }
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
 

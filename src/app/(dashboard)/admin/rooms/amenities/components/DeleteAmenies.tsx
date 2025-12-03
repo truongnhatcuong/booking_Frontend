@@ -39,10 +39,10 @@ const DeleteAmenies = ({ id }: { id: string }) => {
       <Button
         variant="ghost"
         size="icon"
-        className="hover:text-red-500 cursor-pointer"
+        className="hover:text-red-500 cursor-pointer p-1 text-white bg-red-600"
         onClick={handleDelete}
       >
-        <Trash className="h-4 w-4 " />
+        <Trash className="h-4 w-4" />
       </Button>
     </>
   );

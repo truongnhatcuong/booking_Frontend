@@ -19,9 +19,9 @@ const RevenueTotalMonth: React.FC<RevenueTotalMonthProps> = ({ data }) => {
   }));
 
   return (
-    <div className="bg-white shadow-xl hover:shadow-2xl duration-300 rounded-2xl mt-5 p-4">
+    <div className="bg-white shadow-xl hover:shadow-2xl duration-300 rounded-2xl mt-5 p-2">
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={charData}>
+        <LineChart data={charData} title="Doanh thu theo tháng">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="months" />
           <YAxis />

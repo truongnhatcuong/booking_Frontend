@@ -11,8 +11,9 @@ import {
   ShieldCheckIcon,
   KeyIcon,
 } from "@heroicons/react/24/outline";
-import { Department, Position, UserProfile, UserStatus } from "./employee";
+import { UserProfile, UserStatus } from "./employee";
 import { formatDate } from "@/lib/formatDate";
+import { translateDepartment, translatePosition } from "@/lib/translate";
 
 // Format date function with proper typing
 
@@ -27,25 +28,6 @@ interface EmployeeProfileProps {
 
 export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
   const router = useRouter();
-
-  const formatDepartment = (dept: Department | null | undefined): string => {
-    const departments: Record<Department, string> = {
-      MANAGEMENT: "Quản Lý",
-      FRONT_DESK: "Lễ Tân",
-      MAINTENANCE: "Bảo Trì",
-    };
-    return dept ? departments[dept] || dept : "Chưa phân công";
-  };
-
-  // Format position with proper typing
-  const formatPosition = (pos: Position | null | undefined): string => {
-    const positions: Record<Position, string> = {
-      MANAGEMENT: "Quản Lý",
-      FRONT_DESK: "Lễ Tân",
-      MAINTENANCE: "Bảo Trì",
-    };
-    return pos ? positions[pos] || pos : "Nhân viên";
-  };
 
   // Format status with proper typing
   const formatStatus = (status: UserStatus): StatusInfo => {
@@ -216,7 +198,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
                       <div className="flex-1">
                         <p className="text-sm text-gray-600 mb-1">Phòng ban</p>
                         <p className="font-medium text-gray-800">
-                          {formatDepartment(profile.employee.department)}
+                          {translateDepartment(profile.employee.department)}
                         </p>
                       </div>
                     </div>
@@ -227,7 +209,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
                       <div className="flex-1">
                         <p className="text-sm text-gray-600 mb-1">Chức vụ</p>
                         <p className="font-medium text-gray-800">
-                          {formatPosition(profile.employee.position)}
+                          {translatePosition(profile.employee.position)}
                         </p>
                       </div>
                     </div>
@@ -309,7 +291,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
             </div>
             <p className="text-sm text-gray-600 mb-1">Phòng ban</p>
             <p className="text-lg font-bold text-gray-800">
-              {formatDepartment(profile.employee?.department)}
+              {translateDepartment(profile.employee?.department)}
             </p>
           </div>
         </div>

@@ -21,23 +21,9 @@ import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios";
 import Mutate from "@/hook/Mutate";
 import { URL_API } from "@/lib/fetcher";
+import { translateMaintenanceStatus } from "@/lib/translate";
 
 const statuses = ["SCHEDULED", "IN_PROGRESS", "COMPLETED", "CANCELLED"];
-
-function getMaintenanceStatusText(status: string): string {
-  switch (status) {
-    case "SCHEDULED":
-      return "Đã lên lịch";
-    case "IN_PROGRESS":
-      return "Đang thực hiện";
-    case "COMPLETED":
-      return "Đã hoàn thành";
-    case "CANCELLED":
-      return "Đã hủy";
-    default:
-      return "Không xác định";
-  }
-}
 
 const UpdateStatus = ({ status, id }: { status: string; id: string }) => {
   const [open, setOpen] = useState(false);
@@ -53,15 +39,15 @@ const UpdateStatus = ({ status, id }: { status: string; id: string }) => {
         <Button
           variant="outline"
           role="combobox"
-          className="w-[240px] justify-between"
+          className="w-40 justify-between"
         >
           {selectedStatus
-            ? getMaintenanceStatusText(selectedStatus)
+            ? translateMaintenanceStatus(selectedStatus)
             : "Chọn trạng thái"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[240px] p-0">
+      <PopoverContent className="w-50">
         <Command>
           <CommandInput placeholder="Tìm trạng thái..." />
           <CommandList>
@@ -81,7 +67,7 @@ const UpdateStatus = ({ status, id }: { status: string; id: string }) => {
                       });
                       // Cập nhật trạng thái trong giao diện người dùng nếu cần
                       toast.success(
-                        `Cập nhật trạng thái thành công: ${getMaintenanceStatusText(
+                        `Cập nhật trạng thái thành công: ${translateMaintenanceStatus(
                           s
                         )}`
                       );
@@ -96,11 +82,11 @@ const UpdateStatus = ({ status, id }: { status: string; id: string }) => {
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      " h-4 w-4",
                       selectedStatus === s ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {getMaintenanceStatusText(s)}
+                  {translateMaintenanceStatus(s)}
                 </CommandItem>
               ))}
             </CommandGroup>

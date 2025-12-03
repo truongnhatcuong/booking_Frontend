@@ -66,7 +66,7 @@ const CalendarBooking = () => {
   };
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="">
       <Card className="bg-card border-border shadow-lg">
         <CardHeader>
           <CardTitle className="text-xl font-semibold text-card-foreground flex items-center">

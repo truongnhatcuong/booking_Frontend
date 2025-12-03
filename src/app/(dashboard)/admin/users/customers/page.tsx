@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import TableCustomer from "./components/TableCustomer";
+import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 import useSWR from "swr";
 import { URL_API } from "@/lib/fetcher";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
@@ -18,24 +19,26 @@ const Page = () => {
     `${URL_API}/api/auth/customer?search=${debouncedSearch}&page=${currentPage}&limit=${limit}`
   );
 
-  // Kiểm tra trạng thái loading và hiển thị thông báo
-  if (isLoading) {
-    return <div>Đang tải dữ liệu...</div>;
-  }
-
   return (
     <div className="bg-white p-6 rounded-xl">
       <ElegantTitle title="Quản Lý Khách Hàng" />
-      <TableCustomer
-        customers={data.customer.result || []}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        setCurrentPage={setCurrentPage}
-      />
+      <div className="my-6">
+        <SearchForm
+          placeholder="Tìm Kiếm Theo Tên / CCCD..."
+          search={searchTerm}
+          setSearch={setSearchTerm}
+          setPage={setCurrentPage}
+        />
+      </div>
+      {isLoading ? (
+        <div className="text-center col-span-5">Đang tải dữ liệu...</div>
+      ) : (
+        <TableCustomer customers={data?.customer.result ?? []} />
+      )}
       <Pagination
         page={currentPage}
         setPage={setCurrentPage}
-        totalPages={data.customer.totalPages || 1}
+        totalPages={data?.customer.totalPages || 1}
       />
       <LimitSelector onChange={setLimit} value={limit} />
     </div>

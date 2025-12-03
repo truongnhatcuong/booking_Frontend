@@ -59,7 +59,7 @@ const UpdateAmenies = ({ amenities }: IUpdateAmeniesProps) => {
       <Button
         variant="ghost"
         size="icon"
-        className="hover:text-blue-500 cursor-pointer"
+        className="hover:text-blue-500 cursor-pointer text-white p-1 bg-blue-600"
         onClick={() => setIsOpen(true)}
       >
         <Pencil className="h-4 w-4 " />

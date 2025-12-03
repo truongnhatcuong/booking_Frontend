@@ -1,5 +1,5 @@
 "use client";
-import {  useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -13,6 +13,7 @@ import {
 import { adminMenu, IListItemAdmin } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
 import useAuth from "@/lib/authUser";
+import { translatePosition } from "@/lib/translate";
 
 const AdminSidebar = () => {
   const pathname = usePathname();
@@ -76,7 +77,9 @@ const AdminSidebar = () => {
                     </Link>
                   </p>
                   <p className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 shadow-sm w-fit">
-                    {user && user.employee && user?.employee?.position}
+                    {user &&
+                      user.employee &&
+                      translatePosition(user?.employee?.position)}
                   </p>
                 </div>
 

@@ -24,7 +24,7 @@ export default function RootLayout({
         <header>
           <HeaderTop />
           <Header />
-        </header>{" "}
+        </header>
         <main className="flex-1">{children}</main>
         <footer className="">
           <Footer />

@@ -48,7 +48,7 @@ const TableBlog = ({ posts }: TableBlogProps) => {
 
   return (
     <div className="container mx-auto p-6 rounded-2xl bg-white">
-      <h2 className="text-2xl font-bold mb-4">Blog Post Management</h2>
+      <h2 className="text-2xl font-bold mb-4">Quản Lý Bài Viết</h2>
       <div className="border rounded-md">
         <Table>
           <TableHeader>

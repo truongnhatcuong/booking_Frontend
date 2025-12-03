@@ -41,7 +41,7 @@ const TableAmenies = ({ amenities }: IAmenities) => {
             <TableRow key={amenity.id}>
               <TableCell>{amenity.name}</TableCell>
               <TableCell>{amenity.description}</TableCell>
-              <TableCell className="text-right">
+              <TableCell className="flex gap-3 justify-end">
                 <UpdateAmenies amenities={amenity} />
                 <DeleteAmenies id={amenity.id} />
               </TableCell>
