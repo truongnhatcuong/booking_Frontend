@@ -1,0 +1,28 @@
+services:
+  booking-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_URL_API: ${NEXT_PUBLIC_URL_API}
+        NEXT_PUBLIC_PUSHER_KEY: ${NEXT_PUBLIC_PUSHER_KEY}
+        UPLOADTHING_TOKEN: ${UPLOADTHING_TOKEN}
+        JWT_SECRET: ${JWT_SECRET}
+
+    ports:
+      - "5000:3000"
+    environment:
+      NEXT_PUBLIC_URL_API: ${NEXT_PUBLIC_URL_API}
+      NEXT_PUBLIC_PUSHER_KEY: ${NEXT_PUBLIC_PUSHER_KEY}
+      UPLOADTHING_TOKEN: ${UPLOADTHING_TOKEN}
+      JWT_SECRET: ${JWT_SECRET}
+    env_file:
+      - .env
+    restart: unless-stopped
+
+    networks:
+      - booking-frontend-network
+
+networks:
+  booking-frontend-network:
+    driver: bridge
