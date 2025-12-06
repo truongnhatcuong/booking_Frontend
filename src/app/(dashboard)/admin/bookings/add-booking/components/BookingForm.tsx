@@ -174,7 +174,7 @@ export default function BookingForm({
 
   return (
     <>
-      <div className="mx-auto p-6 bg-white rounded-lg shadow-sm w-full">
+      <div className=" w-full">
         <form className="space-y-6">
           {/* First Row - Name Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

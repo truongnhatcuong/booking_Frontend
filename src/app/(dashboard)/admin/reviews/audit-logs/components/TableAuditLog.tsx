@@ -27,7 +27,7 @@ interface IAuditLogProps {
 
 const TableAuditLog = ({ auditLogs }: IAuditLogProps) => {
   return (
-    <div className="p-6 bg-white border rounded-xl ">
+    <div className=" bg-white border rounded-xl ">
       <div className="rounded-md border">
         <Table>
           <TableHeader>

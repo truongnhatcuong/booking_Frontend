@@ -47,7 +47,7 @@ const TableBlog = ({ posts }: TableBlogProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="container mx-auto p-6 rounded-2xl bg-white">
+    <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
       <h2 className="text-2xl font-bold mb-4">Quản Lý Bài Viết</h2>
       <div className="border rounded-md">
         <Table>

@@ -60,7 +60,7 @@ const PostBlog = () => {
   };
 
   return (
-    <div className=" mx-auto p-4 bg-white">
+    <div className="lg:px-10 py-5 px-4 rounded-2xl bg-white">
       <div className="flex justify-between">
         {" "}
         <h1 className="text-2xl font-bold mb-6">Tạo bài viết mới</h1>

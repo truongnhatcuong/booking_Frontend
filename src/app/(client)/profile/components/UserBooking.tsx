@@ -24,10 +24,10 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-4 lg:px-5  ">
-      <div className="bg-white rounded-lg shadow-sm h-full">
+    <div className="max-w-7xl mx-auto px-4 lg:px-5 mb-20 md:mb-0 ">
+      <div className="bg-white rounded-lg shadow-sm h-full py-8 border">
         {/* Header */}
-        <div className="border-b p-4">
+        <div className="border-b p-4 border-gray-200">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-lg font-medium">

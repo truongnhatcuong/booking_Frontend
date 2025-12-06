@@ -4,6 +4,7 @@ import React from "react";
 import useSWR from "swr";
 import TableDiscount from "./components/TableDisCount";
 import CreateDiscount from "./components/CreateDisCount";
+import ElegantTitle from "../../components/TitleDashboard/ElegantTitle";
 
 export interface IDiscount {
   id: string;
@@ -22,7 +23,8 @@ const Page = () => {
     return <div>Dữ Liệu Đang Cập Nhật</div>;
   }
   return (
-    <div className="p-6 bg-white">
+    <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
+      <ElegantTitle title="Quản Lý Giảm Giá" />
       <div className="flex justify-end mb-4 ">
         {" "}
         <CreateDiscount />
