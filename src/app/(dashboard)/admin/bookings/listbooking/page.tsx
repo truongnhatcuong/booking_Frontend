@@ -27,7 +27,7 @@ const BookingManagementForm = () => {
   );
 
   return (
-    <div className="container mx-auto p-6 bg-white">
+    <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
       <ElegantTitle title="Quản lý đặt phòng" className="mb-5" />
       <div className="justify-center flex items-center">
         <FilterBooking

@@ -33,8 +33,8 @@ const RoomCard = ({ room }: Iroom) => {
   }, [room.id]);
 
   return (
-    <div className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
-      <div className="relative h-40 bg-gradient-to-br from-blue-50 to-indigo-100 overflow-hidden">
+    <div className=" group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+      <div className="relative h-40 w-full bg-gradient-to-br from-blue-50 to-indigo-100 overflow-hidden">
         <Image
           src={room.images[0].imageUrl || "/images/room-placeholder.jpg"}
           alt={room.roomType.name}

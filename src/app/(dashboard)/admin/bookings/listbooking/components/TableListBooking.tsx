@@ -11,9 +11,10 @@ import { formatPrice } from "@/lib/formatPrice";
 import React, { useState } from "react";
 import UpdateStatus from "./UpdateStatus";
 import { FilterDropdown } from "./FilterDropdown";
-import { ArrowDown, ArrowDownUp, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowDownUp, ArrowUp, Phone } from "lucide-react";
 import { translatePaymentStatus, translateStatus } from "@/lib/translate";
 import { IBooking } from "./bookingad";
+import { formatDate } from "@/lib/formatDate";
 
 interface BookingProps {
   booking: IBooking[];
@@ -53,7 +54,7 @@ const TableListBooking = ({
               Mã đặt phòng
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Khách hàng
+              Khách hàng{"_ "}Số điện thoại
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Loại Phòng
@@ -105,15 +106,21 @@ const TableListBooking = ({
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 *:flex items-center gap-2">
                   #{booking.id.replace(/-/g, "").slice(0, 8)}
                 </TableCell>
-                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {booking.customer.user.firstName}{" "}
-                  {booking.customer.user.lastName}
+                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex gap-4">
+                  <p>
+                    {booking.customer.user.firstName}
+                    {booking.customer.user.lastName}
+                  </p>
+                  <p className="flex gap-1 items-center">
+                    <Phone size={15} className="text-green-500" />
+                    {booking.customer.user.phone}
+                  </p>
                 </TableCell>
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {booking.bookingItems.map((item, index) => (
                     <p key={index}>
                       {item.room.roomType.name}{" "}
-                      <span>({booking.totalGuests})</span>
+                      <span>-P{item.room.roomNumber}</span>
                     </p>
                   ))}
                 </TableCell>
@@ -121,10 +128,10 @@ const TableListBooking = ({
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex items-center gap-20 ">
                   <p className="text-right ">
                     {" "}
-                    {new Date(booking.checkInDate).toLocaleDateString("vi-VN")}
+                    {formatDate(booking.checkInDate)}
                   </p>
                   <p className="text-left">
-                    {new Date(booking.checkOutDate).toLocaleDateString("vi-VN")}
+                    {formatDate(booking.checkOutDate)}
                   </p>
                 </TableCell>
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
