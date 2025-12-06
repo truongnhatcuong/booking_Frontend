@@ -18,6 +18,7 @@ interface ILoginModal {
 const LoginModal = ({ isLogin, setIsLogin }: ILoginModal) => {
   const { login } = useUserStore();
 
+
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     email: "",
@@ -52,7 +53,11 @@ const LoginModal = ({ isLogin, setIsLogin }: ILoginModal) => {
           role: string;
         };
         localStorage.setItem("token", token);
-        localStorage.setItem("sessionId", decoded.id || crypto.randomUUID());
+        localStorage.setItem(
+          "sessionId",
+          decoded.id ||  Math.random().toString(36).substring(2, 12)
+        );
+
         login({
           id: decoded.id,
           lastName: decoded.lastName,
@@ -69,7 +74,7 @@ const LoginModal = ({ isLogin, setIsLogin }: ILoginModal) => {
       setIsLogin(false);
     }
   };
-  
+
   useEffect(() => {
     if (message) {
       const timeout = setTimeout(() => {
