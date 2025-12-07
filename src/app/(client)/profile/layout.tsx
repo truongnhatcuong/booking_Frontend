@@ -26,7 +26,7 @@ const LayoutProfile = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="md:mt-10 mt-0  grid-cols-1 lg:grid grid-cols-[15%_85%] md:grid-cols-[20%_80%] ">
+    <div className="md:mt-10 mt-0 lg:grid grid-cols-[15%_85%] md:grid-cols-[20%_80%] ">
       <div>
         <ProfileItems />
       </div>

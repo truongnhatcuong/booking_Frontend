@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { URL_API } from "@/lib/fetcher";
 import ListRoom, { RoomCustomer } from "./ListRoom";
@@ -19,7 +19,7 @@ const RoomShow = () => {
     <>
       {" "}
       <div className="text-center my-12 ">
-        <h1 className=" text-2xl md:text-5xl font-bold  mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className=" text-2xl md:text-5xl font-bold  mb-4 bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
           Thiên đường nghỉ dưỡng
         </h1>
         <p className="text-xl text-gray-600 md:max-w-2xl mx-10 md:mx-auto ">

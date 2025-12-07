@@ -70,8 +70,8 @@ const AiLoadingOverlay = ({ loading }: IAiLoading) => {
   ];
 
   return (
-    <div className="absolute top-0 right-0 z-[100]">
-      <div className="relative flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#001848] to-[#004C97] text-white w-screen h-screen rounded-2xl shadow-2xl">
+    <div className="absolute top-0 right-0 z-100">
+      <div className="relative flex flex-col justify-between overflow-hidden bg-linear-to-b from-[#001848] to-[#004C97] text-white w-screen h-screen rounded-2xl shadow-2xl">
         {/* Backgrounds */}
         {backgrounds.map((bg) => (
           <img

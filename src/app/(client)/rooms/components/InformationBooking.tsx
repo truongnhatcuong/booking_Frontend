@@ -65,6 +65,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
   useEffect(() => {
     Modal.setAppElement("#root");
   }, []);
+
   useEffect(() => {
     const fetchUser = async () => {
       const resUser = await axiosInstance.get(`/api/auth/user`, {
