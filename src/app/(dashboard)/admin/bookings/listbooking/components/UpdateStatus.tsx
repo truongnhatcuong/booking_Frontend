@@ -75,7 +75,7 @@ const UpdateStatus = ({ booking }: IUpdateStatus) => {
       );
 
       if (res.data) {
-        Mutate(`${URL_API}/api/booking?idNumber=`);
+        Mutate(`${URL_API}/api/booking`);
         toast.success("Phòng Đã Được xóa");
       }
     } catch (error: any) {
@@ -86,17 +86,14 @@ const UpdateStatus = ({ booking }: IUpdateStatus) => {
   return (
     <>
       <DropdownMenu>
-        {" "}
         <DropdownMenuTrigger className="text-center ml-8">
           <MoreHorizontal className="w-5 h-5 cursor-pointer " />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
-          {" "}
           <DropdownMenuLabel>Hành Động</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              {" "}
               <Invoice booking={booking} />
             </DropdownMenuItem>
 

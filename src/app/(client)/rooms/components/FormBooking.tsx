@@ -81,7 +81,6 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
     setIsOpen(true);
   };
 
-  console.log("laf", formData);
   const { data } = useSWR(`${URL_API}/api/room/${room.id}/booked-dates`);
   const { data: discount } = useSWR(
     discountCode ? `${URL_API}/api/discount?code=${discountCode}` : null

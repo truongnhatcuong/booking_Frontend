@@ -5,7 +5,6 @@ export default async function middleware(req: NextRequest) {
   const token = authHeader
     ? authHeader.split(" ")[1]
     : req.cookies.get("token")?.value;
-  console.log("token ", token);
 
   if (req.nextUrl.pathname === "/logOut") {
     const response = NextResponse.redirect(new URL("/signIn", req.url));

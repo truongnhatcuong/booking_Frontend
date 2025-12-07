@@ -14,11 +14,13 @@ import { adminMenu, IListItemAdmin } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
 import useAuth from "@/lib/authUser";
 import { translatePosition } from "@/lib/translate";
+import { useUserStore } from "@/hook/useUserStore";
 
 const AdminSidebar = () => {
   const pathname = usePathname();
   const { isCollapsed, toggleCollapse, countCustomer } = useSidebar();
   const { user } = useAuth();
+  const { logout } = useUserStore();
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<number[]>([]);
@@ -100,13 +102,7 @@ const AdminSidebar = () => {
                     className=" hover:rounded-full hover:bg-gray-200 p-2 mt-1 text-gray-600 text-sm hover:text-gray-800"
                     title="Đăng xuất"
                   >
-                    <Link
-                      href="/logOut"
-                      onClick={() => {
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("refreshToken");
-                      }}
-                    >
+                    <Link href="/logOut" onClick={logout}>
                       <LogOut />
                     </Link>
                   </div>

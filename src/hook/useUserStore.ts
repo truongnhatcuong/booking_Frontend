@@ -1,5 +1,7 @@
 // useUserStore.ts
 "use client";
+import axiosInstance from "@/lib/axios";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { create } from "zustand";
 
@@ -21,8 +23,12 @@ interface UserStore {
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
   login: (user) => set({ user }),
-  logout: () => {
-    localStorage.removeItem("token");
+  logout: async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      await axiosInstance.get(`/api/auth/logOut`);
+      localStorage.removeItem("token");
+    }
     set({ user: null });
   },
   initUser: () => {
