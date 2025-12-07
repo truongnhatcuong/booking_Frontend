@@ -57,7 +57,7 @@ const AdminHeader = () => {
               <Link href={"#"}>Cài Đặt</Link>
             </li>
             <li>
-              <Link href={"/"}>Đăng Xuất</Link>
+              <Link href={"/"}>Quay Lại </Link>
             </li>
           </ul>
         </div>

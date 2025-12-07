@@ -46,7 +46,7 @@ const AccountUser = ({ userType, lastName }: AccountUserProps) => {
               </Link>
             </>
           )}
-          <Link href="/logOut" onClick={() => logout()}>
+          <Link href="/logOut" onClick={logout}>
             <DropdownMenuItem>Đăng Xuất</DropdownMenuItem>
           </Link>
         </DropdownMenuContent>
