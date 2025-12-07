@@ -1,11 +1,12 @@
 "use client";
 
 import { HoverCardContent } from "@/components/ui/hover-card";
+import { useRoomTypeStore } from "@/hook/roomTypeStore";
 import { HoverCard, HoverCardTrigger } from "@radix-ui/react-hover-card";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 interface IListHeader {
@@ -30,9 +31,13 @@ const ListItems: IListHeader[] = [
 
 const ListItem = () => {
   const pathname = usePathname();
+  const { setRoomTypes } = useRoomTypeStore();
   const { data, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype?page=1&limit=999`
+    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`
   );
+  useEffect(() => {
+    if (data?.roomType) setRoomTypes(data.roomType);
+  }, [data]);
 
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
 
@@ -61,18 +66,22 @@ const ListItem = () => {
               </HoverCardTrigger>
               <HoverCardContent
                 align="center"
-                className="w-48 mt-2 p-2 bg-white shadow-lg rounded-lg border hidden md:block "
+                className="w-70 mt-2 p-2 bg-white shadow-lg rounded-lg border hidden md:block "
               >
                 {isLoading && (
                   <p className="text-gray-500 text-sm">Loading...</p>
                 )}
                 {data && data?.roomType?.length > 0 ? (
-                  <ul className="space-y-1">
+                  <ul className="grid grid-cols-2">
                     {data?.roomType?.map((room: IRoomtype) => (
                       <li key={room.id}>
                         <Link
                           href={`/rooms/${room.id}`}
-                          className="block text-gray-700 hover:bg-gray-50 p-2 rounded hover:border-l-4 text-center hover:border-amber-400 transition-all duration-150"
+                          className={`block ${
+                            pathname === `/rooms/${room.id}`
+                              ? "text-red-500 font-semibold"
+                              : ""
+                          } text-gray-700 hover:bg-gray-50 p-2 rounded hover:border-l-4 text-center hover:border-amber-400 transition-all duration-150`}
                         >
                           {room.name}
                         </Link>
@@ -106,19 +115,23 @@ const ListItem = () => {
               </button>
 
               {isMobileDropdownOpen && (
-                <div className="mt-2 w-full bg-white/70 shadow-lg rounded-lg border overflow-hidden">
+                <div className="mt-2 w-full bg-white/80 shadow-lg rounded-lg border overflow-hidden">
                   {isLoading && (
                     <div className="p-4">
                       <p className="text-gray-500 text-sm">Loading...</p>
                     </div>
                   )}
                   {data && data?.roomType?.length > 0 ? (
-                    <ul className="py-2">
+                    <ul className="grid grid-cols-2">
                       {data?.roomType.map((room: IRoomtype) => (
                         <li key={room.id}>
                           <Link
                             href={`/rooms/${room.id}`}
-                            className="block text-gray-700 hover:bg-gray-50 px-4 text-center py-3 hover:border-l-4  transition-all duration-150"
+                            className={`block ${
+                              pathname === `/rooms/${room.id}`
+                                ? "text-red-500 font-semibold"
+                                : ""
+                            } hover:bg-gray-50 px-4 text-center py-3 hover:border-l-4  transition-all duration-150`}
                             onClick={() => setIsMobileDropdownOpen(false)}
                           >
                             {room.name}

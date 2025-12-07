@@ -6,34 +6,14 @@ import Image from "next/image";
 
 import { motion } from "framer-motion";
 
-import useSWR from "swr";
 import Link from "next/link";
-
-interface Amenity {
-  id: string;
-  name: string;
-  description: string | null;
-}
-
-interface RoomType {
-  id: string;
-  name: string;
-  description: string | null;
-  maxOccupancy: number;
-  photoUrls: string; // JSON string array<
-  amenities: {
-    amenity: Amenity;
-  }[];
-}
-
-interface RoomTypeShowcaseProps {
-  roomType: RoomType[];
-}
+import { IRoomType, useRoomTypeStore } from "@/hook/roomTypeStore";
 
 export default function RoomTypeShowcase() {
-  const { data } = useSWR<RoomTypeShowcaseProps>("/api/roomtype");
+  const { roomType } = useRoomTypeStore();
+
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+    <section className="py-20 px-4 bg-linear-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div
@@ -54,7 +34,7 @@ export default function RoomTypeShowcase() {
 
         {/* Room Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data?.roomType.map((roomType, index) => (
+          {roomType?.map((roomType, index) => (
             <RoomCard key={roomType.id} roomType={roomType} index={index} />
           ))}
         </div>
@@ -63,7 +43,7 @@ export default function RoomTypeShowcase() {
   );
 }
 
-function RoomCard({ roomType, index }: { roomType: RoomType; index: number }) {
+function RoomCard({ roomType, index }: { roomType: IRoomType; index: number }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -89,7 +69,7 @@ function RoomCard({ roomType, index }: { roomType: RoomType; index: number }) {
           </div>
 
           {/* Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
 
           {/* Max Occupancy Badge */}
           <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">

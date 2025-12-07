@@ -11,7 +11,7 @@ interface IMainArticle {
 const MainArticle = ({ article }: IMainArticle) => {
   return (
     <Link href={`blog/${article.slug}`}>
-      <div className="relative h-full xl:h-[100vh] group overflow-hidden rounded-lg ">
+      <div className="relative h-full xl:h-screen 2xl:h-[80vh] group overflow-hidden rounded-lg ">
         {/* Ảnh nền */}
         <Image
           alt={article.title}
