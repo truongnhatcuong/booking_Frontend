@@ -9,6 +9,7 @@ import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import { RoomTypeFilter } from "./components/RoomTypeFilter";
 import { StatusFilter } from "./components/StatusFilter";
 import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
+import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
 
 const Page = () => {
   const [limit, setLimit] = useState(10);
@@ -33,19 +34,29 @@ const Page = () => {
     <div className="bg-white p-4 rounded-md shadow-md">
       <ElegantTitle title="Quản Lý Danh Sách Phòng" className="mb-5 ml-5" />
 
-      <div className="flex justify-between items-center my-5">
-        <SearchForm
-          search={search}
-          setSearch={setSearch}
-          setPage={setPage}
-          placeholder="Nhập Số Phòng Tại Đây ...."
-        />
+      <div className="lg:flex lg:justify-between items-center my-5">
+        <div className="hidden lg:block">
+          <SearchForm
+            search={search}
+            setSearch={setSearch}
+            setPage={setPage}
+            placeholder="Nhập Số Phòng Tại Đây ...."
+          />
+        </div>
 
         <CreateRoom data={DataTypeRoom?.roomType ?? []} />
+        <div className="block lg:hidden">
+          <SearchForm
+            search={search}
+            setSearch={setSearch}
+            setPage={setPage}
+            placeholder="Nhập Số Phòng Tại Đây ...."
+          />
+        </div>
       </div>
-      <div className="mb-5 flex items-center gap-6">
+      <div className="mb-5 flex flex-col lg:flex-row items-center gap-6">
         <RoomTypeFilter
-          className="w-56"
+          className="w-full lg:w-60"
           placeholder="Chọn loại phòng"
           showCapacity={true}
           options={DataTypeRoom?.roomType}
@@ -58,6 +69,7 @@ const Page = () => {
           onStatusChange={setSelectedStatuses}
           placeholder="Chọn trạng thái phòng"
           multiple={false}
+          className="w-full lg:w-60 "
         />
       </div>
       <TableRoom
@@ -65,6 +77,7 @@ const Page = () => {
         data={DataTypeRoom?.roomType || []}
       />
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
+      <LimitSelector value={limit} onChange={(value) => setLimit(value)} />
     </div>
   );
 };

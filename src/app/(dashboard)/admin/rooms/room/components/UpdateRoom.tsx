@@ -381,7 +381,7 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
                   name="notes"
                   value={formData.notes || ""}
                   onChange={handleChange}
-                  rows={4}
+                  rows={7}
                   placeholder="Nhập thông tin bổ sung về phòng (tùy chọn)..."
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 resize-none"
                 />
