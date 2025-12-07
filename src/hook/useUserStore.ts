@@ -1,7 +1,6 @@
 // useUserStore.ts
 "use client";
 import axiosInstance from "@/lib/axios";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { create } from "zustand";
 
@@ -17,7 +16,7 @@ interface UserStore {
   user: UserData | null;
   login: (user: UserData) => void;
   logout: () => void;
-  initUser: () => void; // thêm hàm khởi tạo
+  initUser: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -28,6 +27,7 @@ export const useUserStore = create<UserStore>((set) => ({
     if (token) {
       await axiosInstance.get(`/api/auth/logOut`);
       localStorage.removeItem("token");
+      window.location.href = "/logOut";
     }
     set({ user: null });
   },

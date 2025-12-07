@@ -102,9 +102,9 @@ const AdminSidebar = () => {
                     className=" hover:rounded-full hover:bg-gray-200 p-2 mt-1 text-gray-600 text-sm hover:text-gray-800"
                     title="Đăng xuất"
                   >
-                    <Link href="/logOut" onClick={logout}>
+                    <button onClick={logout}>
                       <LogOut />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
