@@ -1,8 +1,5 @@
 "use client";
-
-import MarkDown from "@/hook/MarkDown";
-import { useParams } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 interface HeroSectionProps {
   title: string;
@@ -30,10 +27,10 @@ export function HeroSection({
     medium: "bg-black/50",
     dark: "bg-black/70",
   };
-
+  const [openKeyword, setOpenKeyword] = useState(false);
   const gradientOverlay =
     variant === "gradient"
-      ? "bg-gradient-to-br from-blue-600/90 via-purple-600/80 to-pink-600/90"
+      ? "bg-linear-to-br from-blue-600/90 via-purple-600/80 to-pink-600/90"
       : overlayConfigs[overlayOpacity];
 
   return (
@@ -41,11 +38,11 @@ export function HeroSection({
       className={`
         relative pt-24 pb-20 lg:pt-10 lg:pb-28
         bg-cover bg-center bg-no-repeat 
-        min-h-screen flex items-center justify-center
+         lg:min-h-screen flex items-center justify-center
         overflow-hidden
         ${
           !backgroundImage && variant === "gradient"
-            ? "bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600"
+            ? "bg-linear-to-br from-blue-600 via-purple-600 to-pink-600"
             : "bg-gray-900"
         }
         ${className}
@@ -66,7 +63,7 @@ export function HeroSection({
           <div className="absolute inset-0 backdrop-blur-xs" />
 
           {/* Layer 3: Gradient overlay từ bottom để tạo depth */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30" />
         </>
       )}
 
@@ -90,22 +87,28 @@ export function HeroSection({
               mb-6 lg:mb-8
               leading-tight whitespace-pre-line
               animate-fade-in-up
-              [text-shadow:_0_2px_10px_rgb(0_0_0_/_40%)]
+              [text-shadow:0_2px_10px_rgb(0_0_0/40%)]
             "
           >
             {title}
           </h1>
 
-          {/* Description với background blur để dễ đọc hơn */}
+          {/* mobile*/}
           {description && (
-            <div className="backdrop-blur-md bg-black/20 rounded-2xl p-6 mb-8 lg:mb-10 animate-fade-in-up animation-delay-200">
+            <div
+              className={`backdrop-blur-md bg-black/20   ${
+                openKeyword
+                  ? "line-clamp-none"
+                  : "line-clamp-10 lg:line-clamp-none"
+              } rounded-2xl p-6 mb-8 lg:mb-10 animate-fade-in-up animation-delay-200`}
+            >
               <p
                 className="
                   text-lg sm:text-xl md:text-2xl
                   text-white
                   max-w-3xl
                   leading-relaxed
-                  [text-shadow:_0_1px_8px_rgb(0_0_0_/_30%)]
+                  [text-shadow:0_1px_8px_rgb(0_0_0/30%)]
                   whitespace-pre-line
                   
                 "
@@ -125,7 +128,10 @@ export function HeroSection({
       </div>
 
       {/* Scroll Indicator với backdrop blur */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        onClick={() => setOpenKeyword(!openKeyword)}
+      >
         <div className="flex flex-col items-center gap-2 text-white/90 animate-bounce backdrop-blur-sm bg-black/20 rounded-full p-3">
           <span className="text-sm font-medium hidden sm:block">Scroll</span>
           <svg

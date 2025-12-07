@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <>
       {/* Navigation */}
-      <header className="bg-gradient-to-br from-blue-500/10 to-teal-800/90  border-b border-white/10 hidden md:block">
+      <header className="bg-linear-to-br from-blue-500/10 to-teal-800/90  border-b border-white/10 hidden md:block">
         <div className=" mx-auto px-4 py-3 ">
           <nav className="flex items-center gap-4">
             {/* Logo */}
@@ -33,7 +33,7 @@ const Header = () => {
           </nav>
         </div>
       </header>
-      <div className="flex justify-between items-center px-4 py-2 md:hidden bg-gradient-to-br from-blue-500/10 to-teal-800/90 border-b border-white/10">
+      <div className="flex justify-between items-center px-4 py-2 md:hidden bg-linear-to-br from-blue-500/10 to-teal-800/90 border-b border-white/10">
         {/* Logo */}
         <Link href={"/"}>
           <Image

@@ -1,8 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import CardBlog from "./components/CardBlog";
-import { Button } from "@/components/ui/button";
 import MainArticle from "./components/MainArticle";
 import CardBlogSub from "./components/CardBlogSub";
 
@@ -18,7 +17,24 @@ export interface Article {
 }
 
 const Page = () => {
+  const [width, setWidth] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isXL = width ? width >= 1300 : false; // Tailwind xl breakpoint = 1280px
+
   const { data, isLoading } = useSWR<Article[]>(`/api/blog`);
+
+  const sliceData = isXL ? data?.slice(1, 6) : data?.slice(1, 5);
+
   if (isLoading) {
     <div>loading.....</div>;
   }
@@ -30,7 +46,7 @@ const Page = () => {
           <div className="relative max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-balance ">
               Khám Phá Thế Giới
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-600">
+              <span className="block text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-green-600">
                 Blogs
               </span>
             </h1>
@@ -59,7 +75,7 @@ const Page = () => {
                   <MainArticle article={data[0]} />
                 </div>
                 <div className="flex flex-col gap-10 ">
-                  {data.slice(1, 6).map((item, index) => (
+                  {sliceData?.map((item, index) => (
                     <CardBlogSub article={item} key={index} />
                   ))}
                 </div>
@@ -68,7 +84,7 @@ const Page = () => {
           </div>
         </div>
       </section>
-      <div className="mt-10   mx-4 lg:mx-10 ">
+      <div className="py-10   mx-4 lg:mx-10 ">
         <div className="flex flex-col md:flex-row text-center md:text-start justify-between mb-5">
           {" "}
           <h1 className="text-red-500 text-3xl font-bold uppercase">

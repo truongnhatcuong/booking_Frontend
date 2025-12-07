@@ -1,10 +1,10 @@
 "use client";
 import "react-datepicker/dist/react-datepicker.css";
 import React, { useEffect, useState } from "react";
-import useSWR from "swr";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 import toast from "react-hot-toast";
+import { useRoomTypeStore } from "@/hook/roomTypeStore";
 
 interface IRoomType {
   id: string;
@@ -25,7 +25,7 @@ const SearchForm = ({
   setAvailableRooms,
   setLoading,
 }: ISeearchForm) => {
-  const { data: roomType } = useSWR(`${URL_API}/api/roomtype`);
+  const { roomType } = useRoomTypeStore();
   const [isSticky, setIsSticky] = useState(false);
 
   const handleChange = (
@@ -69,7 +69,7 @@ const SearchForm = ({
       } else {
         toast.error(`Hiện Tại Phòng Chúng Tôi Chưa có`);
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Có lỗi xảy ra khi tìm phòng");
     } finally {
       setLoading(false);
@@ -176,7 +176,7 @@ const SearchForm = ({
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
           >
             <option value="">Tất cả</option>
-            {roomType?.roomType?.map((item: IRoomType) => (
+            {roomType?.map((item: IRoomType) => (
               <option value={item.name} key={item.id}>
                 {item.name}
               </option>

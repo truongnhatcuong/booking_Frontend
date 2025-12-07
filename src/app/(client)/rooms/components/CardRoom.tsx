@@ -70,20 +70,20 @@ const CardRoom = ({ room }: RoomCardProps) => {
   }
 
   return (
-    <section className="py-8 px-4 md:px-6 lg:px-8 bg-gray-50">
+    <section className="py-15 lg:py-30  px-4 md:px-6 lg:px-10 bg-gray-50">
       {/* Section Title - Agoda Style */}
       <div className="max-w-7xl mx-auto mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
           {room.name}
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 text-xl">
           {room.rooms.length} phòng có sẵn • Sức chứa tối đa {room.maxOccupancy}{" "}
           khách
         </p>
       </div>
 
       {/* Room Cards Grid */}
-      <div className="max-w-7xl mx-auto space-y-4">
+      <div className="max-w-7xl mx-auto space-y-6">
         {room.rooms.map((roomDetail) => (
           <div
             key={roomDetail.id}
