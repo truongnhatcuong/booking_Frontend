@@ -14,14 +14,12 @@ const PaymentSuccess = () => {
       status,
       orderCode,
     });
-  }, []);
-  useEffect(() => {
     const timeout = setTimeout(() => {
       router.push("/profile/bookings");
     }, 3000);
 
     return () => clearTimeout(timeout);
-  }, [router]);
+  }, []);
 
   return (
     <div className="h-screen flex flex-col items-center justify-center">

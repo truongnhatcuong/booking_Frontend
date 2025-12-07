@@ -2,7 +2,7 @@
 import { ReactNode, useState } from "react";
 
 interface HeroSectionProps {
-  title: string;
+  title?: string;
   description?: string;
   children?: ReactNode;
   backgroundImage?: string;
@@ -21,16 +21,16 @@ export function HeroSection({
   variant = "default",
   overlayOpacity = "medium",
 }: HeroSectionProps) {
-  // Độ mờ của overlay tùy theo brightness của ảnh
   const overlayConfigs = {
     light: "bg-black/30",
     medium: "bg-black/50",
     dark: "bg-black/70",
   };
+
   const [openKeyword, setOpenKeyword] = useState(false);
   const gradientOverlay =
     variant === "gradient"
-      ? "bg-linear-to-br from-blue-600/90 via-purple-600/80 to-pink-600/90"
+      ? "bg-gradient-to-br from-blue-600/90 via-purple-600/80 to-pink-600/90"
       : overlayConfigs[overlayOpacity];
 
   return (
@@ -38,11 +38,11 @@ export function HeroSection({
       className={`
         relative pt-24 pb-20 lg:pt-10 lg:pb-28
         bg-cover bg-center bg-no-repeat 
-         lg:min-h-screen flex items-center justify-center
+        lg:min-h-screen flex items-center justify-center
         overflow-hidden
         ${
           !backgroundImage && variant === "gradient"
-            ? "bg-linear-to-br from-blue-600 via-purple-600 to-pink-600"
+            ? "bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600"
             : "bg-gray-900"
         }
         ${className}
@@ -53,18 +53,23 @@ export function HeroSection({
           : undefined,
       }}
     >
-      {/* Multi-layer Overlay với blur cho readability tốt hơn */}
-      {backgroundImage && (
+      {/* Multi-layer Overlay - CHỈ khi có ảnh VÀ KHÔNG phải default */}
+      {backgroundImage && variant !== "default" && (
         <>
           {/* Layer 1: Dark overlay */}
           <div className={`absolute inset-0 ${gradientOverlay}`} />
 
-          {/* Layer 2: Backdrop blur - tạo frosted glass effect */}
+          {/* Layer 2: Backdrop blur */}
           <div className="absolute inset-0 backdrop-blur-xs" />
 
-          {/* Layer 3: Gradient overlay từ bottom để tạo depth */}
-          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30" />
+          {/* Layer 3: Gradient overlay từ bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
         </>
+      )}
+
+      {/* Dark overlay đơn giản cho variant="default" */}
+      {backgroundImage && variant === "default" && (
+        <div className={`absolute inset-0 ${overlayConfigs[overlayOpacity]}`} />
       )}
 
       {/* Animated gradient orbs (decorative) */}
@@ -75,10 +80,10 @@ export function HeroSection({
         </>
       )}
 
-      {/* Content Container với backdrop blur riêng */}
+      {/* Content Container */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="max-w-4xl">
-          {/* Title với text shadow cho readability */}
+          {/* Title với text shadow */}
           <h1
             className="
               text-4xl sm:text-5xl md:text-6xl lg:text-7xl
@@ -93,14 +98,24 @@ export function HeroSection({
             {title}
           </h1>
 
-          {/* mobile*/}
+          {/* Description với conditional blur */}
           {description && (
             <div
-              className={`backdrop-blur-md bg-black/20   ${
-                openKeyword
-                  ? "line-clamp-none"
-                  : "line-clamp-10 lg:line-clamp-none"
-              } rounded-2xl p-6 mb-8 lg:mb-10 animate-fade-in-up animation-delay-200`}
+              className={`
+                ${
+                  variant !== "default"
+                    ? "backdrop-blur-md"
+                    : "backdrop-blur-none"
+                } 
+                bg-black/20 
+                rounded-2xl p-6 mb-8 lg:mb-10 
+                animate-fade-in-up animation-delay-200
+                ${
+                  openKeyword
+                    ? "line-clamp-none"
+                    : "line-clamp-10 lg:line-clamp-none"
+                }
+              `}
             >
               <p
                 className="
@@ -110,7 +125,6 @@ export function HeroSection({
                   leading-relaxed
                   [text-shadow:0_1px_8px_rgb(0_0_0/30%)]
                   whitespace-pre-line
-                  
                 "
               >
                 {description}
@@ -118,7 +132,7 @@ export function HeroSection({
             </div>
           )}
 
-          {/* CTA Buttons với backdrop blur */}
+          {/* CTA Buttons */}
           {children && (
             <div className="animate-fade-in-up animation-delay-400">
               {children}
@@ -127,13 +141,21 @@ export function HeroSection({
         </div>
       </div>
 
-      {/* Scroll Indicator với backdrop blur */}
+      {/* Scroll Indicator với conditional blur */}
       <div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
         onClick={() => setOpenKeyword(!openKeyword)}
       >
-        <div className="flex flex-col items-center gap-2 text-white/90 animate-bounce backdrop-blur-sm bg-black/20 rounded-full p-3">
-          <span className="text-sm font-medium hidden sm:block">Scroll</span>
+        <div
+          className={`
+            flex flex-col items-center gap-2 text-white/90 animate-bounce 
+            bg-black/20 rounded-full p-3 shadow-xl
+            ${variant !== "default" ? "backdrop-blur-sm" : "backdrop-blur-none"}
+          `}
+        >
+          <span className="text-sm font-medium hidden sm:block">
+            {openKeyword ? "Thu gọn" : "Scroll"}
+          </span>
           <svg
             className="w-6 h-6"
             fill="none"

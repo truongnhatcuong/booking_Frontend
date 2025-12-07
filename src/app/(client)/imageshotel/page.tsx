@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { HeroSection } from "../components/common/HeroSection";
 
 const GalleryPage = () => {
   // Array of image filenames (anh1.jpg to anh9.jpg)
@@ -13,14 +14,11 @@ const GalleryPage = () => {
       {/* Heading */}
 
       {/* Video */}
-      <div className=" mb-12 h-screen rounded-xl overflow-hidden shadow-lg">
-        <video
-          src="/video/2406638-uhd_3840_2160_24fps.mp4"
-          loop
-          autoPlay
-          muted
-          playsInline
-          className="w-full h-full object-cover z-10"
+      <div className=" mb-12   h-[80vh] rounded-xl overflow-hidden shadow-lg">
+        <HeroSection
+          backgroundImage="/image/banner4.jpg"
+          variant="default"
+          overlayOpacity="light"
         />
       </div>
 

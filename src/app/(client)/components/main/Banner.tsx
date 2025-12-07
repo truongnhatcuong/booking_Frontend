@@ -3,6 +3,8 @@ import { Navigation, Keyboard, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { HeroSection } from "../common/HeroSection";
+import Image from "next/image";
 
 const Banner = () => {
   return (
@@ -16,51 +18,34 @@ const Banner = () => {
       className="mySwiper w-screen  h-[50%] lg:w-full xl:h-screen"
     >
       <SwiperSlide>
-        <div className="relative w-screen  ">
-          <video
-            src="/video/video2.mp4"
-            loop
-            autoPlay
-            muted
-            playsInline
-            className="w-screen h-full object-cover z-10"
+        <HeroSection
+          backgroundImage="/image/banner1.jpg"
+          title="DTU HOTEL"
+          description="Xin kính chào quý khách đến với DTU HOTEL - Nơi trải nghiệm đỉnh cao của sự sang trọng và tiện nghi giữa lòng thành phố sôi động. Hãy để chúng tôi chăm sóc bạn với dịch vụ hoàn hảo và không gian nghỉ dưỡng đẳng cấp."
+          className="h-[50vh] lg:h-screen"
+          variant="default"
+        />
+      </SwiperSlide>
+
+      <SwiperSlide>
+        <div className="relative h-[50vh] lg:h-screen w-full">
+          <Image
+            src="/image/banner2.jpg"
+            alt="Banner 2"
+            fill
+            className="object-cover"
           />
-          <div className="absolute inset-0 z-20 bg-opacity-30 flex items-center justify-center">
-            <div className="text-center text-white p-4">
-              <h2 className="text-2xl md:text-8xl mb-2">XTRAVEL</h2>
-              <h2 className="text-2xl md:text-8xl font-bold mb-2">Kính Chào</h2>
-              <p className="text-2xl md:text-6xl">Quý Khách</p>
-            </div>
-          </div>
         </div>
       </SwiperSlide>
 
       <SwiperSlide>
-        <div className="relative w-screen  ">
-          <video
-            src="/video/video1.mp4"
-            loop
-            autoPlay
-            muted
-            playsInline
-            className="w-screen h-full object-cover z-10" // Thêm z-10 để video ở dưới overlay
+        <div className="relative h-[50vh] lg:h-screen w-full">
+          <Image
+            src="/image/banner3.jpg"
+            alt="Banner 3"
+            fill
+            className="object-cover"
           />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center text-white p-4"></div>
-          </div>
-        </div>
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <div className="relative w-screen  ">
-          <video
-            src="/video/video3.mp4"
-            loop
-            autoPlay
-            muted
-            playsInline
-            className="w-screen h-full object-cover z-10" // Thêm z-10 để video ở dưới overlay
-          />{" "}
         </div>
       </SwiperSlide>
     </Swiper>
