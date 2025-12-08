@@ -19,6 +19,7 @@ const GalleryPage = () => {
           backgroundImage="/image/banner4.jpg"
           variant="default"
           overlayOpacity="light"
+          className="h-[80vh] lg:h-screen"
         />
       </div>
 

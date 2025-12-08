@@ -45,6 +45,7 @@ const Banner = () => {
             src="/image/banner3.jpg"
             alt="Banner 3"
             fill
+            priority
             className="object-cover"
           />
         </div>
