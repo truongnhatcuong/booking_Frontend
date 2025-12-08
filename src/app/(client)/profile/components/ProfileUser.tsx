@@ -25,6 +25,9 @@ interface UserProfile {
 const ProfileUser = () => {
   const data = useAuth();
   const { user } = data as { user: UserProfile };
+
+  if (!user) return <>vui lòng chờ....</>;
+
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <Card className="p-2 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
