@@ -5,6 +5,8 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import SWRProvider from "@/components/ui/SWRProvider";
 import { SidebarProvider } from "./(dashboard)/context/contextAdmin";
+import UserProvider from "./(dashboard)/context/UserProvider";
+
 const inter = Inter({ subsets: ["latin"] });
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -14,7 +16,7 @@ const beVietnamPro = Be_Vietnam_Pro({
 
 export const metadata: Metadata = {
   title: "Trang DashBoard",
-  description: "danh mục quản lý ",
+  description: "trang quản lý",
 };
 
 export default function RootLayout({
@@ -24,12 +26,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={beVietnamPro.className}>
+      <body className={`${beVietnamPro.className} ${beVietnamPro.variable}`}>
         <Toaster />
-        <main className="" id="root">
-          <SidebarProvider>
-            <SWRProvider>{children}</SWRProvider>
-          </SidebarProvider>
+        <main id="root">
+          <UserProvider>
+            <SidebarProvider>
+              <SWRProvider>{children}</SWRProvider>
+            </SidebarProvider>
+          </UserProvider>
         </main>
       </body>
     </html>
