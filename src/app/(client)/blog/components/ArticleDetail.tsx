@@ -1,12 +1,11 @@
-"use client";
 import Image from "next/image";
-import useSWR from "swr";
 import { formatDate } from "@/lib/formatDate";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, Calendar, ChevronRight } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 import MarkDown from "@/hook/MarkDown";
+import axiosInstance from "@/lib/axios";
+import Link from "next/link";
 
 interface Props {
   slug: string;
@@ -23,22 +22,12 @@ interface Article {
   readTime?: number;
 }
 
-const ArticleDetail = ({ slug }: Props) => {
-  const router = useRouter();
-  const { data: article, isLoading } = useSWR<Article>(`/api/blog/${slug}`);
-  const pathname = usePathname(); //
-  const firstSegment = pathname.split("/")[1];
-
-  if (isLoading) {
-    return (
-      <div className=" lg:min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Đang tải bài viết...</p>
-        </div>
-      </div>
-    );
-  }
+const ArticleDetail = async ({ slug }: Props) => {
+  const article = await axiosInstance
+    .get<Article>(`/api/blog/${slug}`)
+    .then((res) => res.data);
+  const firstSegment = "blog";
+  const shareUrl = `/blog/${slug}`;
 
   if (!article) {
     return (
@@ -47,13 +36,12 @@ const ArticleDetail = ({ slug }: Props) => {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Bài viết không tồn tại
           </h2>
-          <Button
-            onClick={() => router.push("/blog")}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Quay lại Blog
-          </Button>
+          <Link href="/blog">
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Quay lại Blog
+            </Button>
+          </Link>
         </div>
       </div>
     );
@@ -63,12 +51,9 @@ const ArticleDetail = ({ slug }: Props) => {
     <div className="  lg:overflow-auto lg:max-h-screen">
       <article className=" mx-auto px-4 lg:px-10 py-4 ">
         <div className="text-base md:text-xl text-gray-700 font- gap-2 cursor-pointer my-4 md:my-8 flex items-center ">
-          <p
-            className="hover:underline ml-4"
-            onClick={() => router.push("/blog")}
-          >
+          <Link className="hover:underline ml-4" href="/blog">
             {firstSegment}
-          </p>
+          </Link>
           <ChevronRight className="w-7 h-7" />
           <p className="truncate ">{article.title}</p>
         </div>
@@ -131,20 +116,12 @@ const ArticleDetail = ({ slug }: Props) => {
             Chia sẻ với bạn bè hoặc đăng ký nhận thông báo về những bài viết mới
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              variant="secondary"
-              className="bg-white text-blue-600 hover:bg-blue-50"
-              onClick={() => {
-                const url = window.location.href; // Link bài viết
-                window.open(
-                  `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-                  "_blank",
-                  "width=600,height=400"
-                );
-              }}
+            <Link
+              className="text-white  hover:text-blue-200 cursor-pointer"
+              href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
             >
               Chia Sẻ Lên Facebook
-            </Button>
+            </Link>
           </div>
         </div>
       </article>

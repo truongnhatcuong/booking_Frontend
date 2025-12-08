@@ -1,9 +1,7 @@
-"use client";
-import { useRouter } from "next/navigation";
 import React from "react";
+import Link from "next/link";
 
 const AboutPage = () => {
-  const router = useRouter();
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-12 md:py-20">
       {/* Background decor */}
@@ -92,23 +90,21 @@ const AboutPage = () => {
 
             {/* CTA */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                onClick={() =>
-                  router.push("/rooms/18a8e9bc-b4e2-4597-9fd2-571eb3a32ead")
-                }
+              <Link
+                href="/rooms/18a8e9bc-b4e2-4597-9fd2-571eb3a32ead"
                 className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-rose-400 px-6 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_18px_40px_rgba(251,191,36,0.45)] transition hover:shadow-[0_22px_60px_rgba(251,191,36,0.65)]"
               >
                 Đặt phòng ngay
                 <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
                   →
                 </span>
-              </button>
-              <button
-                onClick={() => router.push("/blog")}
+              </Link>
+              <Link
+                href="/blog"
                 className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-medium text-slate-100 backdrop-blur-lg transition hover:border-amber-300/60 hover:text-amber-100"
               >
                 Khám phá bài viết của chúng tôi
-              </button>
+              </Link>
             </div>
           </div>
 

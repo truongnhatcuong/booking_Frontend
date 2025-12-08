@@ -1,9 +1,6 @@
-"use client";
-import { Card, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Article } from "../page";
 import { ArrowRightCircle } from "lucide-react";
 import Link from "next/link";
@@ -13,8 +10,6 @@ interface CardBlogProps {
 }
 
 const CardBlog = ({ data }: CardBlogProps) => {
-  const route = useRouter();
-
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-8 my-10">
       {data.map((item) => (

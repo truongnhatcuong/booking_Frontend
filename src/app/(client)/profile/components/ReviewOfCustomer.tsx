@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-
 interface IReview {
   id: string;
   rating: number;

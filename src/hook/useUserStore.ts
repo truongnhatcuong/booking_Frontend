@@ -1,5 +1,3 @@
-// useUserStore.ts
-"use client";
 import axiosInstance from "@/lib/axios";
 import { jwtDecode } from "jwt-decode";
 import { create } from "zustand";

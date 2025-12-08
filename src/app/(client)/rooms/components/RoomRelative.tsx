@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 
 import { URL_API } from "@/lib/fetcher";
 
@@ -15,13 +15,14 @@ const RoomRelative = ({
 }) => {
   const { data } = useSWR<RoomCustomer[]>(`${URL_API}/api/room/customer`);
 
-  if (!data) return <div>Đang tải dữ liệu...</div>;
-
   // Filter rooms with same roomTypeId but different id
-  const relatedRooms = data.filter(
-    (room) => room.roomTypeId === RoomTypeId && room.id !== currentRoomId
-  );
-
+  const relatedRooms = useMemo(() => {
+    if (!data) return [];
+    return data.filter(
+      (room) => room.roomTypeId === RoomTypeId && room.id !== currentRoomId
+    );
+  }, [data, RoomTypeId, currentRoomId]);
+  if (!data) return <div>Đang tải dữ liệu...</div>;
   return (
     <>
       <div className="my-10 bg-white p-3">

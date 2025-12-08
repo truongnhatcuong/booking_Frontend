@@ -1,9 +1,9 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import useSWR from "swr";
+"use server";
+import React from "react";
 import CardBlog from "./components/CardBlog";
 import MainArticle from "./components/MainArticle";
 import CardBlogSub from "./components/CardBlogSub";
+import axiosInstance from "@/lib/axios";
 
 export interface Article {
   id: string;
@@ -16,28 +16,17 @@ export interface Article {
   publishedAt: string;
 }
 
-const Page = () => {
-  const [width, setWidth] = useState<number | undefined>(undefined);
+const PageBlog = async () => {
+  // const { data, isLoading } = useSWR<Article[]>(`/api/blog`);
 
-  useEffect(() => {
-    function handleResize() {
-      setWidth(window.innerWidth);
-    }
+  // const sliceData = data?.slice(1, 5);
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const isXL = width ? width >= 1300 : false; // Tailwind xl breakpoint = 1280px
-
-  const { data, isLoading } = useSWR<Article[]>(`/api/blog`);
-
-  const sliceData = isXL ? data?.slice(1, 6) : data?.slice(1, 5);
-
-  if (isLoading) {
-    <div>loading.....</div>;
-  }
+  // if (isLoading) {
+  //   <div>loading.....</div>;
+  // }
+  const data = await axiosInstance
+    .get<Article[]>("/api/blog")
+    .then((res) => res.data);
   return (
     <div className="w-full">
       <div className="relative h-screen px-4 text-center  bg-[url(/image/bgNews.png)] bg-no-repeat bg-cover bg-center">
@@ -75,7 +64,7 @@ const Page = () => {
                   <MainArticle article={data[0]} />
                 </div>
                 <div className="flex flex-col gap-10 ">
-                  {sliceData?.map((item, index) => (
+                  {data.slice(1, 5).map((item, index) => (
                     <CardBlogSub article={item} key={index} />
                   ))}
                 </div>
@@ -101,4 +90,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default PageBlog;

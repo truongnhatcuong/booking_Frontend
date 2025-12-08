@@ -1,6 +1,6 @@
+"use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/lib/axios";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";

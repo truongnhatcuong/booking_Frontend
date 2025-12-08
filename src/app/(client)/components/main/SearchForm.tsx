@@ -19,6 +19,15 @@ interface ISeearchForm {
   // onSubmit: (e: React.FormEvent) => Promise<void>;
   setAvailableRooms: (value: any) => void;
 }
+type CacheValue = {
+  data: any[];
+  timestamp: number;
+};
+
+// ✅ Cache dùng chung cho toàn file, không bị tạo lại mỗi lần render
+const roomCache = new Map<string, CacheValue>();
+const TTL = 60_000; // 60 giây
+
 const SearchForm = ({
   searchParams,
   setSearchParams,
@@ -59,15 +68,43 @@ const SearchForm = ({
       return;
     }
     setLoading(true);
+    const url = `${URL_API}/api/room/customer?customer=${searchParams.customer}&checkIn=${searchParams.checkInDate}&checkOut=${searchParams.checkOutDate}&roomType=${searchParams.roomType}`;
+
     try {
-      const res = await axios.get(
-        `${URL_API}/api/room/customer?customer=${searchParams.customer}&checkIn=${searchParams.checkInDate}&checkOut=${searchParams.checkOutDate}&roomType=${searchParams.roomType}`
-      );
-      if (res.data && res.data.length > 0) {
-        setAvailableRooms(res?.data || []);
-        setLoading(false);
+      const cached = roomCache.get(url);
+      if (cached) {
+        const isValid = Date.now() - cached.timestamp < TTL;
+
+        if (isValid) {
+          console.log("👉 Dùng cache cho URL:", url); // <== biết ngay
+
+          // 🔹 Dùng cache nếu chưa hết hạn
+          if (cached.data.length > 0) {
+            setAvailableRooms(cached.data);
+          } else {
+            setAvailableRooms([]);
+            toast.error("Hiện tại phòng chúng tôi chưa có");
+          }
+          return;
+        } else {
+          console.log("👉 Hết hạn cache cho URL:", url); // <== biết ngay
+
+          // 🔹 Hết hạn thì xóa cache (optional)
+          roomCache.delete(url);
+        }
+      }
+
+      const res = await axios.get(url);
+      const rooms = res.data || [];
+      // Lưu cache luôn, kể cả mảng rỗng
+
+      roomCache.set(url, { data: rooms, timestamp: Date.now() });
+
+      if (rooms.length > 0) {
+        setAvailableRooms(rooms);
       } else {
-        toast.error(`Hiện Tại Phòng Chúng Tôi Chưa có`);
+        setAvailableRooms([]);
+        toast.error(`Hiện tại phòng chúng tôi chưa có`);
       }
     } catch (error: any) {
       toast.error("Có lỗi xảy ra khi tìm phòng");

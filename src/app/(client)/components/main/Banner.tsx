@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Navigation, Keyboard, Autoplay } from "swiper/modules";
 import "swiper/css";

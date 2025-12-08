@@ -1,3 +1,4 @@
+"use client";
 import { useUserStore } from "@/hook/useUserStore";
 import ProfileMenu from "./ProfileMenu";
 import { User, CalendarCheck, KeyRound, Star } from "lucide-react";

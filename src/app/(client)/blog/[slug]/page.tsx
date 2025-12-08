@@ -1,16 +1,14 @@
-"use client";
 import React from "react";
 import ArticleDetail from "../components/ArticleDetail";
 import CardBlogRelation from "../components/CardBlogRelation";
-import useSWR from "swr";
 import { Article } from "../page";
+import axiosInstance from "@/lib/axios";
 
-const Page = ({ params }: { params: Promise<{ slug: string }> }) => {
-  const { slug } = React.use(params);
-  const { data, isLoading } = useSWR<Article[]>(`/api/blog`);
-  if (isLoading) {
-    <div>loading.....</div>;
-  }
+const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
+  const data = await axiosInstance
+    .get<Article[]>("/api/blog")
+    .then((res) => res.data);
   return (
     <div className=" grid grid-cols-1 md:grid-cols-4 ">
       <div className="col-span-3">

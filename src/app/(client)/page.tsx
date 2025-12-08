@@ -1,6 +1,4 @@
-"use client";
 import React from "react";
-
 import BeanHotel from "./components/main/BeanHotel";
 import Banner from "./components/main/Banner";
 import HotelShow from "./components/main/HotelShow";
