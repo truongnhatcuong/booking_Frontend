@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { User } from "lucide-react";
+import useAuth from "@/lib/authUser";
 
 interface CustomerInfo {
   address: string;
@@ -20,7 +22,9 @@ interface UserProfile {
   customer: CustomerInfo | null;
 }
 
-const ProfileUser: React.FC<{ user: UserProfile }> = ({ user }) => {
+const ProfileUser = () => {
+  const data = useAuth();
+  const { user } = data as { user: UserProfile };
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <Card className="p-2 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
