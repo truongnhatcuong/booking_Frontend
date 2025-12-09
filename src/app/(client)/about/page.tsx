@@ -33,7 +33,7 @@ const AboutPage = () => {
         </div>
 
         {/* Main content */}
-        <div className="flex justify-around items-center">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-0 justify-around items-center">
           {/* Text block */}
           <div className="space-y-5 max-w-6xl ">
             <div className="rounded-2xl bg-white/5 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.85)] ring-1 ring-white/10 backdrop-blur-xl">
@@ -61,7 +61,7 @@ const AboutPage = () => {
             </div>
 
             {/* Highlight stats */}
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
               <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center backdrop-blur-xl">
                 <div className="text-lg md:text-2xl font-semibold text-amber-300">
                   5+

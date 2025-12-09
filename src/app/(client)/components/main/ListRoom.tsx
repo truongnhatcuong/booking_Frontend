@@ -4,21 +4,11 @@ import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  Users,
-  Wifi,
-  Car,
-  Coffee,
-  Tv,
-  Bath,
-  ChevronRight,
-  Star,
-} from "lucide-react";
+import { Users, Wifi, Car, Coffee, Tv, Bath, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 export interface RoomCustomer {
   id: string;
-  roomNumber: string;
   roomTypeId: string;
   currentPrice: number;
   originalPrice: number;
