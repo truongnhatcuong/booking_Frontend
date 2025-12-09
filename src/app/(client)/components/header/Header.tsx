@@ -23,12 +23,12 @@ const Header = () => {
                   src={"/image/logo2.png"}
                   width={100}
                   height={100}
-                  className="w-32 md:w-40  bg-cover"
+                  priority
+                  className="w-32 md:w-40 object-cover"
                 />
               </Link>
             </div>
 
-            {/* Navigation Menu */}
             <ListItem />
           </nav>
         </div>
@@ -41,6 +41,7 @@ const Header = () => {
             src={"/image/logo2.png"}
             width={80}
             height={80}
+            priority
             className="w-24 object-contain"
           />
         </Link>

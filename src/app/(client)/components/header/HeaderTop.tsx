@@ -5,8 +5,7 @@ import AccountUser from "./AccountUser";
 import { useUserStore } from "@/hook/useUserStore";
 
 const HeaderTop = () => {
-  const { user } = useUserStore(); // lấy user global từ store
-
+  const { user } = useUserStore();
   return (
     <div className="h-8 bg-black shadow-md">
       <div className="container mx-auto px-4 md:px-8 lg:px-52">
