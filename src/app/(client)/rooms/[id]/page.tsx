@@ -2,7 +2,11 @@ import CardRoom from "../components/CardRoom";
 import { HeroSection } from "../../components/common/HeroSection";
 import axiosInstance from "@/lib/axios";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   const res = await axiosInstance.get(`/api/room/roomtype/${id}`);

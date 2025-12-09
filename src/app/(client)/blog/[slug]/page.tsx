@@ -4,7 +4,7 @@ import CardBlogRelation from "../components/CardBlogRelation";
 import { Article } from "../page";
 import axiosInstance from "@/lib/axios";
 
-const Page = async ({ params }: { params: { slug: string } }) => {
+const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
   const data = await axiosInstance
     .get<Article[]>("/api/blog")
