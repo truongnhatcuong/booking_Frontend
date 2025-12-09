@@ -17,13 +17,6 @@ export interface Article {
 }
 
 const PageBlog = async () => {
-  // const { data, isLoading } = useSWR<Article[]>(`/api/blog`);
-
-  // const sliceData = data?.slice(1, 5);
-
-  // if (isLoading) {
-  //   <div>loading.....</div>;
-  // }
   const data = await axiosInstance
     .get<Article[]>("/api/blog")
     .then((res) => res.data);

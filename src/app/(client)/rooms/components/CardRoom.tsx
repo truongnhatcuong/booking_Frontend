@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+
 import React, { useEffect, useState } from "react";
 import { Wifi, Users, Check, MapPin } from "lucide-react";
 import { ShowCurrentPrice } from "@/lib/showCurrentPrice";
+import Link from "next/link";
 
-// Interfaces
 interface RoomImage {
   id: string;
   imageUrl: string;
@@ -41,7 +41,6 @@ interface RoomCardProps {
 }
 
 const CardRoom = ({ room }: RoomCardProps) => {
-  const router = useRouter();
   const [prices, setPrices] = useState<{ [key: string]: number }>({});
   useEffect(() => {
     async function fetchPrices() {
@@ -223,16 +222,14 @@ const CardRoom = ({ room }: RoomCardProps) => {
                 </div>
 
                 {/* CTA Button - Prominent */}
-                <div className="space-y-2">
-                  <Button
-                    onClick={() =>
-                      router.push(`/rooms/${room.id}/${roomDetail.id}`)
-                    }
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 text-base rounded-lg shadow-md hover:shadow-lg transition-all"
-                  >
+                <Link
+                  href={`/rooms/${room.id}/${roomDetail.id}`}
+                  className="space-y-2"
+                >
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 text-base rounded-lg shadow-md hover:shadow-lg transition-all">
                     Chọn phòng
                   </Button>
-                </div>
+                </Link>
 
                 {/* Trust Badges */}
                 <div className="mt-4 pt-4 border-t border-gray-200">

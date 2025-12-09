@@ -1,20 +1,16 @@
-"use client";
-import React, { use } from "react";
 import CardRoom from "../components/CardRoom";
-import useSWR from "swr";
 import { HeroSection } from "../../components/common/HeroSection";
+import axiosInstance from "@/lib/axios";
 
-type RoomPageProps = {
-  params: Promise<{ id: string }>;
-};
-export default function Page({ params }: RoomPageProps) {
-  const { id } = use(params); // Unwrap params bằng React.use()
+export default async function Page({ params }: { params: { id: string } }) {
+  const { id } = await params;
 
-  const { data, isLoading } = useSWR(`/api/room/roomtype/${id}`);
+  const res = await axiosInstance.get(`/api/room/roomtype/${id}`);
 
-  if (!data || isLoading) {
-    return <div>Loading...</div>;
+  if (!res.data) {
+    throw new Error("Failed to fetch room data");
   }
+  const data = res.data;
   return (
     <div>
       <HeroSection
@@ -23,7 +19,7 @@ export default function Page({ params }: RoomPageProps) {
         description={data.room.description ?? ""}
       />
 
-      <CardRoom room={data ? data.room : {}} />
+      <CardRoom room={data.room} />
     </div>
   );
 }
