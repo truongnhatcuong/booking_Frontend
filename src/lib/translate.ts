@@ -1,3 +1,4 @@
+import { PaymentMethod } from "@/app/(client)/rooms/components/booking";
 import {
   Department,
   Position,
@@ -73,3 +74,11 @@ export function translateMaintenanceStatus(status: string): string {
       return "Không xác định";
   }
 }
+
+export const translatepaymentMethodDisplayNames: Record<PaymentMethod, string> =
+  {
+    [PaymentMethod.CASH]: "Tiền Mặt",
+    // [PaymentMethod.CREDIT_CARD]: "Thẻ Tín Dụng",
+    // [PaymentMethod.PAYPAL]: "PayPal",
+    [PaymentMethod.QR_CODE]: "QR Code",
+  };

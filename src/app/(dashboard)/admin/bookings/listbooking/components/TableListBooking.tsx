@@ -12,7 +12,11 @@ import React, { useState } from "react";
 import UpdateStatus from "./UpdateStatus";
 import { FilterDropdown } from "./FilterDropdown";
 import { ArrowDown, ArrowDownUp, ArrowUp, Phone } from "lucide-react";
-import { translatePaymentStatus, translateStatus } from "@/lib/translate";
+import {
+  translatepaymentMethodDisplayNames,
+  translatePaymentStatus,
+  translateStatus,
+} from "@/lib/translate";
 import { IBooking } from "./bookingad";
 import { formatDate } from "@/lib/formatDate";
 
@@ -94,6 +98,9 @@ const TableListBooking = ({
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Thanh Toán
             </TableHead>
+            <TableHead className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Phương thức
+            </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Hành động
             </TableHead>
@@ -167,6 +174,21 @@ const TableListBooking = ({
                       "N/A"}
                   </span>
                 </td>
+                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <span
+                    className={` py-1 text-xs px-2 flex justify-center rounded-3xl text-white font-bold ${
+                      booking.payments[0].paymentMethod === "CASH"
+                        ? "bg-blue-400  "
+                        : "bg-green-500 "
+                    }`}
+                  >
+                    {
+                      translatepaymentMethodDisplayNames[
+                        booking.payments[0].paymentMethod
+                      ]
+                    }
+                  </span>
+                </TableCell>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <UpdateStatus booking={booking} />
                 </td>

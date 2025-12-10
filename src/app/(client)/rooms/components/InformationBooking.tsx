@@ -6,15 +6,14 @@ import { CheckIcon } from "lucide-react";
 import {
   PaymentMethod,
   paymentMethodDescriptions,
-  paymentMethodDisplayNames,
   paymentMethodIcons,
 } from "./booking";
 import { useBookingStore } from "@/app/(dashboard)/context/useBookingForm";
-import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
+import { translatepaymentMethodDisplayNames } from "@/lib/translate";
 
 interface IInformationProps {
   isOpen: boolean;
@@ -32,7 +31,7 @@ interface GuestInfo {
 
 const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
   const { formData, resetForm } = useBookingStore();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // State quản lý bước hiện tại
   const [isBookingForOther, setIsBookingForOther] = useState(false);
   const [user, setUser] = useState<any | null>(null);
@@ -68,9 +67,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const resUser = await axiosInstance.get(`/api/auth/user`, {
-        withCredentials: true,
-      });
+      const resUser = await axiosInstance.get(`/api/auth/user`);
       setUser(resUser?.data);
     };
     if (localStorage.getItem("token")) {
@@ -101,14 +98,13 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
 
   const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsSubmitting(true);
     if (isBookingForOther) {
       try {
         //createGuest
-        const resGuest = await axios.post(
+        const resGuest = await axiosInstance.post(
           `${URL_API}/api/auth/guest`,
-          guestInfo,
-          { withCredentials: true }
+          guestInfo
         );
         if (resGuest.data) {
           const guestId = resGuest.data.newgest.id;
@@ -118,26 +114,23 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
           };
 
           // reservation for other
-          const res = await axios.post(`${URL_API}/api/booking`, bookingData, {
-            withCredentials: true,
-          });
+          const res = await axiosInstance.post(
+            `${URL_API}/api/booking`,
+            bookingData
+          );
 
           if (res.data) {
-            toast.success("Đặt phòng thành công!");
-
-            const resPayment = await axios.post(
+            const resPayment = await axiosInstance.post(
               `${URL_API}/api/payment`,
               {
                 amount: formData.totalAmount,
                 paymentMethod: selectedPaymentMethod,
                 bookingId: res.data.data.id,
                 status: "PENDING",
-              },
-              {
-                withCredentials: true,
               }
             );
             if (resPayment.data) {
+              toast.success("Đặt phòng thành công!");
               if (selectedPaymentMethod === PaymentMethod.CASH) {
                 router.push("/profile/bookings");
               } else if (
@@ -153,32 +146,29 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Có lỗi xảy ra!");
       } finally {
-        // Đóng modal sau khi submit
+        setIsSubmitting(false);
         resetForm();
         setIsOpen(false);
       }
     } else {
       try {
-        const res = await axios.post(`${URL_API}/api/booking`, formData, {
-          withCredentials: true,
-        });
+        const res = await axiosInstance.post(
+          `${URL_API}/api/booking`,
+          formData
+        );
 
         if (res.data) {
-          toast.success("Đặt phòng thành công!");
-
-          const resPayment = await axios.post(
+          const resPayment = await axiosInstance.post(
             `${URL_API}/api/payment`,
             {
               amount: formData.totalAmount,
               paymentMethod: selectedPaymentMethod,
               bookingId: res.data.data.id,
               status: "PENDING",
-            },
-            {
-              withCredentials: true,
             }
           );
           if (resPayment.data) {
+            toast.success("Đặt phòng thành công!");
             if (selectedPaymentMethod === PaymentMethod.CASH) {
               router.push("/profile/bookings");
             } else if (
@@ -193,6 +183,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
       } catch (error: any) {
         toast.error(error?.response?.data?.message || "Có lỗi xảy ra!");
       } finally {
+        setIsSubmitting(false);
         setIsOpen(false);
         resetForm();
       }
@@ -204,7 +195,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
       isOpen={isOpen}
       onRequestClose={() => setIsOpen(false)}
       contentLabel="Payment Confirmation"
-      className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-7xl max-h-[90vh] 2xl:max-h-[100vh] mx-auto mt-5 outline-none overflow-y-auto"
+      className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-7xl max-h-[90vh] 2xl:max-h-screen mx-auto mt-5 outline-none overflow-y-auto"
       overlayClassName="fixed inset-0 bg-black/20 flex justify-center items-start z-50 overflow-auto"
     >
       <div className="flex justify-between items-center mb-6 border-b pb-4">
@@ -428,7 +419,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                         <Icon className="h-6 w-6 mr-3" />
                         <div>
                           <h4 className="font-medium">
-                            {paymentMethodDisplayNames[method]}
+                            {translatepaymentMethodDisplayNames[method]}
                           </h4>
                           <p className="text-sm text-gray-500">
                             {paymentMethodDescriptions[method]}
@@ -501,9 +492,15 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                 ? "bg-gray-700 text-white cursor-wait"
                 : "bg-blue-600 text-white hover:bg-blue-700"
             }  rounded-lg  transition-colors font-medium`}
-            disabled={currentStep === 2 && !selectedPaymentMethod} // chỉ disable ở bước 2
+            disabled={
+              isSubmitting || (currentStep === 2 && !selectedPaymentMethod)
+            }
           >
-            {currentStep === 1 ? "Tiếp theo" : "Xác nhận đặt phòng"}
+            {isSubmitting
+              ? "Đang xử lý..."
+              : currentStep === 1
+              ? "Tiếp theo"
+              : "Xác nhận đặt phòng"}
           </button>
         </div>
       </form>

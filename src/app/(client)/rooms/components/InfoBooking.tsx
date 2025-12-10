@@ -27,11 +27,6 @@ const InfoBooking = () => {
 
         <div className="space-y-4">
           <div className="flex justify-between py-2 border-b">
-            <span className="text-gray-600">Mã phòng:</span>
-            <span className="font-semibold">{formData?.roomId}</span>
-          </div>
-
-          <div className="flex justify-between py-2 border-b">
             <span className="text-gray-600">Ngày nhận phòng:</span>
             <span className="font-semibold">
               {formatDate(formData.checkInDate)}
@@ -69,7 +64,7 @@ const InfoBooking = () => {
             </div>
           )}
 
-          <div className="flex justify-between py-3 border-t-2 border-gray-300 mt-4">
+          <div className="flex justify-between py-3  border-gray-300 mt-4">
             <span className="text-lg font-bold text-gray-800">Tổng tiền:</span>
             <span className="text-lg font-bold text-blue-600">
               {formatPrice(formData.totalAmount)}

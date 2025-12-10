@@ -1,3 +1,5 @@
+import { PaymentMethod } from "../../rooms/components/booking";
+
 interface Amenity {
   amenity: {
     id: string;
@@ -29,7 +31,7 @@ interface BookingItem {
 
 interface Payment {
   id: string;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
   status: string;
   amount: string;
   paymentDate: string;

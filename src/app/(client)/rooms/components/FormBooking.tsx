@@ -169,7 +169,7 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
                   placeholderText=" ngày nhận phòng"
                   dateFormat="yyyy-MM-dd"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                  minDate={new Date()} // Disable past dates
+                  minDate={new Date()}
                   required
                 />
               </div>
@@ -186,7 +186,14 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
                   placeholderText=" ngày trả phòng"
                   dateFormat="yyyy-MM-dd"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                  minDate={formData.checkInDate || new Date()} // Ensure checkOutDate is after checkInDate
+                  minDate={
+                    formData.checkInDate
+                      ? new Date(
+                          new Date(formData.checkInDate).getTime() +
+                            24 * 60 * 60 * 1000
+                        )
+                      : new Date()
+                  }
                   required
                 />
               </div>

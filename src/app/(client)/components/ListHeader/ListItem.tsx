@@ -73,17 +73,17 @@ const ListItem = () => {
                 )}
                 {data && data?.roomType?.length > 0 ? (
                   <ul className="grid grid-cols-2">
-                    {data?.roomType?.map((room: IRoomtype) => (
-                      <li key={room.id}>
+                    {data?.roomType?.map((item: IRoomtype) => (
+                      <li key={item.id}>
                         <Link
-                          href={`/rooms/${room.id}`}
+                          href={`/rooms/${item.id}`}
                           className={`block ${
-                            pathname === `/rooms/${room.id}`
+                            pathname.startsWith(`/rooms/${item.id}`)
                               ? "text-red-500 font-semibold"
                               : ""
                           } text-gray-700 hover:bg-gray-50 p-2 rounded hover:border-l-4 text-center hover:border-amber-400 transition-all duration-150`}
                         >
-                          {room.name}
+                          {item.name}
                         </Link>
                       </li>
                     ))}
@@ -123,18 +123,18 @@ const ListItem = () => {
                   )}
                   {data && data?.roomType?.length > 0 ? (
                     <ul className="grid grid-cols-2">
-                      {data?.roomType.map((room: IRoomtype) => (
-                        <li key={room.id}>
+                      {data?.roomType.map((romType: IRoomtype) => (
+                        <li key={romType.id}>
                           <Link
-                            href={`/rooms/${room.id}`}
+                            href={`/rooms/${romType.id}`}
                             className={`block ${
-                              pathname === `/rooms/${room.id}`
+                              pathname.startsWith(`/rooms/${romType.id}`)
                                 ? "text-red-500 font-semibold"
                                 : ""
                             } hover:bg-gray-50 px-4 text-center py-3 hover:border-l-4  transition-all duration-150`}
                             onClick={() => setIsMobileDropdownOpen(false)}
                           >
-                            {room.name}
+                            {romType.name}
                           </Link>
                         </li>
                       ))}

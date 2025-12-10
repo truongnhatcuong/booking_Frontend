@@ -63,15 +63,15 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
           </div>
 
           {/* Enhanced Key Features */}
-          <div className="flex flex-wrap gap-6 mt-6">
-            <div className="flex items-center bg-blue-50 px-4 py-2 rounded-full">
-              <Users size={20} className="text-blue-600 mr-2" />
+          <div className="flex flex-wrap gap-12 mt-6">
+            <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full">
+              <Users size={20} className="text-blue-600" />
               <span className="text-gray-700 font-medium">
                 Tối đa {room.roomType.maxOccupancy} khách
               </span>
             </div>
-            <div className="flex items-center bg-amber-50 px-4 py-2 rounded-full">
-              <Star size={20} className="text-amber-500 mr-2" />
+            <div className="flex items-center gap-2 bg-amber-50 px-4 py-2 rounded-full">
+              <Star size={20} className="text-amber-500 " />
               <span className="text-gray-700 font-medium">Phòng cao cấp</span>
             </div>
           </div>
@@ -156,12 +156,14 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
         </div>
 
         {/* Enhanced Description */}
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-8 rounded-2xl">
-          <h2 className="text-2xl lg:text-3xl font-serif text-gray-800 mb-6 flex items-center">
+        <div className="bg-gradient-to-r from-gray-50 to-blue-50  rounded-2xl">
+          <h2 className="text-2xl lg:text-3xl font-serif text-gray-800 mb-6 flex items-center ">
             <div className="w-1 h-8 bg-blue-600 rounded-full mr-4"></div>
             Giới thiệu
           </h2>
-          <MarkDown>{room.notes}</MarkDown>
+          <div className="p-2">
+            <MarkDown>{room.notes}</MarkDown>
+          </div>
         </div>
 
         {/* Enhanced Amenities */}
