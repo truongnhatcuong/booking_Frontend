@@ -439,7 +439,10 @@ export default function BookingForm({
                   required
                   minDate={
                     booking.checkInDate
-                      ? new Date(booking.checkInDate)
+                      ? new Date(
+                          new Date(booking.checkInDate).getTime() +
+                            24 * 60 * 60 * 1000
+                        )
                       : new Date()
                   }
                 />

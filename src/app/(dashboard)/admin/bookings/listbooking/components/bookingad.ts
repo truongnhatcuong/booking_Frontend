@@ -1,3 +1,5 @@
+import { PaymentMethod } from "@/app/(client)/rooms/components/booking";
+
 export interface IBooking {
   id: string;
   checkInDate: string; // ISO string
@@ -22,7 +24,7 @@ export interface IBooking {
   payments: {
     id: string;
     status: "PENDING" | "COMPLETED" | "FAILED";
-    paymentMethod: string;
+    paymentMethod: PaymentMethod;
     transactionId?: string;
     amount: number;
   }[];
