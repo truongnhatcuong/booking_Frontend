@@ -1,8 +1,12 @@
 "use client";
 import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const ChatBox: React.FC = () => {
+  const pathname = usePathname();
+
   useEffect(() => {
+    if (pathname !== "/") return;
     // Create script tag for Tawk.to widget
     const script = document.createElement("script");
     script.src = "https://embed.tawk.to/67e3bba4591d01190a171ab1/1in8p9uud";
@@ -22,9 +26,9 @@ const ChatBox: React.FC = () => {
         script.parentNode.removeChild(script);
       }
     };
-  }, []); // Empty dependency array to run only once on mount
+  }, [pathname]);
 
-  return <div></div>;
+  return null;
 };
 
 export default ChatBox;

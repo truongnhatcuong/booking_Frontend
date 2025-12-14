@@ -99,8 +99,8 @@ const FormGeneratePostAi = ({ setPostData }: PostProps) => {
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <input
-                type="text"
+              <textarea
+                rows={6}
                 placeholder="Ví dụ: cầu rồng - Khám phá thành phố đáng sống"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}

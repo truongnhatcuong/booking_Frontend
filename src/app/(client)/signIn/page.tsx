@@ -278,7 +278,7 @@ export default function SignInForm() {
           </div>
 
           {/* Social login divider */}
-          <div className="relative my-8 animate-fade-in">
+          {/* <div className="relative my-8 animate-fade-in">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t-2 border-gray-200"></div>
             </div>
@@ -287,10 +287,10 @@ export default function SignInForm() {
                 Hoặc tiếp tục với
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Social buttons */}
-          <div className="grid grid-cols-2 gap-4 animate-fade-in">
+          {/* <div className="grid grid-cols-2 gap-4 animate-fade-in">
             <Button
               variant="outline"
               className="flex items-center justify-center gap-2 py-3 text-base border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all group"
@@ -317,7 +317,7 @@ export default function SignInForm() {
                 GitHub
               </span>
             </Button>
-          </div>
+          </div> */}
 
           {/* Trust indicators */}
           <div className="mt-8 pt-6 border-t border-gray-200 animate-fade-in">

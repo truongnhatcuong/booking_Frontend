@@ -35,6 +35,8 @@ const UpdateBlog: React.FC<IUpdateProps> = ({ data, isOpen, setIsOpen }) => {
     }));
   };
 
+  console.log("data", form);
+
   // Gửi dữ liệu cập nhật lên parent hoặc API
   const submitUpdate = async (e: React.FormEvent) => {
     e.preventDefault();

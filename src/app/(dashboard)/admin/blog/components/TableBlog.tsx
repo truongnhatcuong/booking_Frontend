@@ -44,7 +44,7 @@ interface TableBlogProps {
 }
 
 const TableBlog = ({ posts }: TableBlogProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [activePost, setActivePost] = useState<BlogPost | null>(null);
 
   return (
     <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
@@ -96,15 +96,22 @@ const TableBlog = ({ posts }: TableBlogProps) => {
                       <PublishedBlog id={post.id} published={post.published} />
                       <DropdownMenuItem
                         className="text-blue-600"
-                        onClick={() => setIsOpen(true)}
+                        onClick={() => setActivePost(post)}
                       >
                         chỉnh sửa bài viết
                       </DropdownMenuItem>
+
                       <DeleteBlog id={post.id} />
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
-                <UpdateBlog data={post} isOpen={isOpen} setIsOpen={setIsOpen} />
+                {activePost && (
+                  <UpdateBlog
+                    data={activePost}
+                    isOpen={!!activePost}
+                    setIsOpen={() => setActivePost(null)}
+                  />
+                )}
               </TableRow>
             ))}
           </TableBody>
