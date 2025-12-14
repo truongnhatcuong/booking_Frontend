@@ -1,5 +1,6 @@
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import Mutate from "@/hook/Mutate";
+import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
 import React from "react";
@@ -12,7 +13,7 @@ interface IPublishedBlog {
 const PublishedBlog = ({ id, published }: IPublishedBlog) => {
   const handlePublish = async () => {
     try {
-      const res = await axios.put(`${URL_API}/api/blog/${id}`);
+      const res = await axiosInstance.put(`/api/blog/${id}`);
       if (res.data) {
         toast.success("xuất Bản Thành Công");
         Mutate(`${URL_API}/api/blog/employee`);
