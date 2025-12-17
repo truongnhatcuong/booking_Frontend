@@ -15,7 +15,7 @@ export interface Article {
   publishedAt: string;
 }
 
-const PageBlog = async () => {
+export default async function BlogPage() {
   const data = await axiosInstance
     .get<Article[]>("/api/blog")
     .then((res) => res.data);
@@ -80,6 +80,4 @@ const PageBlog = async () => {
       </div>
     </div>
   );
-};
-
-export default PageBlog;
+}
