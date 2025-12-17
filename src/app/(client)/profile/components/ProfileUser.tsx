@@ -26,6 +26,8 @@ const ProfileUser = () => {
   const data = useAuth();
   const { user } = data as { user: UserProfile };
 
+  console.log(user);
+
   if (!user) return <>vui lòng chờ....</>;
 
   return (
@@ -59,7 +61,7 @@ const ProfileUser = () => {
                 Trạng thái
               </h3>
               <p className="text-sm sm:text-lg capitalize">
-                {user.status ? (
+                {user.status === "ACTIVE" ? (
                   <span className="text-green-600">hoạt động</span>
                 ) : (
                   <span className="text-red-600">vô hiệu hóa</span>

@@ -115,10 +115,10 @@ const SearchForm = ({
 
   return (
     <div
-      className={` max-w-4xl mx-auto my-8  rounded-lg shadow-md transition-all duration-300 
+      className={` max-w-4xl mx-auto my-8 shadow-md transition-all duration-300 
         ${
           isSticky
-            ? "fixed -top-8 left-0 p-2 right-0 z-40 max-w-full  shadow-lg"
+            ? "fixed -top-8 left-0 p-2 right-0 z-40 max-w-full  shadow-lg bg-white"
             : " p-5 lg:p-15"
         }
       `}

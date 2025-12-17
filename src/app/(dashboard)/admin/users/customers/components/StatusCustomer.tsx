@@ -32,6 +32,8 @@ const StatusCustomer = ({ userId, status }: StatusCustomerProps) => {
         Mutate(`${URL_API}/api/auth/customer`);
       }
     } catch (error: any) {
+      console.log(error);
+
       toast.error("Đã xảy ra lỗi khi cập nhật trạng thái người dùng.");
     }
   };

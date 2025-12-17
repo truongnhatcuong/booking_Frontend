@@ -12,7 +12,7 @@ import {
   ChatBubbleLeftIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
-import { MessageCircleCode } from "lucide-react";
+import { ChartPie } from "lucide-react";
 
 export interface ISubMenuItem {
   id: number;
@@ -166,7 +166,7 @@ export const adminMenu: IListItemAdmin[] = [
   {
     id: 10,
     link: "/admin/blog",
-    title: "Quản lý Blog",
+    title: "Quản lý bài viết",
     icon: NewspaperIcon,
     subMenuItem: [
       {
@@ -183,10 +183,10 @@ export const adminMenu: IListItemAdmin[] = [
       },
     ],
   },
-  // {
-  //   id: 12,
-  //   link: "/admin/message",
-  //   title: "Nhắn Tin",
-  //   icon: MessageCircleCode,
-  // },
+  {
+    id: 12,
+    link: "/admin/statiscal",
+    title: "Thống Kê",
+    icon: ChartPie,
+  },
 ];

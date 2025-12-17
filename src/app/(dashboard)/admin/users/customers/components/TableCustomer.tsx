@@ -11,7 +11,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import StatusCustomer from "./StatusCustomer";
 import { UserRound } from "lucide-react";
-import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 
 // Define types based on your Prisma schema
 type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
