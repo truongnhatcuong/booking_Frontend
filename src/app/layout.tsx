@@ -1,13 +1,12 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Inter, Be_Vietnam_Pro } from "next/font/google";
+import { Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import SWRProvider from "@/components/ui/SWRProvider";
 import { SidebarProvider } from "./(dashboard)/context/contextAdmin";
 import UserProvider from "./(dashboard)/context/UserProvider";
 
-const inter = Inter({ subsets: ["latin"] });
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
