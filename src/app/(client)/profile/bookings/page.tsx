@@ -27,9 +27,10 @@ const Page = () => {
       <Swiper
         spaceBetween={30}
         effect={"fade"}
-        pagination={{
-          clickable: true,
-        }}
+        pagination={{ clickable: true }}
+        fadeEffect={{ crossFade: true }}
+        allowTouchMove={true} // 👈 quan trọng với fade
+        navigation={true} // 👈 Bật mũi tên điều hướng
         modules={[EffectFade, Navigation, Pagination]}
         className="mySwiper"
       >

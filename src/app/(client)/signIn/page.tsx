@@ -56,7 +56,7 @@ export default function SignInForm() {
           lastName: decoded.lastName,
           userType: decoded.userType,
           token: res.data.accessToken,
-          role: res.data.role,
+          role: decoded.role,
         });
       }
     } catch (error: any) {

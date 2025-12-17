@@ -7,6 +7,7 @@ export default function useAuth(
   expectedRole?: ("CUSTOMER" | "EMPLOYEE" | "ADMIN")[]
 ) {
   const [user, setUser] = useState<any>(null);
+
   const [loadingLog, setLoadingLog] = useState(true);
   const router = useRouter();
 
@@ -32,7 +33,7 @@ export default function useAuth(
       setUser(data);
       setLoadingLog(false);
     };
-    console.log("useAuth effect chạy lại");
+    console.log("useAuth effect chạy lại", user);
     checkUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

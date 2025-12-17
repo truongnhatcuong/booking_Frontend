@@ -18,7 +18,7 @@ import { useUserStore } from "@/hook/useUserStore";
 
 const AdminSidebar = () => {
   const pathname = usePathname();
-  const { isCollapsed, toggleCollapse, countCustomer } = useSidebar();
+  const { isCollapsed, toggleCollapse } = useSidebar();
   const { user } = useAuth();
   const { logout } = useUserStore();
 
@@ -147,16 +147,13 @@ const AdminSidebar = () => {
                         }`}
                         onClick={() => toggleSubMenu(menuItem.id)}
                       >
-                        {menuItem.link === "/admin/message" ? (
+                        {menuItem.link === "/admin/statiscal" ? (
                           <Link
-                            href="/admin/message"
+                            href="/admin/statiscal"
                             className="flex items-center gap-3 relative "
                           >
                             <menuItem.icon className="h-5 w-5" />
                             <div className="font-medium">{menuItem.title}</div>
-                            <div className="absolute -right-5 bottom-2 rounded-full bg-blue-600 text-white px-1 text-sm ">
-                              {countCustomer ? countCustomer : 0}
-                            </div>
                           </Link>
                         ) : (
                           <div className="flex items-center gap-3">
@@ -165,7 +162,7 @@ const AdminSidebar = () => {
                           </div>
                         )}
 
-                        {menuItem.link !== "/admin/message" &&
+                        {menuItem.link !== "/admin/statiscal" &&
                           (expandedMenus.includes(menuItem.id) ? (
                             <ChevronDown className="h-4 w-4" />
                           ) : (

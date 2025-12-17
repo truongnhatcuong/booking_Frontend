@@ -30,7 +30,10 @@ export default function UserProvider({
 
     const handleToken = async () => {
       let token = localStorage.getItem("token");
-      if (!token) return;
+      token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
 
       let remainingTime = getTokenRemainingTime(token);
       console.log("Thời gian còn lại của token:", remainingTime, "ms");
