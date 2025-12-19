@@ -1,8 +1,13 @@
 "use client";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import useAuth from "@/lib/authUser";
+import axiosInstance from "@/lib/axios";
+import toast from "react-hot-toast";
 
 interface CustomerInfo {
   address: string;
@@ -22,84 +27,138 @@ interface UserProfile {
   customer: CustomerInfo | null;
 }
 
+const Field = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <div className="space-y-1">
+    <label className="text-sm font-medium text-muted-foreground">{label}</label>
+    {children}
+  </div>
+);
+
 const ProfileUser = () => {
-  const data = useAuth();
-  const { user } = data as { user: UserProfile };
+  const { user } = useAuth() as { user: UserProfile | null };
+  const [form, setForm] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  console.log(user);
+  useEffect(() => {
+    if (user) {
+      setForm(user);
+    }
+  }, [user]);
 
-  if (!user) return <>vui lòng chờ....</>;
+  if (!form) return <>Vui lòng chờ...</>;
+
+  const updateField = (key: keyof UserProfile, value: any) => {
+    setForm({ ...form, [key]: value });
+  };
+
+  const updateCustomerField = (key: keyof CustomerInfo, value: string) => {
+    setForm({
+      ...form,
+      customer: {
+        ...(form.customer as CustomerInfo),
+        [key]: value,
+      },
+    });
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      await axiosInstance.put(`/api/auth/customer/${form.id}`, {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        phone: form.phone,
+        address: form.customer?.address,
+        city: form.customer?.city,
+        country: form.customer?.country,
+      });
+      toast.success("dữ liệu của bạn đã được cập nhật");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Cập nhật thất bại");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <Card className="p-2 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <div className="flex flex-col items-center mb-5">
-          <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-secondary flex items-center justify-center mb-4 sm:mb-6 border-4 border-primary/10 shadow-md hover:scale-105 transition-transform duration-300">
-            <User className="h-10 w-10 sm:h-16 sm:w-16 text-secondary-foreground" />
+      <Card className="p-4 sm:p-8 shadow-lg ">
+        {/* Avatar */}
+        <div className="flex flex-col items-center">
+          <div className="h-24 w-24 rounded-full bg-secondary flex items-center justify-center mb-4 border">
+            <User className="h-14 w-14 text-secondary-foreground" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-center">
-            {user.firstName} {user.lastName}
-          </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          <div className="space-y-4">
-            <div className="border-l-4 border-primary pl-4 transition-all hover:border-secondary">
-              <h3 className="font-semibold text-muted-foreground text-sm sm:text-base">
-                Email
-              </h3>
-              <p className="text-sm sm:text-lg">{user.email}</p>
-            </div>
-            <div className="border-l-4 border-primary pl-4 transition-all hover:border-secondary">
-              <h3 className="font-semibold text-muted-foreground text-sm sm:text-base">
-                Số điện thoại
-              </h3>
-              <p className="text-sm sm:text-lg">{user.phone}</p>
-            </div>
-            <div className="border-l-4 border-primary pl-4 transition-all hover:border-secondary">
-              <h3 className="font-semibold text-muted-foreground text-sm sm:text-base">
-                Trạng thái
-              </h3>
-              <p className="text-sm sm:text-lg capitalize">
-                {user.status === "ACTIVE" ? (
-                  <span className="text-green-600">hoạt động</span>
-                ) : (
-                  <span className="text-red-600">vô hiệu hóa</span>
-                )}
-              </p>
-            </div>
-          </div>
+        {/* User info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Field label="Họ">
+            <Input
+              value={form.firstName}
+              onChange={(e) => updateField("firstName", e.target.value)}
+            />
+          </Field>
 
-          {user.customer && (
-            <div className="space-y-4">
-              <div className="border-l-4 border-primary pl-4 transition-all hover:border-secondary">
-                <h3 className="font-semibold text-muted-foreground text-sm sm:text-base">
-                  Địa chỉ
-                </h3>
-                <p className="text-base sm:text-lg">{user.customer.address}</p>
-              </div>
-              <div className="border-l-4 border-primary pl-4 transition-all hover:border-secondary">
-                <h3 className="font-semibold text-muted-foreground text-sm sm:text-base">
-                  Thành phố
-                </h3>
-                <p className="text-base sm:text-lg capitalize">
-                  {user.customer.city}
-                </p>
-              </div>
-              <div className="border-l-4 border-primary pl-4 transition-all hover:border-secondary">
-                <h3 className="font-semibold text-muted-foreground text-sm sm:text-base">
-                  Quốc gia
-                </h3>
-                <p className="text-base sm:text-lg">{user.customer.country}</p>
-              </div>
-              <div className="border-l-4 border-primary pl-4 transition-all hover:border-secondary">
-                <h3 className="font-semibold text-muted-foreground text-sm sm:text-base">
-                  Số CMND/CCCD
-                </h3>
-                <p className="text-base sm:text-lg">{user.customer.idNumber}</p>
-              </div>
-            </div>
-          )}
+          <Field label="Tên">
+            <Input
+              value={form.lastName}
+              onChange={(e) => updateField("lastName", e.target.value)}
+            />
+          </Field>
+
+          <Field label="Email">
+            <Input value={form.email} disabled />
+          </Field>
+
+          <Field label="Số điện thoại">
+            <Input
+              value={form.phone}
+              onChange={(e) => updateField("phone", e.target.value)}
+            />
+          </Field>
+        </div>
+
+        {/* Customer info */}
+        {form.customer && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Field label="Địa chỉ">
+              <Input
+                value={form.customer.address}
+                onChange={(e) => updateCustomerField("address", e.target.value)}
+              />
+            </Field>
+
+            <Field label="Thành phố">
+              <Input
+                value={form.customer.city}
+                onChange={(e) => updateCustomerField("city", e.target.value)}
+              />
+            </Field>
+
+            <Field label="Quốc gia">
+              <Input
+                value={form.customer.country}
+                onChange={(e) => updateCustomerField("country", e.target.value)}
+              />
+            </Field>
+
+            <Field label="CMND / CCCD">
+              <Input value={form.customer.idNumber} disabled />
+            </Field>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex justify-end">
+          <Button onClick={handleSubmit} disabled={loading}>
+            {loading ? "Đang lưu..." : "Lưu thay đổi"}
+          </Button>
         </div>
       </Card>
     </div>

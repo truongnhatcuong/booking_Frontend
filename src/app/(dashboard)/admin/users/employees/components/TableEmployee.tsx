@@ -16,10 +16,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Search } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
 import AddEmployee from "./AddEmployee";
 import DisabledUser from "./DisabledUser";
@@ -30,12 +29,18 @@ import { URL_API } from "@/lib/fetcher";
 import EmployeeRoleAction from "./EmployeeRoleAction";
 import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 import Mutate from "@/hook/Mutate";
+import {
+  translateDepartment,
+  translatePosition,
+  translateUserStatus,
+} from "@/lib/translate";
+import { Department, Position } from "../../../profile/components/employee";
 
 interface EmployeeDetails {
   id: string;
-  department: string;
+  department: Department;
   hireDate: string;
-  position: string;
+  position: Position;
   roles: { id: string; role: { name: string } }[];
 }
 
@@ -49,12 +54,6 @@ export interface Employee {
   status: string;
   employee: EmployeeDetails | null;
 }
-
-const departmentMap: Record<string, string> = {
-  FRONT_DESK: "Lễ tân",
-  MAINTENANCE: "Bảo trì",
-  MANAGEMENT: "Quản Lý",
-};
 
 interface IEmployees {
   employee: Employee[];
@@ -112,8 +111,9 @@ const TableEmployee = ({
               <TableHead className="hidden md:table-cell">
                 Số điện thoại
               </TableHead>
-              <TableHead className="hidden md:table-cell">Phòng ban</TableHead>
               <TableHead className="hidden md:table-cell">Vị trí</TableHead>
+              <TableHead className="hidden md:table-cell">Phòng ban</TableHead>
+
               <TableHead className="hidden md:table-cell">
                 Ngày vào làm
               </TableHead>
@@ -134,14 +134,15 @@ const TableEmployee = ({
                     {employee.phone}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {employee.employee?.department
-                      ? departmentMap[employee.employee.department] ||
-                        employee.employee.department
-                      : "Chưa phân công"}
+                    {translatePosition(employee.employee?.position) ||
+                      "Chưa phân công"}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {employee.employee?.position || "Chưa phân công"}
+                    {employee.employee?.department
+                      ? translateDepartment(employee.employee.department)
+                      : "Chưa phân công"}
                   </TableCell>
+
                   <TableCell className="hidden md:table-cell">
                     {employee.employee?.hireDate
                       ? formatDate(
@@ -156,9 +157,7 @@ const TableEmployee = ({
                       }
                       className="capitalize"
                     >
-                      {employee.status === "ACTIVE"
-                        ? "Đang làm việc"
-                        : "Đã nghỉ việc"}
+                      {translateUserStatus(employee.status)}
                     </Badge>
                   </TableCell>
                   <TableCell>

@@ -48,7 +48,10 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
                 <ReviewCusTomer bookingId={booking.id} />
               </div>
             ) : booking.status === "PENDING" ? (
-              <RemoveBooking bookingId={booking.id} />
+              <RemoveBooking
+                bookingId={booking.id}
+                paymentMethod={booking.payments[0].paymentMethod}
+              />
             ) : (
               ""
             )}

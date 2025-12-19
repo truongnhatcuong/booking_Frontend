@@ -75,6 +75,17 @@ export function translateMaintenanceStatus(status: string): string {
   }
 }
 
+export function translateUserStatus(status: string): string {
+  switch (status) {
+    case "ACTIVE":
+      return "đang hoạt động";
+    case "INACTIVE":
+      return "vô hiệu hóa";
+    default:
+      return "Không xác định";
+  }
+}
+
 export const translatepaymentMethodDisplayNames: Record<PaymentMethod, string> =
   {
     [PaymentMethod.CASH]: "Tiền Mặt",

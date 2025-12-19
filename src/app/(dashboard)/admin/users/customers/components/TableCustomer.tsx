@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import StatusCustomer from "./StatusCustomer";
 import { UserRound } from "lucide-react";
+import { translateUserStatus } from "@/lib/translate";
 
 // Define types based on your Prisma schema
 type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
@@ -98,7 +99,7 @@ const TableCustomer = ({ customers }: ITableCustomer) => {
                           : "bg-gray-100 text-gray-800 hover:bg-gray-100"
                       }
                     >
-                      {customer.status}
+                      {translateUserStatus(customer.status)}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">

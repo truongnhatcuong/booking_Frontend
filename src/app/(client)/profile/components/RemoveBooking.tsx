@@ -15,12 +15,14 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
+import Link from "next/link";
 
 interface RemoveBookingProps {
   bookingId: string;
+  paymentMethod: string;
 }
 
-const RemoveBooking = ({ bookingId }: RemoveBookingProps) => {
+const RemoveBooking = ({ bookingId, paymentMethod }: RemoveBookingProps) => {
   const handleRemoveBooking = async () => {
     try {
       const res = await axios.delete(
@@ -54,10 +56,25 @@ const RemoveBooking = ({ bookingId }: RemoveBookingProps) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Bạn có chắc chắn muốn hủy đặt phòng ?
+            Bạn có chắc chắn muốn hủy đặt phòng?
           </AlertDialogTitle>
+
           <AlertDialogDescription>
-            Hành động này không thể hoàn tác. Đơn đặt phòng sẽ bị xóa vĩnh viễn.
+            Hành động này không thể hoàn tác. Đơn đặt phòng sẽ bị hủy vĩnh viễn.
+            {paymentMethod === "QR_CODE" && (
+              <>
+                <br />
+                <span className="text-orange-600 font-medium">Lưu ý:</span> Nếu
+                bạn đã thanh toán qua QR, vui lòng liên hệ{" "}
+                <Link
+                  href={"https://web.facebook.com/tncuong2004/"}
+                  className="font-medium text-blue-600 underline underline-offset-4 hover:text-blue-500"
+                >
+                  lễ tân
+                </Link>{" "}
+                để được hỗ trợ theo chính sách của khách sạn.
+              </>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

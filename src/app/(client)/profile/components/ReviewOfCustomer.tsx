@@ -19,7 +19,7 @@ interface IReview {
 }
 
 const ReviewOfCustomer = ({ review }: { review: IReview[] }) => (
-  <div className=" overflow-auto  lg:max-h-screen lg:max-w-5xl">
+  <div className=" overflow-auto  mx-auto lg:max-h-screen lg:max-w-7xl">
     <h1 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">
       Lịch sử đánh giá của tôi
     </h1>

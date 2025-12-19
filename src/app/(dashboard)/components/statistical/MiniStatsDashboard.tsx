@@ -96,10 +96,12 @@ function DataTable({ table }: { table: TableData }) {
         <table className="min-w-full border-t text-sm">
           <thead className="bg-gray-50">
             <tr>
-              {columns.map((c) => (
+              {columns.map((c, idx) => (
                 <th
                   key={c.key}
-                  className="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-700"
+                  className={`whitespace-nowrap px-4 py-3 ${
+                    idx === 0 ? "text-left" : "text-center"
+                  } font-medium text-gray-700`}
                 >
                   {c.label}
                 </th>

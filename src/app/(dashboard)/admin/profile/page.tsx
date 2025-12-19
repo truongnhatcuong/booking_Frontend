@@ -5,7 +5,6 @@ import EmployeeProfile from "./components/ProfileEmployee";
 
 const Page = () => {
   const { user } = useAuth();
-  console.log(user);
 
   return (
     <div>
