@@ -8,6 +8,7 @@ import Image from "next/image";
 import MarkDown from "@/hook/MarkDown";
 import axiosInstance from "@/lib/axios";
 import { useChatSession } from "@/hook/useChatSession";
+import { useChatDragStore } from "@/hook/useChatDragStore";
 
 interface ChatMessage {
   lc: number; // LangChain message index
@@ -25,6 +26,8 @@ export default function ChatBoxAL() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [expand, setExpand] = useState(false);
+  const { setDraggedRoom, draggedRoom } = useChatDragStore();
+
   const sessionId = useChatSession();
 
   // Auto-scroll to bottom when mssages
@@ -104,7 +107,21 @@ export default function ChatBoxAL() {
     <>
       {/* Floating action button - shows on mobile and desktop */}
       {!isOpen && (
-        <div className="group fixed bottom-14 right-5 z-50 w-full">
+        <div
+          className="group fixed bottom-14 right-5 z-50 w-full"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => {
+            if (!draggedRoom) return;
+            setIsOpen(true);
+            setInput((prev) =>
+              prev
+                ? `${prev}\n- ${draggedRoom.name}`
+                : `Khách quan tâm phòng:\n- ${draggedRoom.name}`
+            );
+
+            setDraggedRoom(null);
+          }}
+        >
           {/* Nút chatbot */}
           <div
             className="fixed rounded-full bg-gradient-to-r animate-bounce-light from-blue-500 to-blue-600 text-white p-1 w-fit cursor-pointer border-none outline-none bottom-7 lg:bottom-14 right-5"
@@ -116,6 +133,7 @@ export default function ChatBoxAL() {
               alt="anhdaidien"
               width={50}
               height={50}
+              unoptimized
               className="object-contain rounded-full "
             />
           </div>
@@ -129,6 +147,18 @@ export default function ChatBoxAL() {
 
       {isOpen && (
         <div
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => {
+            if (!draggedRoom) return;
+            setIsOpen(true);
+            setInput((prev) =>
+              prev
+                ? `${prev}\n- ${draggedRoom.name}`
+                : `Khách quan tâm phòng:\n- ${draggedRoom.name}`
+            );
+
+            setDraggedRoom(null);
+          }}
           className={`fixed flex flex-col bg-white rounded-xl shadow-lg overflow-hidden z-40 md:mb-6 md:mr-14  h-[calc(100vh-8rem)] w-[calc(100vw-2rem)]
     ${expand ? "max-w-6xl" : "max-w-lg"} bottom-20  right-4 `}
         >

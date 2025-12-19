@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 
 import Link from "next/link";
 import { IRoomType, useRoomTypeStore } from "@/hook/roomTypeStore";
+import { useChatDragStore } from "@/hook/useChatDragStore";
 
 export default function RoomTypeShowcase() {
   const { roomType } = useRoomTypeStore();
@@ -45,12 +46,16 @@ export default function RoomTypeShowcase() {
 
 function RoomCard({ roomType, index }: { roomType: IRoomType; index: number }) {
   const [isHovered, setIsHovered] = useState(false);
+  const { setDraggedRoom } = useChatDragStore();
 
   return (
     <motion.div
+      draggable
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      onDragStart={() => setDraggedRoom(roomType)}
+      onDragEnd={() => setDraggedRoom(null)}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500"
       onMouseEnter={() => setIsHovered(true)}

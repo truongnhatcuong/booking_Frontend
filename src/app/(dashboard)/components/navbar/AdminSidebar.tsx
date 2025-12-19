@@ -15,6 +15,17 @@ import { useSidebar } from "../../context/contextAdmin";
 import useAuth from "@/lib/authUser";
 import { translatePosition } from "@/lib/translate";
 import { useUserStore } from "@/hook/useUserStore";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const AdminSidebar = () => {
   const pathname = usePathname();
@@ -98,14 +109,36 @@ const AdminSidebar = () => {
                       <Settings />
                     </Link>
                   </div>
-                  <div
-                    className=" hover:rounded-full hover:bg-gray-200 p-2 mt-1 text-gray-600 text-sm hover:text-gray-800"
-                    title="Đăng xuất"
-                  >
-                    <button onClick={logout}>
-                      <LogOut />
-                    </button>
-                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <div
+                        className="hover:rounded-full hover:bg-gray-200 p-2 mt-1 text-gray-600 text-sm hover:text-gray-800 cursor-pointer"
+                        title="Đăng xuất"
+                      >
+                        <LogOut />
+                      </div>
+                    </AlertDialogTrigger>
+
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Bạn có chắc chắn?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Bạn sẽ đăng xuất khỏi hệ thống và cần đăng nhập lại để
+                          tiếp tục.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={logout}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Đăng xuất
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             )}

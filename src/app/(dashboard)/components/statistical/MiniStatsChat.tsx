@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useMemo, useState } from "react";
 import {
   MiniStatsDashboard,
@@ -113,7 +112,34 @@ export default function MiniStatsChat() {
       </div>
 
       {/* Result */}
-      {payload ? <MiniStatsDashboard payload={payload} /> : null}
+      {payload ? (
+        <MiniStatsDashboard payload={payload} />
+      ) : (
+        <div className="flex  flex-col items-center justify-center rounded-2xl border border-dashed bg-gray-50 px-6 py-16 text-center">
+          <div className="mb-4 rounded-full bg-black/5 p-4">📊</div>
+
+          <h2 className="text-lg font-semibold">Trợ lý AI Thống kê</h2>
+
+          <p className="mt-2 max-w-md text-sm text-muted-foreground">
+            Tôi có thể giúp bạn tổng hợp nhanh dữ liệu kinh doanh như doanh thu,
+            tình trạng phòng, hành vi khách hàng và các chỉ số quan trọng theo
+            thời gian thực.
+          </p>
+
+          <p className="mt-4 text-sm text-muted-foreground">👉 Hãy thử hỏi:</p>
+
+          <div className="mt-2 flex flex-wrap justify-center gap-2">
+            {quickQuestions.slice(0, 4).map((q) => (
+              <span
+                key={q}
+                className="rounded-full bg-white px-3 py-1.5 text-xs shadow-sm"
+              >
+                {q}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
