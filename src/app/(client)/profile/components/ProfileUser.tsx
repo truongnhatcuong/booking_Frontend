@@ -100,7 +100,7 @@ const ProfileUser = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field label="Họ">
             <Input
-              value={form.firstName}
+              value={form.firstName ?? ""}
               onChange={(e) => updateField("firstName", e.target.value)}
             />
           </Field>
@@ -113,12 +113,12 @@ const ProfileUser = () => {
           </Field>
 
           <Field label="Email">
-            <Input value={form.email} disabled />
+            <Input value={form.email ?? ""} disabled />
           </Field>
 
           <Field label="Số điện thoại">
             <Input
-              value={form.phone}
+              value={form.phone ?? ""}
               onChange={(e) => updateField("phone", e.target.value)}
             />
           </Field>
@@ -129,27 +129,27 @@ const ProfileUser = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Field label="Địa chỉ">
               <Input
-                value={form.customer.address}
+                value={form.customer.address ?? ""}
                 onChange={(e) => updateCustomerField("address", e.target.value)}
               />
             </Field>
 
             <Field label="Thành phố">
               <Input
-                value={form.customer.city}
+                value={form.customer.city ?? ""}
                 onChange={(e) => updateCustomerField("city", e.target.value)}
               />
             </Field>
 
             <Field label="Quốc gia">
               <Input
-                value={form.customer.country}
+                value={form.customer.country ?? ""}
                 onChange={(e) => updateCustomerField("country", e.target.value)}
               />
             </Field>
 
             <Field label="CMND / CCCD">
-              <Input value={form.customer.idNumber} disabled />
+              <Input value={form.customer.idNumber ?? ""} disabled />
             </Field>
           </div>
         )}
