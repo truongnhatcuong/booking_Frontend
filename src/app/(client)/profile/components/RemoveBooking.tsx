@@ -12,10 +12,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
 import Link from "next/link";
+import axiosInstance from "@/lib/axios";
 
 interface RemoveBookingProps {
   bookingId: string;
@@ -25,12 +25,7 @@ interface RemoveBookingProps {
 const RemoveBooking = ({ bookingId, paymentMethod }: RemoveBookingProps) => {
   const handleRemoveBooking = async () => {
     try {
-      const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_URL_API}/api/booking/${bookingId}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axiosInstance.delete(`/api/booking/${bookingId}`);
       if (res.data) {
         toast.success("Đơn đặt phòng đã được hủy thành công");
         mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/booking/bookingUser`);
