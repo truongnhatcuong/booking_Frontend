@@ -146,7 +146,7 @@ const ProgressMessage = ({
   dots: string;
 }) => (
   <p className="font-semibold tracking-wide drop-shadow-md flex items-center justify-center">
-    <span className="bg-gradient-to-r from-[#00FFF5] via-[#C7FFFD] to-[#00FFF5] bg-clip-text text-transparent flex items-center whitespace-nowrap overflow-hidden text-ellipsis text-[clamp(1rem,5vw,2rem)] max-w-full">
+    <span className="bg-linear-to-r from-[#00FFF5] via-[#C7FFFD] to-[#00FFF5] bg-clip-text text-transparent flex items-center whitespace-nowrap overflow-hidden text-ellipsis text-[clamp(1rem,5vw,2rem)] max-w-full">
       <span className="inline-block">{message}</span>
       <span className="ml-1 w-7 inline-flex justify-start">{dots}</span>
     </span>

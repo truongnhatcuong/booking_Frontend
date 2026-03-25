@@ -108,7 +108,7 @@ const ArticleDetail = async ({ slug }: Props) => {
         </div>
 
         {/* Call to action */}
-        <div className="mt-12 p-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl text-center text-white">
+        <div className="mt-12 p-8 bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl text-center text-white">
           <h3 className="text-2xl font-bold mb-4">
             Bạn thấy bài viết này hữu ích?
           </h3>

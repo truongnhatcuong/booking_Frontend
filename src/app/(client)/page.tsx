@@ -1,4 +1,13 @@
+"use client"; // Marks this file as a Client Component
+
 import React from "react";
+import dynamic from "next/dynamic";
+
+const DynamicComponentWithNoSSR = dynamic(
+  () => import("./components/main/HotelMap"),
+  { ssr: false },
+);
+
 import BeanHotel from "./components/main/BeanHotel";
 import Banner from "./components/main/Banner";
 import HotelShow from "./components/main/HotelShow";
@@ -22,6 +31,7 @@ const Page = () => {
       <HotelHighlightsCarousel />
       <ChatBoxAL />
       <ChatBox />
+      <DynamicComponentWithNoSSR />
       <TestimonialCarousel />
       <Footer2 />
     </div>

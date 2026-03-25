@@ -32,7 +32,7 @@ const CardBlog = ({ data }: CardBlogProps) => {
                   {item?.content || "Blog"}
                 </Badge>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
 
             {/* Phần nội dung */}

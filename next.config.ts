@@ -16,6 +16,19 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "i.ibb.co",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+        port: "",
+        pathname: "/**",
+      },
+      
+      {
+        protocol: "https",
         hostname: "cdn3.ivivu.com",
         port: "",
         pathname: "/**",

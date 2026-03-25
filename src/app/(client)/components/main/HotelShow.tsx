@@ -69,7 +69,7 @@ const HotelShow = () => {
   const currentTab = tabData[hotel];
 
   return (
-    <div className=" bg-gradient-to-br from-slate-50 to-slate-100 p-4 mt-8  lg:mt-10">
+    <div className=" bg-linear-to-br from-slate-50 to-slate-100 p-4 mt-8  lg:mt-10">
       <div className="flex flex-col lg:flex-row gap-5  justify-center space-x-2 mb-8  lg:max-w-6xl mx-auto">
         {(Object.keys(tabData) as TabType[]).map((tabKey) => {
           const tab = tabData[tabKey];
@@ -80,7 +80,7 @@ const HotelShow = () => {
               onClick={() => handleTabChange(tabKey)}
               className={`group relative px-8 py-4 rounded-2xl font-semibold uppercase tracking-wide transition-all duration-500 transform hover:scale-105 ${
                 isActive
-                  ? `bg-gradient-to-r ${tab.gradient} text-white shadow-2xl shadow-black/20`
+                  ? `bg-linear-to-r ${tab.gradient} text-white shadow-2xl shadow-black/20`
                   : "bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-xl border border-gray-200/50"
               }`}
             >
@@ -103,7 +103,7 @@ const HotelShow = () => {
                 </span>
               </div>
               {isActive && (
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-transparent opacity-50"></div>
+                <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-white/20 to-transparent opacity-50"></div>
               )}
             </button>
           );
@@ -128,9 +128,9 @@ const HotelShow = () => {
                   alt={currentTab.title}
                   className="w-full md:h-200 object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div
-                  className={`absolute top-6 left-6 px-4 py-2 rounded-full bg-gradient-to-r ${currentTab.gradient} text-white font-bold text-sm shadow-lg`}
+                  className={`absolute top-6 left-6 px-4 py-2 rounded-full bg-linear-to-r ${currentTab.gradient} text-white font-bold text-sm shadow-lg`}
                 >
                   Tiện Nghi Sang Trọng
                 </div>
@@ -140,11 +140,11 @@ const HotelShow = () => {
             <div className="flex-1 flex flex-col justify-center">
               <div className="bg-white rounded-2xl shadow-xl py-10 p-2 border border-gray-100 relative overflow-hidden h-full lg:h-150">
                 <div
-                  className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${currentTab.gradient}`}
+                  className={`absolute top-0 left-0 w-full h-1 bg-linear-to-r ${currentTab.gradient}`}
                 ></div>
                 <div className="flex items-center gap-3 mb-6">
                   <div
-                    className={`p-3 rounded-full bg-gradient-to-r ${currentTab.gradient} text-white shadow-lg`}
+                    className={`p-3 rounded-full bg-linear-to-r ${currentTab.gradient} text-white shadow-lg`}
                   >
                     {currentTab.icon}
                   </div>
@@ -162,7 +162,7 @@ const HotelShow = () => {
                   </p>
                 </div>
                 <div
-                  className={`mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r ${currentTab.gradient} text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer`}
+                  className={`mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-linear-to-r ${currentTab.gradient} text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer`}
                 >
                   <span>Tìm hiểu thêm</span>
                   <svg
@@ -189,7 +189,7 @@ const HotelShow = () => {
                   alt={currentTab.title}
                   className="w-full md:h-200 object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </div>
           </div>

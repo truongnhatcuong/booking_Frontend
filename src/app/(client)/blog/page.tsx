@@ -16,9 +16,12 @@ export interface Article {
 }
 
 export default async function BlogPage() {
-  const data = await axiosInstance
-    .get<Article[]>("/api/blog")
-    .then((res) => res.data);
+  const page = 1;
+  const res = await axiosInstance.get(`/api/blog?page=${page}&limit=14`);
+
+  const { data } = res.data;
+
+  const blogs = data as Article[];
   return (
     <div className="w-full">
       <div className="relative h-screen px-4 text-center  bg-[url(/image/bgNews.png)] bg-no-repeat bg-cover bg-center">
@@ -50,13 +53,13 @@ export default async function BlogPage() {
             </p>
           </div>
           <div className="">
-            {data && data.length > 0 && (
+            {blogs && blogs.length > 0 && (
               <div className="grid grid-cols-1 xl:grid-cols-3 lg:gap-5 ">
                 <div className="col-span-2 mb-5">
-                  <MainArticle article={data[0]} />
+                  <MainArticle article={blogs[0]} />
                 </div>
                 <div className="flex flex-col gap-10 ">
-                  {data.slice(1, 5).map((item, index) => (
+                  {blogs?.slice(1, 5).map((item, index) => (
                     <CardBlogSub article={item} key={index} />
                   ))}
                 </div>

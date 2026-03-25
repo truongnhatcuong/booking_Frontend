@@ -1,69 +1,58 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Utensils, Wifi, Car, Waves, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import axios from "axios";
+
 interface Highlight {
   id: number;
   title: string;
   description: string;
   image: string;
-  icon: React.ReactNode;
+  icon: string;
   features: string[];
 }
 
-const highlights: Highlight[] = [
-  {
-    id: 1,
-    title: "Nhà Hàng Cao Cấp",
-    description:
-      "Thưởng thức ẩm thực đẳng cấp quốc tế với đầu bếp Michelin Star",
-    image: "/image/khong-gian-akuna-8225.jpg",
-    icon: <Utensils className="w-6 h-6" />,
-    features: ["Buffet sáng miễn phí", "Menu đa dạng", "Phục vụ 24/7"],
-  },
-  {
-    id: 2,
-    title: "Tiện Nghi Hiện Đại",
-    description: "Wifi tốc độ cao và các tiện ích công nghệ tiên tiến",
-    image: "/image/standard-hotel-room-with-garden-view.png",
-    icon: <Wifi className="w-6 h-6" />,
-    features: ["Wifi miễn phí", "Smart TV", "Sạc không dây"],
-  },
-  {
-    id: 3,
-    title: "Bãi Đỗ Xe Rộng Rãi",
-    description: "Khu vực đỗ xe an toàn và thuận tiện cho khách hàng",
-    image: "/image/bai-do-xe-ngoai-troi.jpg",
-    icon: <Car className="w-6 h-6" />,
-    features: ["Bảo vệ 24/7", "Miễn phí đỗ xe", "Valet parking"],
-  },
-  {
-    id: 4,
-    title: "Hồ Bơi & Spa",
-    description: "Thư giãn tại hồ bơi vô cực và spa cao cấp",
-    image: "/image/4-ho-boi-vo-cuc-o-da-nang-len-hinh-sang-chanh-ivivu-2.jpg",
-    icon: <Waves className="w-6 h-6" />,
-    features: ["Hồ bơi vô cực", "Spa trị liệu", "Jacuzzi"],
-  },
-  {
-    id: 5,
-    title: "Quán Cà Phê Thư Giãn",
-    description: "Không gian yên tĩnh để thưởng thức cà phê và làm việc",
-    image: "/image/danangviewbien.jpg",
-    icon: <Coffee className="w-6 h-6" />,
-    features: ["Cà phê premium", "Wifi tốc độ cao", "Không gian yên tĩnh"],
-  },
-];
 const HotelHighlightsCarousel = () => {
+  const range = "Trang tính2!A2:H6"; // Phạm vi dữ liệu bạn muốn lấy
+  const sheetId = process.env.NEXT_PUBLIC_GGSHEETID; // ID của Google Sheet từ .env
+  const apiKey = process.env.NEXT_PUBLIC_API_GGSHEET; // API key của bạn từ .env
+  const [highlights, setHighlights] = React.useState<Highlight[]>([]);
+  useEffect(() => {
+    // Chỉ gửi yêu cầu API một lần khi component mount
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`,
+        );
+        const transformedData = response.data.values.map(
+          (row: Highlight[]) => ({
+            id: row[0], // Giả sử cột A chứa ID
+            title: row[1],
+            description: row[2],
+            image: row[3],
+            icon: row[4],
+            features: [row[5], row[6], row[7]].filter(Boolean), // Lọc bỏ các giá trị rỗng
+          }),
+        );
+        setHighlights(transformedData);
+      } catch (error) {
+        console.error("Error fetching data from Google Sheets:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <section className="py-15 bg-gradient-to-br from-background to-muted bg-white mx-4 lg:mx-0">
-      <div className="container max-w-md md:max-w-none md:mx-auto ">
+    <section className="py-15 bg-linear-to-br from-background to-muted bg-white mx-4 lg:mx-0">
+      <div className=" ">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-foreground mb-4 animate-fade-in-up">
             Tiện Nghi Đẳng Cấp
@@ -91,26 +80,31 @@ const HotelHighlightsCarousel = () => {
         >
           {highlights.map((highlight) => (
             <SwiperSlide key={highlight.id} className="relative  max-w-6xl">
-              <div key={highlight.id} className="w-full flex-shrink-0">
+              <div
+                key={highlight.id}
+                className=" w-screen md:w-full flex-shrink-0"
+              >
                 <div className="grid md:grid-cols-2 gap-4  ">
                   {/* Image section */}
                   <div className="relative overflow-hidden group h-80 lg:h-120 ">
                     <Image
-                      width={500}
-                      height={500}
+                      width={1000}
+                      height={1000}
                       src={highlight.image || "/placeholder.svg"}
                       alt={highlight.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute inset-0 bg-linear-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
 
                   {/* Content section */}
                   <div className="  flex flex-col justify-center bg-card pb-8 px-4  ">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 rounded-full bg-primary text-primary-foreground">
-                        {highlight.icon}
-                      </div>
+                      <div
+                        className="text-2xl"
+                        dangerouslySetInnerHTML={{ __html: highlight.icon }}
+                      />
+
                       <h3 className="text-2xl md:text-3xl font-bold text-card-foreground animate-slide-in-right">
                         {highlight.title}
                       </h3>
@@ -126,7 +120,7 @@ const HotelHighlightsCarousel = () => {
                           key={idx}
                           className="flex items-center gap-3 animate-slide-in-right"
                         >
-                          <div className="w-2 h-2 rounded-full bg-accent" />
+                          <div className="w-2 h-2 rounded-full bg-black" />
                           <span className="text-card-foreground">
                             {feature}
                           </span>

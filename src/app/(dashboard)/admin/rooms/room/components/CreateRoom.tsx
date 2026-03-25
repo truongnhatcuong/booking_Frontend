@@ -91,7 +91,7 @@ const CreateRoom = ({ data }: RoomProps) => {
     <>
       <Button
         variant="default"
-        className="px-4 py-2.5 mb-2 cursor-pointer flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 mt-2.5 font-medium"
+        className="px-4 py-2.5 mb-2 cursor-pointer flex items-center gap-2 bg-linear-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 mt-2.5 font-medium"
         onClick={() => setIsOpen(true)}
       >
         <PlusCircle className="h-5 w-5" />
@@ -395,7 +395,7 @@ const CreateRoom = ({ data }: RoomProps) => {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md hover:shadow-lg transition-all duration-200"
+                  className="px-6 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md hover:shadow-lg transition-all duration-200"
                 >
                   Thêm phòng
                 </button>

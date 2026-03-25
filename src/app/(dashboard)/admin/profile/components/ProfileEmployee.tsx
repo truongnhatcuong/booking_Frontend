@@ -76,7 +76,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
         {/* Profile Card */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header Background */}
-          <div className="relative h-40 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800">
+          <div className="relative h-40 bg-linear-to-r from-blue-600 via-blue-700 to-indigo-800">
             <div className="absolute inset-0 bg-black opacity-10"></div>
             <div className="absolute top-4 right-4">
               <span
@@ -128,7 +128,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Email */}
                   <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                    <EnvelopeIcon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                    <EnvelopeIcon className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-gray-600 mb-1">Email</p>
                       <p className="font-medium text-gray-800 break-all">
@@ -139,7 +139,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
                   {/* Phone */}
                   <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                    <PhoneIcon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                    <PhoneIcon className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
                     <div className="flex-1">
                       <p className="text-sm text-gray-600 mb-1">
                         Số điện thoại
@@ -156,7 +156,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
                   {/* User Type */}
                   <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                    <ShieldCheckIcon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                    <ShieldCheckIcon className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
                     <div className="flex-1">
                       <p className="text-sm text-gray-600 mb-1">
                         Loại tài khoản
@@ -171,7 +171,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
                   {/* Created At */}
                   <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                    <CalendarIcon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                    <CalendarIcon className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
                     <div className="flex-1">
                       <p className="text-sm text-gray-600 mb-1">
                         Ngày tạo tài khoản
@@ -194,7 +194,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Department */}
                     <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                      <BuildingOfficeIcon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                      <BuildingOfficeIcon className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm text-gray-600 mb-1">Phòng ban</p>
                         <p className="font-medium text-gray-800">
@@ -205,7 +205,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
                     {/* Position */}
                     <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                      <BriefcaseIcon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                      <BriefcaseIcon className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm text-gray-600 mb-1">Chức vụ</p>
                         <p className="font-medium text-gray-800">
@@ -216,7 +216,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
                     {/* Hire Date */}
                     <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-100 md:col-span-2">
-                      <CalendarIcon className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                      <CalendarIcon className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm text-gray-600 mb-1">
                           Ngày bắt đầu làm việc
@@ -235,7 +235,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
             <div className="mt-8 p-5 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
               <div className="flex gap-3">
                 <svg
-                  className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5"
+                  className="w-6 h-6 text-yellow-600 shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

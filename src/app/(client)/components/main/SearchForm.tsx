@@ -38,7 +38,7 @@ const SearchForm = ({
   const [isSticky, setIsSticky] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setSearchParams((prev: any) => ({
@@ -63,7 +63,7 @@ const SearchForm = ({
     e.preventDefault();
     if (!searchParams.checkInDate || !searchParams.checkOutDate) {
       toast.error(
-        "Vui lòng chọn đầy đủ ngày nhận và ngày trả phòng trước khi tìm!"
+        "Vui lòng chọn đầy đủ ngày nhận và ngày trả phòng trước khi tìm!",
       );
       return;
     }
@@ -115,7 +115,7 @@ const SearchForm = ({
 
   return (
     <div
-      className={` max-w-4xl mx-auto my-8 shadow-md transition-all duration-300 
+      className={` max-w-4xl mx-auto my-8 md:shadow-md transition-all duration-300 
         ${
           isSticky
             ? "fixed -top-8 left-0 p-2 right-0 z-40 max-w-full  shadow-lg bg-white"
