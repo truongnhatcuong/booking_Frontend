@@ -124,7 +124,7 @@ export default function ChatBoxAL() {
         >
           {/* Nút chatbot */}
           <div
-            className="fixed rounded-full bg-gradient-to-r animate-bounce-light from-blue-500 to-blue-600 text-white p-1 w-fit cursor-pointer border-none outline-none bottom-7 lg:bottom-14 right-5"
+            className="fixed rounded-full bg-linear-to-r animate-bounce-light from-blue-500 to-blue-600 text-white p-1 w-fit cursor-pointer border-none outline-none bottom-7 lg:bottom-14 right-5"
             onClick={() => setIsOpen(!isOpen)}
             title="Hỗ Trợ Bạn Tìm Thông Tin Nhanh Chống Bằng Ai"
           >
@@ -163,7 +163,7 @@ export default function ChatBoxAL() {
     ${expand ? "max-w-6xl" : "max-w-lg"} bottom-20  right-4 `}
         >
           {/* Chat header */}
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 text-white flex justify-between items-center cursor-pointer">
+          <div className="bg-linear-to-r from-blue-500 to-blue-600 px-4 py-2 text-white flex justify-between items-center cursor-pointer">
             <div>
               <h2 className="text-xl font-semibold">Trợ Lý Ai</h2>
               <p className="text-sm opacity-80">Tôi có thể giúp gì cho bạn?</p>

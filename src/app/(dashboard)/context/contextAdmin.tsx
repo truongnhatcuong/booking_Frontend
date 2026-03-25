@@ -1,17 +1,6 @@
 "use client";
 
-import { useUserStore } from "@/hook/useUserStore";
-import { refreshAccessToken } from "@/lib/axios";
-import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/navigation";
-
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface SidebarContextType {
   isCollapsed: boolean;

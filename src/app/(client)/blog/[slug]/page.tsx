@@ -6,9 +6,9 @@ import axiosInstance from "@/lib/axios";
 
 const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  const data = await axiosInstance
-    .get<Article[]>("/api/blog")
-    .then((res) => res.data);
+  const res = await axiosInstance.get("/api/blog");
+  const data = res.data.data as Article[];
+
   return (
     <div className=" grid grid-cols-1 md:grid-cols-4 ">
       <div className="col-span-3">

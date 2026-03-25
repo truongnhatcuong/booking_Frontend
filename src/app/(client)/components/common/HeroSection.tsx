@@ -30,7 +30,7 @@ export function HeroSection({
   const [openKeyword, setOpenKeyword] = useState(false);
   const gradientOverlay =
     variant === "gradient"
-      ? "bg-gradient-to-br from-blue-600/90 via-purple-600/80 to-pink-600/90"
+      ? "bg-linear-to-br from-blue-600/90 via-purple-600/80 to-pink-600/90"
       : overlayConfigs[overlayOpacity];
 
   return (
@@ -42,7 +42,7 @@ export function HeroSection({
         overflow-hidden
         ${
           !backgroundImage && variant === "gradient"
-            ? "bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600"
+            ? "bg-linear-to-br from-blue-600 via-purple-600 to-pink-600"
             : "bg-gray-900"
         }
         ${className}
@@ -63,7 +63,7 @@ export function HeroSection({
           <div className="absolute inset-0 backdrop-blur-xs" />
 
           {/* Layer 3: Gradient overlay từ bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30" />
         </>
       )}
 

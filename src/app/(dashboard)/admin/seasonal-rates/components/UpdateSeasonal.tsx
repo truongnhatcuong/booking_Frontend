@@ -187,7 +187,7 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
           </Alert>
         )}
         {/* Info box - Current data */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
             <Info className="w-5 h-5 text-blue-600" />
             <h4 className="font-semibold text-blue-900">Thông tin hiện tại</h4>

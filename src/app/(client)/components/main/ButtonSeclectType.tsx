@@ -48,7 +48,7 @@ const ButtonSelectType = ({ setTypeRoom, typeRoom }: IButton) => {
                 px-4 md:px-6 py-3 md:py-6 rounded-xl font-medium text-sm
                 ${
                   isSelected
-                    ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg scale-105 transform`
+                    ? `bg-linear-to-r ${item.gradient} text-white shadow-lg scale-105 transform`
                     : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                 }
               `}
@@ -57,7 +57,7 @@ const ButtonSelectType = ({ setTypeRoom, typeRoom }: IButton) => {
               {/* Background gradient overlay for hover effect */}
               <div
                 className={`
-                absolute inset-0 bg-gradient-to-r ${item.hoverGradient} 
+                absolute inset-0 bg-linear-to-r ${item.hoverGradient} 
                 opacity-0 group-hover:opacity-100 transition-opacity duration-300
                 ${isSelected ? "opacity-0" : ""}
               `}

@@ -77,7 +77,7 @@ export default function SignUpForm() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-blue-200/50">
         <div className="flex flex-col md:flex-row">
           {/* Left side decorative image */}
@@ -92,11 +92,11 @@ export default function SignUpForm() {
           </div>
 
           {/* Right side form */}
-          <div className="md:w-3/5 p-8 md:p-12 bg-gradient-to-br from-white to-blue-50/30">
+          <div className="md:w-3/5 p-8 md:p-12 bg-linear-to-br from-white to-blue-50/30">
             {/* Header */}
             <div className="mb-8 animate-fade-in">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-linear-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
                   <svg
                     className="w-7 h-7 text-white"
                     fill="none"
@@ -111,7 +111,7 @@ export default function SignUpForm() {
                     />
                   </svg>
                 </div>
-                <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <h2 className="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   Đăng Ký Tài Khoản
                 </h2>
               </div>
@@ -486,7 +486,7 @@ export default function SignUpForm() {
 
               {/* Submit Button */}
               <Button
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 mt-6 animate-bounce-in"
+                className="w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 mt-6 animate-bounce-in"
                 type="submit"
               >
                 <span className="flex items-center justify-center gap-2">

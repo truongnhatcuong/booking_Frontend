@@ -49,7 +49,7 @@ export default function UserProvider({
         } catch (err) {
           console.error("Refresh token thất bại:", err);
           localStorage.removeItem("token");
-          router.push("/signIn");
+          router.push("/");
           return;
         }
       } else {

@@ -34,7 +34,7 @@ const RoomCard = ({ room }: Iroom) => {
 
   return (
     <div className=" group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
-      <div className="relative h-40 w-full bg-gradient-to-br from-blue-50 to-indigo-100 overflow-hidden">
+      <div className="relative h-40 w-full bg-linear-to-br from-blue-50 to-indigo-100 overflow-hidden">
         <Image
           src={room.images[0].imageUrl || "/images/room-placeholder.jpg"}
           alt={room.roomType.name}
@@ -43,7 +43,7 @@ const RoomCard = ({ room }: Iroom) => {
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Floating badge */}
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1 transform translate-x-8 group-hover:translate-x-0 transition-transform duration-300">
@@ -67,7 +67,7 @@ const RoomCard = ({ room }: Iroom) => {
           </div>
         </div>
 
-        <div className="mb-6 py-2 px-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+        <div className="mb-6 py-2 px-3 bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
           <div className="flex items-center justify-between">
             <span className="text-gray-700 font-medium">Giá từ:</span>
             <div className="text-right">
@@ -81,7 +81,7 @@ const RoomCard = ({ room }: Iroom) => {
 
         <Link
           href={`/rooms/${room.roomTypeId}/${room.id}`}
-          className="group/btn relative block w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
+          className="group/btn relative block w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
         >
           <span className="flex items-center justify-center gap-2">
             Đặt phòng ngay
@@ -89,7 +89,7 @@ const RoomCard = ({ room }: Iroom) => {
           </span>
 
           {/* Animated background effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 rounded-xl" />
+          <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 rounded-xl" />
         </Link>
       </div>
 

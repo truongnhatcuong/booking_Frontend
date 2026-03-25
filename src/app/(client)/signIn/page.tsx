@@ -94,7 +94,7 @@ export default function SignInForm() {
   }, [message]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:shadow-blue-200/50 flex flex-col md:flex-row">
         {/* Left side - Image with overlay */}
         <div className="md:w-1/2 h-64 md:h-auto relative group">
@@ -108,11 +108,11 @@ export default function SignInForm() {
         </div>
 
         {/* Right side - Form */}
-        <div className="md:w-1/2 p-12 flex flex-col justify-center bg-gradient-to-br from-white to-blue-50/30">
+        <div className="md:w-1/2 p-12 flex flex-col justify-center bg-linear-to-br from-white to-blue-50/30">
           {/* Header */}
           <div className="mb-10 animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-brfrom-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
                 <svg
                   className="w-7 h-7 text-white"
                   fill="none"
@@ -127,7 +127,7 @@ export default function SignInForm() {
                   />
                 </svg>
               </div>
-              <h3 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <h3 className="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Đăng Nhập
               </h3>
             </div>
@@ -226,7 +226,7 @@ export default function SignInForm() {
 
             {/* Submit button */}
             <Button
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 animate-bounce-in mt-2"
+              className="w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 animate-bounce-in mt-2"
               type="submit"
             >
               <span className="flex items-center justify-center gap-2">
@@ -252,7 +252,7 @@ export default function SignInForm() {
           {message && (
             <div className="flex items-center gap-2 p-4 mt-4 bg-red-50 border border-red-200 rounded-xl text-red-600 animate-fade-in">
               <svg
-                className="w-5 h-5 flex-shrink-0"
+                className="w-5 h-5 shrink-0"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >

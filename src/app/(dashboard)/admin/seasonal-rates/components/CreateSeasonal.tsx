@@ -125,11 +125,11 @@ export default function AddSeasonalRate() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 ">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-4 ">
       <div className="">
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8">
+          <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-8">
             <h1 className=" text-lg md:text-3xl font-bold text-white">
               Thêm Giá Theo Mùa
             </h1>
@@ -337,7 +337,7 @@ export default function AddSeasonalRate() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
+                  className="flex-1 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center">

@@ -8,7 +8,7 @@ const AboutPage = () => {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-amber-500/20 blur-3xl" />
         <div className="absolute -right-32 top-40 h-80 w-80 rounded-full bg-rose-500/20 blur-3xl" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-slate-950 to-transparent" />
       </div>
 
       <div className="relative mx-auto  px-4 lg:px-6">
@@ -21,7 +21,7 @@ const AboutPage = () => {
           </span>
           <h1 className="mt-5 text-2xl md:text-4xl font-bold tracking-tight text-white">
             Hãy đến dtuHotel để{" "}
-            <span className="bg-gradient-to-r from-amber-300 via-yellow-400 to-rose-300 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-amber-300 via-yellow-400 to-rose-300 bg-clip-text text-transparent">
               trải nghiệm sự khác biệt
             </span>
             .
@@ -92,7 +92,7 @@ const AboutPage = () => {
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 href="/rooms/18a8e9bc-b4e2-4597-9fd2-571eb3a32ead"
-                className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-rose-400 px-6 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_18px_40px_rgba(251,191,36,0.45)] transition hover:shadow-[0_22px_60px_rgba(251,191,36,0.65)]"
+                className="group inline-flex items-center justify-center rounded-full bg-linear-to-r from-amber-400 via-yellow-400 to-rose-400 px-6 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_18px_40px_rgba(251,191,36,0.45)] transition hover:shadow-[0_22px_60px_rgba(251,191,36,0.65)]"
               >
                 Đặt phòng ngay
                 <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">

@@ -99,7 +99,7 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
             {room.images.map((image, index) => (
               <SwiperSlide key={index}>
                 <div className="relative h-full w-full">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent z-10"></div>
                   <Image
                     src={image.imageUrl || "/placeholder.svg"}
                     alt={`${room.roomType.name} - Phòng ${room.roomNumber}`}
@@ -156,7 +156,7 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
         </div>
 
         {/* Enhanced Description */}
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50  rounded-2xl">
+        <div className="bg-linear-to-r from-gray-50 to-blue-50  rounded-2xl">
           <h2 className="text-2xl lg:text-3xl font-serif text-gray-800 mb-6 flex items-center ">
             <div className="w-1 h-8 bg-blue-600 rounded-full mr-4"></div>
             Giới thiệu
@@ -196,7 +196,7 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
             Chính sách
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
+            <div className="bg-linear-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
               <div className="flex items-center mb-4">
                 <div className="bg-blue-600 p-2 rounded-full mr-3">
                   <Clock size={20} className="text-white" />
@@ -217,7 +217,7 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
+            <div className="bg-linear-to-br from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
               <div className="flex items-center mb-4">
                 <div className="bg-green-600 p-2 rounded-full mr-3">
                   <Shield size={20} className="text-white" />
