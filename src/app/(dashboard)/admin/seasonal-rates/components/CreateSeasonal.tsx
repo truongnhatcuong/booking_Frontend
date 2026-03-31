@@ -43,7 +43,7 @@ export default function AddSeasonalRate() {
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -103,7 +103,7 @@ export default function AddSeasonalRate() {
 
     try {
       const response = await axiosInstance.post("/api/seasonal", formData);
-      console.log("API Response:", response.data);
+
       if (response.status === 201) {
         setSuccess(true);
         setFormData({
@@ -117,8 +117,15 @@ export default function AddSeasonalRate() {
       } else {
         setError("Thêm giá theo mùa thất bại. Vui lòng thử lại.");
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Có lỗi xảy ra");
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        "Lỗi không xác định. Vui lòng thử lại.";
+
+      setError(errorMessage);
+      console.log("API error:", err.response?.data);
     } finally {
       setLoading(false);
     }

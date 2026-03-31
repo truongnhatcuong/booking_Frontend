@@ -313,3 +313,7 @@
 .react-datepicker-wrapper {
   width: 100%;
 }
+
+.leaflet-container {
+  z-index: -100;
+}

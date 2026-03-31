@@ -59,21 +59,29 @@ const CardStatistical = () => {
           title={`Tổng đặt phòng (${translatedRange})`}
           total={data?.bookings || 0}
           description="tổng đơn đặt phòng"
+          className="border-t-green-500 text-green-500"
+          image="/RevenueIcon.svg"
         />
         <CardItemTotal
           title={`Tổng khách hàng (${translatedRange})`}
           total={data?.customers || 0}
           description="tổng khách hàng"
+          className="border-t-blue-500 text-blue-500"
+          image="/image/customerIcon.png"
         />
         <CardItemTotal
           title={`Tổng Tiền Đặt Phòng (${translatedRange})`}
           total={formatPrice(Number(data?.totalAmount) || 0)}
           description="tổng tiền đặt phòng"
+          className=" border-t-red-500 text-red-500"
+          image="/image/roomIcon.png"
         />
         <CardItemTotal
           title={`Tổng doanh thu`}
           total={formatPrice(Number(data?.revenue) || 0)}
           description="tổng doanh thu"
+          className="border-t-orange-500 text-orange-500"
+          image="/image/revenueIcon.png"
         />
       </div>
     </>
