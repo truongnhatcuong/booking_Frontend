@@ -1,134 +1,191 @@
 import React from "react";
 import Link from "next/link";
 
+const stats = [
+  { value: "5+", label: "Hạng phòng sang trọng" },
+  { value: "24/7", label: "Dịch vụ & hỗ trợ khách" },
+  { value: "100%", label: "Hài lòng & tin tưởng" },
+];
+
 const AboutPage = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-12 md:py-20">
-      {/* Background decor */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-amber-500/20 blur-3xl" />
-        <div className="absolute -right-32 top-40 h-80 w-80 rounded-full bg-rose-500/20 blur-3xl" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-slate-950 to-transparent" />
+    <section className="relative overflow-hidden bg-white py-10">
+      {/* Soft background blobs */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-amber-50 blur-3xl" />
+        <div className="absolute top-20 -right-40 h-[400px] w-[400px] rounded-full bg-rose-50 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-64 w-3/4 rounded-full bg-yellow-50 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto  px-4 lg:px-6">
-        {/* Heading */}
-        <div className="mb-10 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-amber-300">
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
+        {/* ── Badge + Heading ── */}
+        <div className="mb-16 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border  px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-amber-600">
             dtuHotel
-            <span className="h-1 w-1 rounded-full bg-amber-300" />
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
             Since 2025
           </span>
-          <h1 className="mt-5 text-2xl md:text-4xl font-bold tracking-tight text-white">
-            Hãy đến dtuHotel để{" "}
-            <span className="bg-linear-to-r from-amber-300 via-yellow-400 to-rose-300 bg-clip-text text-transparent">
-              trải nghiệm sự khác biệt
-            </span>
-            .
+
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+            Hãy đến{" "}
+            <span className="relative inline-block">
+              <span className="bg-gradient-to-r from-amber-400 via-yellow-400 to-rose-400 bg-clip-text text-transparent">
+                dtuHotel
+              </span>
+              {/* underline accent */}
+              <svg
+                className="absolute -bottom-1 left-0 w-full"
+                viewBox="0 0 200 8"
+                fill="none"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M0 6 Q50 1 100 5 Q150 9 200 4"
+                  stroke="url(#u)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+                <defs>
+                  <linearGradient
+                    id="u"
+                    x1="0"
+                    y1="0"
+                    x2="200"
+                    y2="0"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stopColor="#fbbf24" />
+                    <stop offset="0.5" stopColor="#facc15" />
+                    <stop offset="1" stopColor="#fb7185" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>{" "}
+            để trải nghiệm sự khác biệt.
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-slate-300">
+
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-500 md:text-lg">
             Khách sạn 5 sao đẳng cấp quốc tế, tọa lạc tại giao điểm của bốn quận
-            trung tâm TP. Đà Nẵng – nơi năng động bậc nhất Đà Nẵng hoa lệ.
+            trung tâm TP. Đà Nẵng — nơi năng động bậc nhất Đà Nẵng hoa lệ.
           </p>
         </div>
 
-        {/* Main content */}
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-0 justify-around items-center">
-          {/* Text block */}
-          <div className="space-y-5 max-w-6xl ">
-            <div className="rounded-2xl bg-white/5 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.85)] ring-1 ring-white/10 backdrop-blur-xl">
-              <p className="text-sm md:text-base leading-relaxed text-slate-100">
-                Với hệ thống phòng tiêu chuẩn và hạng sang được thiết kế tinh
-                tế, dtuHotel mang đến không gian nghỉ dưỡng sang trọng, tiện
-                nghi và riêng tư cho mọi kỳ nghỉ hay chuyến công tác của bạn.
-              </p>
-              <p className="mt-3 text-sm md:text-base leading-relaxed text-slate-200">
-                dtuHotel tích hợp đầy đủ dịch vụ cao cấp: nhà hàng, phòng hội
-                nghị, hồ bơi, đưa đón sân bay, tour du lịch, sân golf và hỗ trợ
-                vé máy bay với chất lượng hàng đầu, giúp hành trình của bạn trọn
-                vẹn từng khoảnh khắc.
-              </p>
-              <p className="mt-3 text-sm md:text-base leading-relaxed text-slate-200">
-                Đội ngũ nhân viên được tuyển chọn và đào tạo chuyên nghiệp, chu
-                đáo, thân thiện luôn sẵn sàng đáp ứng mọi nhu cầu, mang đến trải
-                nghiệm cá nhân hóa cho từng vị khách.
-              </p>
-              <p className="mt-3 text-sm md:text-base leading-relaxed text-slate-200">
-                Đến với dtuHotel là đến với sự tinh tế trong chất lượng, dịch vụ
-                và cảm giác thân thuộc như đang ở chính ngôi nhà thứ hai của
-                bạn.
-              </p>
+        {/* ── Main layout ── */}
+        <div className="flex flex-col items-center gap-14 lg:flex-row lg:gap-16">
+          {/* ── Left: text content ── */}
+          <div className="flex-1 space-y-7">
+            {/* Description */}
+            <div className="rounded-3xl border border-slate-100 bg-slate-50/80 p-8 shadow-sm">
+              {[
+                "Với hệ thống phòng tiêu chuẩn và hạng sang được thiết kế tinh tế, dtuHotel mang đến không gian nghỉ dưỡng sang trọng, tiện nghi và riêng tư cho mọi kỳ nghỉ hay chuyến công tác của bạn.",
+                "dtuHotel tích hợp đầy đủ dịch vụ cao cấp: nhà hàng, phòng hội nghị, hồ bơi, đưa đón sân bay, tour du lịch, sân golf và hỗ trợ vé máy bay với chất lượng hàng đầu.",
+                "Đội ngũ nhân viên chuyên nghiệp, chu đáo, thân thiện luôn sẵn sàng đáp ứng mọi nhu cầu, mang đến trải nghiệm cá nhân hóa cho từng vị khách.",
+                "Đến với dtuHotel là đến với sự tinh tế trong chất lượng, dịch vụ và cảm giác thân thuộc như đang ở chính ngôi nhà thứ hai của bạn.",
+              ].map((text, i) => (
+                <p
+                  key={i}
+                  className={`text-sm md:text-base leading-relaxed text-slate-600 ${i > 0 ? "mt-4 border-t border-slate-100 pt-4" : ""}`}
+                >
+                  {text}
+                </p>
+              ))}
             </div>
 
-            {/* Highlight stats */}
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center backdrop-blur-xl">
-                <div className="text-lg md:text-2xl font-semibold text-amber-300">
-                  5+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-3">
+              {stats.map((s) => (
+                <div
+                  key={s.value}
+                  className="group rounded-2xl border border-amber-100 bg-gradient-to-b from-amber-50 to-white p-4 text-center shadow-sm transition hover:border-amber-300 hover:shadow-md"
+                >
+                  <div className="text-2xl font-bold text-amber-500 md:text-3xl">
+                    {s.value}
+                  </div>
+                  <div className="mt-1.5 text-xs leading-snug text-slate-500">
+                    {s.label}
+                  </div>
                 </div>
-                <div className="mt-1 text-xs md:text-sm text-slate-300">
-                  Hạng phòng sang trọng
-                </div>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center backdrop-blur-xl">
-                <div className="text-lg md:text-2xl font-semibold text-amber-300">
-                  24/7
-                </div>
-                <div className="mt-1 text-xs md:text-sm text-slate-300">
-                  Dịch vụ & hỗ trợ khách
-                </div>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center backdrop-blur-xl">
-                <div className="text-lg md:text-2xl font-semibold text-amber-300">
-                  100%
-                </div>
-                <div className="mt-1 text-xs md:text-sm text-slate-300">
-                  Hài lòng & tin tưởng
-                </div>
-              </div>
+              ))}
+            </div>
+
+            {/* Service pills */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                "Nhà hàng",
+                "Hồ bơi",
+                "Hội nghị",
+                "Đưa đón sân bay",
+                "Tour du lịch",
+                "Sân golf",
+              ].map((s) => (
+                <span
+                  key={s}
+                  className="rounded-full border border-slate-200 bg-white px-3.5 py-1 text-xs font-medium text-slate-600 shadow-sm"
+                >
+                  {s}
+                </span>
+              ))}
             </div>
 
             {/* CTA */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <Link
                 href="/rooms/18a8e9bc-b4e2-4597-9fd2-571eb3a32ead"
-                className="group inline-flex items-center justify-center rounded-full bg-linear-to-r from-amber-400 via-yellow-400 to-rose-400 px-6 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_18px_40px_rgba(251,191,36,0.45)] transition hover:shadow-[0_22px_60px_rgba(251,191,36,0.65)]"
+                className="group inline-flex items-center justify-center rounded-full bg-red-500  px-7 py-3 text-sm font-semibold text-white  transition hover:scale-[1.02] hover:shadow-xl "
               >
                 Đặt phòng ngay
-                <span className="ml-2 inline-block transition-transform group-hover:translate-x-0.5">
+                <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
                   →
                 </span>
               </Link>
               <Link
                 href="/blog"
-                className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-medium text-slate-100 backdrop-blur-lg transition hover:border-amber-300/60 hover:text-amber-100"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600 shadow-sm transition hover:border-amber-300 hover:text-amber-600 hover:shadow-md"
               >
-                Khám phá bài viết của chúng tôi
+                Khám phá bài viết
               </Link>
             </div>
           </div>
 
-          {/* Image / visual */}
-          <div>
-            {/* images cycle  rounder  */}
-            <div className="relative flex justify-center px-4 lg:px-0">
-              {/* Outer border circle */}
-              <div className="border-4 border-red-500 rounded-full lg:w-150 lg:h-150 w-80 h-80 flex items-center justify-center relative max-w-full">
-                {/* Main circular image - stays in center */}
-                <div className="relative lg:w-125 lg:h-125 w-64 h-64 rounded-full overflow-hidden">
-                  <img
-                    src={"/image/alper-gio-thieu.webp"}
-                    alt="Company team"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+          {/* ── Right: image ── */}
+          <div className="flex-shrink-0">
+            <div className="relative">
+              {/* Outer glow */}
+              <div className="absolute -inset-6 rounded-full  blur-2xl opacity-80" />
 
-                {/* Rotating dots container - */}
-                <div className="absolute inset-0 animate-orbit overflow-hidden">
-                  <div className="absolute lg:top-4 lg:left-6 lg:w-32 lg:h-32 w-12 h-12 top-2 left-8 bg-red-500 rounded-full opacity-50"></div>
-                  <div className="absolute lg:top-10 lg:right-24 lg:w-10 lg:h-10 w-6 h-6 top-6 right-11 bg-red-500 rounded-full"></div>
-                  <div className="absolute lg:bottom-5 lg:right-25 lg:w-13 lg:h-13 h-8 w-8 bottom-2 right-13 bg-red-500 rounded-full"></div>
-                </div>
+              {/* Dashed orbit ring */}
+              <div className="absolute inset-0 rounded-full border-2 border-dashed border-amber-200 animate-[spin_18s_linear_infinite]" />
+
+              {/* Image */}
+              <div className="relative lg:h-[440px] lg:w-[440px] h-72 w-72 overflow-hidden rounded-full border-4 border-white shadow-2xl shadow-amber-100/60">
+                <img
+                  src="/image/alper-gio-thieu.webp"
+                  alt="dtuHotel"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+
+              {/* Badge: mở cửa */}
+              <div className="absolute -top-3 left-6 flex items-center gap-2 rounded-full border border-green-100 bg-white px-3.5 py-1.5 shadow-md">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-green-400" />
+                <span className="text-xs font-semibold text-slate-700">
+                  Đang mở cửa
+                </span>
+              </div>
+
+              {/* Badge: 5 sao */}
+              <div className="absolute -bottom-3 right-6 flex items-center gap-1.5 rounded-full border border-amber-100 bg-white px-3.5 py-1.5 shadow-md">
+                <span className="text-base leading-none text-amber-400">★</span>
+                <span className="text-xs font-semibold text-slate-700">
+                  5 sao quốc tế
+                </span>
+              </div>
+
+              {/* Badge: Đà Nẵng */}
+              <div className="absolute top-1/2 -right-6 -translate-y-1/2 flex items-center gap-1.5 rounded-full border border-sky-100 bg-white px-3 py-1.5 shadow-md">
+                <span className="text-xs font-semibold text-sky-600">
+                  📍 Đà Nẵng
+                </span>
               </div>
             </div>
           </div>

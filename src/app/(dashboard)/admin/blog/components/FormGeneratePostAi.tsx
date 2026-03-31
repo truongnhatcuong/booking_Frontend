@@ -68,7 +68,7 @@ const FormGeneratePostAi = ({ setPostData }: PostProps) => {
         <Modal
           isOpen={isOpen}
           onRequestClose={() => setIsOpen(false)}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg w-[500px]"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg w-2xl"
           overlayClassName="fixed inset-0 bg-black/30 bg-opacity-50"
         >
           <div className="mb-4">
