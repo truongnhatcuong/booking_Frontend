@@ -15,21 +15,29 @@ const CardStatistical = () => {
           title="Loading..."
           total={0}
           description="Loading data"
+          className="border-t-green-500 text-green-500"
+          image="/RevenueIcon.svg"
         />
         <CardItemTotal
           title="Loading..."
           total={0}
           description="Loading data"
+          className="border-t-blue-500 text-blue-500"
+          image="/image/customerIcon.png"
         />
         <CardItemTotal
           title="Loading..."
           total={0}
           description="Loading data"
+          className=" border-t-red-500 text-red-500"
+          image="/image/roomIcon.png"
         />
         <CardItemTotal
           title="Loading..."
           total={0}
           description="Loading data"
+          className="border-t-orange-500 text-orange-500"
+          image="/image/revenueIcon.png"
         />
       </div>
     );
