@@ -1,46 +1,26 @@
+// app/components/main/BannerClient.tsx
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navigation, Keyboard, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { HeroSection } from "../common/HeroSection";
-import axios from "axios";
 import Image from "next/image";
 
-const Banner = () => {
-  const range = "Trang tính1!A1:C3"; // Phạm vi dữ liệu bạn muốn lấy
-  const sheetId = process.env.NEXT_PUBLIC_GGSHEETID; // ID của Google Sheet từ .env
-  const apiKey = process.env.NEXT_PUBLIC_API_GGSHEET; // API key của bạn từ .env
+interface BannerClientProps {
+  images: string[];
+}
 
-  const [images, setImages] = useState([]); // Cập nhật state để chứa mảng ảnh
-
-  useEffect(() => {
-    // Chỉ gửi yêu cầu API một lần khi component mount
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`,
-        );
-        setImages(response.data.values[0]);
-      } catch (error) {
-        console.error("Error fetching data from Google Sheets:", error);
-      }
-    };
-
-    fetchData();
-  }, []); // Chạy khi component mount (chỉ một lần)
+const BannerClient = ({ images }: BannerClientProps) => {
+  if (images?.length === 0) return <div>Loading...</div>;
 
   return (
     <Swiper
       keyboard={true}
-      autoplay={{
-        delay: 5000,
-        disableOnInteraction: false,
-      }}
+      autoplay={{ delay: 5000, disableOnInteraction: false }}
       modules={[Navigation, Keyboard, Autoplay]}
-      className="mySwiper w-screen h-[50%] lg:w-full "
+      className="mySwiper w-screen h-[50%] lg:w-full"
     >
       {images.length > 0 ? (
         images.map((image, index) => (
@@ -73,4 +53,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default BannerClient;

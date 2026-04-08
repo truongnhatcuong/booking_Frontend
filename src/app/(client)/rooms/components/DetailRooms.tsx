@@ -37,7 +37,12 @@ interface DetailRoomsProps {
     displayPrice: number;
   };
 }
-
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="flex items-center gap-3 font-serif text-2xl lg:text-3xl font-medium text-gray-900 mb-6">
+    <span className="w-[3px] h-7 rounded-sm bg-blue-600 shrink-0" />
+    {children}
+  </h2>
+);
 const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
   return (
     <>
@@ -156,22 +161,16 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
         </div>
 
         {/* Enhanced Description */}
-        <div className="bg-linear-to-r from-gray-50 to-blue-50  rounded-2xl">
-          <h2 className="text-2xl lg:text-3xl font-serif text-gray-800 mb-6 flex items-center ">
-            <div className="w-1 h-8 bg-blue-600 rounded-full mr-4"></div>
-            Giới thiệu
-          </h2>
-          <div className="p-2">
+        <div className="bg-linear-to-r bg-stone-100 rounded-2xl">
+          <SectionTitle>Giới thiệu</SectionTitle>
+          <div className="bg-stone-100 border border-gray-100 rounded-2xl px-6 py-5 text-gray-600 leading-relaxed">
             <MarkDown>{room.notes}</MarkDown>
           </div>
         </div>
 
         {/* Enhanced Amenities */}
         <div>
-          <h2 className="text-2xl lg:text-3xl font-serif text-gray-800 mb-6 flex items-center">
-            <div className="w-1 h-8 bg-blue-600 rounded-full mr-4"></div>
-            Tiện nghi phòng
-          </h2>
+          <SectionTitle>Tiện nghi phòng</SectionTitle>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {room.roomType.amenities.map((item, index) => (
               <div
@@ -191,45 +190,60 @@ const DetailRooms: React.FC<DetailRoomsProps> = ({ room, seasonPrice }) => {
 
         {/* Enhanced Policies */}
         <div>
-          <h2 className="text-2xl lg:text-3xl font-serif text-gray-800 mb-6 flex items-center">
-            <div className="w-1 h-8 bg-blue-600 rounded-full mr-4"></div>
-            Chính sách
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-linear-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-600 p-2 rounded-full mr-3">
-                  <Clock size={20} className="text-white" />
+          <SectionTitle>Chính sách</SectionTitle>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Check-in/out */}
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-blue-600 p-2 rounded-full shrink-0">
+                  <Clock size={18} className="text-white" />
                 </div>
-                <h3 className="font-semibold text-gray-800 text-lg">
-                  Nhận phòng & Trả phòng
+                <h3 className="font-semibold text-blue-900 text-base">
+                  Nhận phòng &amp; Trả phòng
                 </h3>
               </div>
-              <div className="space-y-2">
-                <p className="text-gray-700 flex items-center">
-                  <span className="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
-                  Nhận phòng: 14:00
-                </p>
-                <p className="text-gray-700 flex items-center">
-                  <span className="w-2 h-2 bg-blue-600 rounded-full mr-3"></span>
-                  Trả phòng: 12:00
-                </p>
-              </div>
+              <ul className="space-y-2">
+                {[
+                  "Nhận phòng: 14:00",
+                  "Trả phòng: 12:00",
+                  "Nhận phòng sớm theo yêu cầu",
+                ].map((t) => (
+                  <li
+                    key={t}
+                    className="flex items-center gap-2.5 text-sm text-blue-900"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="bg-linear-to-br from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
-              <div className="flex items-center mb-4">
-                <div className="bg-green-600 p-2 rounded-full mr-3">
-                  <Shield size={20} className="text-white" />
+            {/* Cancellation */}
+            <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-green-600 p-2 rounded-full shrink-0">
+                  <Shield size={18} className="text-white" />
                 </div>
-                <h3 className="font-semibold text-gray-800 text-lg">
+                <h3 className="font-semibold text-green-900 text-base">
                   Hủy phòng
                 </h3>
               </div>
-              <p className="text-gray-700 flex items-center">
-                <span className="w-2 h-2 bg-green-600 rounded-full mr-3"></span>
-                Miễn phí hủy trước 3 ngày
-              </p>
+              <ul className="space-y-2">
+                {[
+                  "Miễn phí hủy trước 3 ngày",
+                  "Hoàn tiền 50% trong vòng 24h",
+                  "Không hoàn tiền trong ngày",
+                ].map((t) => (
+                  <li
+                    key={t}
+                    className="flex items-center gap-2.5 text-sm text-green-900"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

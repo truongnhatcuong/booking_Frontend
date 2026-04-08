@@ -52,7 +52,7 @@ export default function HotelMap() {
     return <div className="h-[500px] bg-gray-100 animate-pulse" />;
 
   return (
-    <div className="h-[600px] w-full mx-4 lg:mx-0 -z-10 my-20">
+    <div className="h-[700px] w-full mx-4 lg:mx-0 -z-10 my-10">
       <MapContainer
         center={position} // `position` is now typed as LatLngTuple
         zoom={15}
@@ -67,7 +67,7 @@ export default function HotelMap() {
           <Popup>
             <div className="font-sans flex flex-col items-center gap-2">
               <h3 className="font-bold text-blue-600">DTU Hotel</h3>
-              <p className="text-sm">Vị trí tuyệt vời ngay mặt biển!</p>
+              <p className="text-sm">Vị trí tuyệt vời ngay mặt sông!</p>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-center text-white font-bold py-2 px-4 rounded"
                 onClick={() => {
