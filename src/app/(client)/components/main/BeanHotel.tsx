@@ -71,26 +71,26 @@ const fallback: BeanData = {
 // ─── Orbit dots config ───────────────────────────────────────────────────────
 const ORBIT_DOTS = [
   {
-    size: "w-14 h-14 lg:w-20 lg:h-20",
-    pos: "top-[6%] left-[12%]",
+    size: "w-12 h-12 lg:w-20 lg:h-20",
+    pos: "top-[14%] left-[10%] md:top-[4%]",
     color: "bg-red-400",
     opacity: "opacity-60",
   },
   {
     size: "w-6  h-6  lg:w-9  lg:h-9",
-    pos: "top-[10%] right-[18%]",
+    pos: "top-[15%] right-[18%] md:top-[5%]",
     color: "bg-rose-300",
     opacity: "opacity-80",
   },
   {
     size: "w-9  h-9  lg:w-12 lg:h-12",
-    pos: "bottom-[8%] right-[20%]",
+    pos: "bottom-[9%] right-[20%] md:bottom-[1%] ",
     color: "bg-red-500",
     opacity: "opacity-50",
   },
   {
     size: "w-5  h-5  lg:w-7  lg:h-7",
-    pos: "bottom-[14%] left-[16%]",
+    pos: "bottom-[18%] left-[16%] md:bottom-[8%]",
     color: "bg-rose-400",
     opacity: "opacity-70",
   },
@@ -103,19 +103,19 @@ export default async function BeanHotel() {
   return (
     <div
       className="flex flex-col xl:flex-row items-center justify-center gap-10
-      xl:my-24 py-10 mx-4 xl:mx-16"
+      xl:my-24 py-10 px-4 xl:px-10"
     >
       {/* ── Circular image + orbit ───────────────────────────────────────── */}
       <div className="relative flex justify-center shrink-0">
         {/* Outer ring */}
         <div
           className="border-[3px] border-red-600 rounded-full
-          w-72 h-72 lg:w-[28rem] lg:h-[28rem] xl:w-[32rem] xl:h-[32rem]
+          w-68 h-68 lg:w-[28rem] lg:h-[28rem] xl:w-[32rem] xl:h-[32rem]
           flex items-center justify-center relative"
         >
           {/* Main image */}
           <div
-            className="relative w-60 h-60 lg:w-[24rem] lg:h-[24rem] xl:w-[28rem] xl:h-[28rem]
+            className="relative w-55 h-55 lg:w-[24rem] lg:h-[24rem] xl:w-[28rem] xl:h-[28rem]
             rounded-full overflow-hidden ring-4 ring-white shadow-xl"
           >
             <Image
@@ -139,52 +139,49 @@ export default async function BeanHotel() {
 
           {/* Counter-rotate stats badges so they stay upright */}
           <div
-            className="absolute inset-0 animate-[spin_18s_linear_infinite_reverse]
+            className="absolute inset-0  lg:animate-[spin_18s_linear_infinite]
             pointer-events-none"
           >
-            {/* Top badge */}
             <div
-              className="absolute -top-5 left-1/2 -translate-x-1/2
-              bg-white border border-red-100 rounded-full px-4 py-1.5 shadow-md
+              className="absolute -top-8 left-1/2 -translate-x-1/2
+              bg-white border border-red-100 rounded-full px-3 py-1.5 shadow-md
               flex items-center gap-2 pointer-events-auto"
             >
-              <span className="text-red-500 text-lg font-bold leading-none">
+              <span className="text-red-500 text-base font-bold leading-none">
                 {data.stats[0]?.value}
               </span>
               <span className="text-xs text-gray-500">
                 {data.stats[0]?.label}
               </span>
             </div>
-            {/* Right badge */}
+
             <div
-              className="absolute top-1/2 -right-6 -translate-y-1/2
+              className="absolute top-1/2 -right-16 -translate-y-1/2
               bg-white border border-amber-100 rounded-full px-4 py-1.5 shadow-md
               flex items-center gap-2 pointer-events-auto"
             >
-              <span className="text-amber-500 text-lg font-bold leading-none">
+              <span className="text-amber-500 text-base font-bold leading-none">
                 {data.stats[1]?.value}
               </span>
               <span className="text-xs text-gray-500">
                 {data.stats[1]?.label}
               </span>
             </div>
-            {/* Bottom badge */}
             <div
-              className="absolute -bottom-5 left-1/2 -translate-x-1/2
+              className="absolute -bottom-10 left-1/2 -translate-x-1/2
               bg-white border border-green-100 rounded-full px-4 py-1.5 shadow-md
               flex items-center gap-2 pointer-events-auto"
             >
-              <span className="text-green-600 text-lg font-bold leading-none">
+              <span className="text-green-600 text-base font-bold leading-none">
                 {data.stats[2]?.value}
               </span>
               <span className="text-xs text-gray-500">
                 {data.stats[2]?.label}
               </span>
             </div>
-            {/* Left badge */}
             <div
-              className="absolute top-1/2 -left-6 -translate-y-1/2
-              bg-white border border-blue-100 rounded-full px-4 py-1.5 shadow-md
+              className="absolute top-1/2 -left-16 -translate-y-1/2
+              bg-white border border-blue-100 rounded-full px-1.5 py-1.5 shadow-md
               flex items-center gap-2 pointer-events-auto"
             >
               <span className="text-blue-600 text-lg font-bold leading-none">
@@ -207,18 +204,18 @@ export default async function BeanHotel() {
         />
 
         {/* Description paragraphs */}
-        <div className="space-y-4 mt-6 text-gray-600 leading-relaxed text-[15px]">
+        <div className="space-y-4 mt-6 text-gray-600 leading-relaxed text-sm mx-4 md:mx-0 text-justify ">
           {data.description.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
         </div>
 
         {/* Feature list */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-8">
+        <div className="grid grid-cols-1  sm:grid-cols-2 gap-2.5 mt-8 mx-4 md:mx-0">
           {data.features.map((f, i) => (
-            <div key={i} className="flex items-center gap-2.5">
+            <div key={i} className="flex justify-content items-center  gap-2.5">
               <CheckCircle size={16} className="text-green-500 shrink-0" />
-              <span className="text-sm text-gray-700">{f}</span>
+              <span className="text-sm text-gray-700 text-center">{f}</span>
             </div>
           ))}
         </div>

@@ -52,12 +52,14 @@ export default function HotelMap() {
     return <div className="h-[500px] bg-gray-100 animate-pulse" />;
 
   return (
-    <div className="h-[700px] w-full mx-4 lg:mx-0 -z-10 my-10">
+    <div className=" h-[500px] md:h-[700px]  w-auto md:w-full mx-4 lg:mx-0 z-0 my-10 overflow-auto rounded-xl shadow-inner">
       <MapContainer
         center={position} // `position` is now typed as LatLngTuple
         zoom={15}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
+        touchZoom={true}
+        doubleClickZoom={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
