@@ -26,7 +26,7 @@ const Invoice = ({ booking }: { booking: IBooking }) => {
     address: "03 Quang Trung,Đà Nẵng, Việt Nam",
     phone: "0258 123 4567",
     email: "contact@bienxanhhotel.vn",
-    logo: "/image/logo2.png",
+    logo: "/image/logo.png", // Đảm bảo đường dẫn đúng với file logo của bạn
   };
 
   return (

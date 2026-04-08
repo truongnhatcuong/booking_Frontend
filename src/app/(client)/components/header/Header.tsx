@@ -20,11 +20,11 @@ const Header = () => {
               <Link href={"/"}>
                 <Image
                   alt="Logo"
-                  src={"/image/logo2.png"}
-                  width={100}
-                  height={100}
+                  src={"/image/logo.png"}
+                  width={80}
+                  height={80}
                   priority
-                  className="w-32 md:w-40 object-cover"
+                  className="object-contain"
                 />
               </Link>
             </div>
@@ -38,11 +38,11 @@ const Header = () => {
         <Link href={"/"}>
           <Image
             alt="Logo"
-            src={"/image/logo2.png"}
+            src={"/image/logo.png"}
             width={80}
             height={80}
             priority
-            className="w-24 object-contain"
+            className="object-contain"
           />
         </Link>
 

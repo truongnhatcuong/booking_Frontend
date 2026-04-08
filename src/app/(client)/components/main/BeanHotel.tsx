@@ -1,57 +1,236 @@
+// app/components/main/BeanHotel.tsx — Server Component
 import Image from "next/image";
 import TitleText from "../common/TitleText";
+import { CheckCircle } from "lucide-react";
 
-export default function BeanHotel() {
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface BeanData {
+  stats: { value: string; label: string }[];
+  features: string[];
+  description: string[];
+}
+
+// ─── Fetch từ Google Sheets ───────────────────────────────────────────────────
+async function fetchBeanData(): Promise<BeanData> {
+  const sheetId = process.env.NEXT_PUBLIC_GGSHEETID;
+  const apiKey = process.env.NEXT_PUBLIC_API_GGSHEET;
+
+  // Sheet "Bean": A2:B6 = stats, C2:C8 = features, D2:D6 = description paragraphs
+  const ranges = ["Bean!A2:B6", "Bean!C2:C8", "Bean!D2:D6"];
+
+  try {
+    const results = await Promise.all(
+      ranges.map((range) =>
+        fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`,
+          { next: { revalidate: 3600 }, cache: "force-cache" },
+        ).then((r) => r.json()),
+      ),
+    );
+
+    return {
+      stats: (results[0].values ?? []).map((r: string[]) => ({
+        value: r[0],
+        label: r[1],
+      })),
+      features: (results[1].values ?? [])
+        .map((r: string[]) => r[0])
+        .filter(Boolean),
+      description: (results[2].values ?? [])
+        .map((r: string[]) => r[0])
+        .filter(Boolean),
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+// ─── Fallback ────────────────────────────────────────────────────────────────
+const fallback: BeanData = {
+  stats: [
+    { value: "5★", label: "Quốc tế" },
+    { value: "24/7", label: "Hỗ trợ" },
+    { value: "98%", label: "Hài lòng" },
+    { value: "12+", label: "Năm KN" },
+  ],
+  features: [
+    "Phòng nghỉ tiêu chuẩn quốc tế",
+    "Nhà hàng ẩm thực Á – Âu",
+    "Spa & Wellness cao cấp",
+    "Phòng gym hiện đại",
+    "Hội nghị & sự kiện doanh nghiệp",
+    "Đưa đón sân bay 24/7",
+  ],
+  description: [
+    "DTU Hotel — điểm dừng chân lý tưởng giữa trái tim TP. Đà Nẵng. Với vị trí chiến lược tại giao điểm của bốn quận trung tâm, khách sạn kết nối thuận tiện tới các khu thương mại, giải trí và văn hóa hàng đầu của thành phố.",
+    "Mỗi phòng nghỉ tại DTU được thiết kế tỉ mỉ theo tiêu chuẩn quốc tế, trang bị nội thất cao cấp, tiện nghi hiện đại và dịch vụ phòng 24/7 để đảm bảo mọi nhu cầu của quý khách được chăm sóc tận tâm.",
+    "Kiến trúc và không gian được chế tác hài hoà giữa phong cách đương đại và nét trang nhã Á — Âu, tạo nên bầu không khí thanh lịch nhưng vẫn ấm cúng, như ngôi nhà thứ hai của bạn.",
+  ],
+};
+
+// ─── Orbit dots config ───────────────────────────────────────────────────────
+const ORBIT_DOTS = [
+  {
+    size: "w-14 h-14 lg:w-20 lg:h-20",
+    pos: "top-[6%] left-[12%]",
+    color: "bg-red-400",
+    opacity: "opacity-60",
+  },
+  {
+    size: "w-6  h-6  lg:w-9  lg:h-9",
+    pos: "top-[10%] right-[18%]",
+    color: "bg-rose-300",
+    opacity: "opacity-80",
+  },
+  {
+    size: "w-9  h-9  lg:w-12 lg:h-12",
+    pos: "bottom-[8%] right-[20%]",
+    color: "bg-red-500",
+    opacity: "opacity-50",
+  },
+  {
+    size: "w-5  h-5  lg:w-7  lg:h-7",
+    pos: "bottom-[14%] left-[16%]",
+    color: "bg-rose-400",
+    opacity: "opacity-70",
+  },
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
+export default async function BeanHotel() {
+  const data = await fetchBeanData();
+
   return (
-    <div className="flex flex-col xl:flex-row items-center justify-center gap-5  xl:my-30  py-5 mx-4 xl:mx-10">
-      {/* images cycle  rounder  */}
-      <div className="relative flex justify-center px-4 lg:px-0">
-        {/* Outer border circle */}
-        <div className="border-4 border-red-700 rounded-full xl:w-150 xl:h-150 lg:h-120 lg:w-120 w-70 h-70 flex items-center justify-center relative max-w-full">
-          {/* Main circular image - stays in center */}
-          <div className="relative xl:w-125 lg:w-100 lg:h-100 xl:h-125 w-60 h-60 rounded-full overflow-hidden">
-            <img
-              src={"/image/about.webp"}
-              alt="Company team"
-              className="w-full h-full object-cover"
+    <div
+      className="flex flex-col xl:flex-row items-center justify-center gap-10
+      xl:my-24 py-10 mx-4 xl:mx-16"
+    >
+      {/* ── Circular image + orbit ───────────────────────────────────────── */}
+      <div className="relative flex justify-center shrink-0">
+        {/* Outer ring */}
+        <div
+          className="border-[3px] border-red-600 rounded-full
+          w-72 h-72 lg:w-[28rem] lg:h-[28rem] xl:w-[32rem] xl:h-[32rem]
+          flex items-center justify-center relative"
+        >
+          {/* Main image */}
+          <div
+            className="relative w-60 h-60 lg:w-[24rem] lg:h-[24rem] xl:w-[28rem] xl:h-[28rem]
+            rounded-full overflow-hidden ring-4 ring-white shadow-xl"
+          >
+            <Image
+              src="/image/about.webp"
+              alt="DTU Hotel"
+              fill
+              className="object-cover"
+              priority
             />
           </div>
 
-          {/* Rotating dots container - */}
-          <div className="absolute inset-0 animate-orbit overflow-hidden">
-            <div className="absolute lg:top-4 lg:left-6 lg:w-32 lg:h-32 w-12 h-12 top-2 left-8 bg-red-400 rounded-full opacity-50"></div>
-            <div className="absolute lg:top-10 lg:right-24 lg:w-10 lg:h-10 w-6 h-6 top-4 right-11 bg-red-400 rounded-full "></div>
-            <div className="absolute lg:bottom-5 lg:right-25 lg:w-13 lg:h-13 h-8 w-8 bottom-2 right-13 bg-red-400 rounded-full "></div>
+          {/* Rotating dots — CSS animation */}
+          <div className="absolute inset-0 animate-[spin_18s_linear_infinite]">
+            {ORBIT_DOTS.map((d, i) => (
+              <div
+                key={i}
+                className={`absolute rounded-full ${d.size} ${d.pos} ${d.color} ${d.opacity}`}
+              />
+            ))}
+          </div>
+
+          {/* Counter-rotate stats badges so they stay upright */}
+          <div
+            className="absolute inset-0 animate-[spin_18s_linear_infinite_reverse]
+            pointer-events-none"
+          >
+            {/* Top badge */}
+            <div
+              className="absolute -top-5 left-1/2 -translate-x-1/2
+              bg-white border border-red-100 rounded-full px-4 py-1.5 shadow-md
+              flex items-center gap-2 pointer-events-auto"
+            >
+              <span className="text-red-500 text-lg font-bold leading-none">
+                {data.stats[0]?.value}
+              </span>
+              <span className="text-xs text-gray-500">
+                {data.stats[0]?.label}
+              </span>
+            </div>
+            {/* Right badge */}
+            <div
+              className="absolute top-1/2 -right-6 -translate-y-1/2
+              bg-white border border-amber-100 rounded-full px-4 py-1.5 shadow-md
+              flex items-center gap-2 pointer-events-auto"
+            >
+              <span className="text-amber-500 text-lg font-bold leading-none">
+                {data.stats[1]?.value}
+              </span>
+              <span className="text-xs text-gray-500">
+                {data.stats[1]?.label}
+              </span>
+            </div>
+            {/* Bottom badge */}
+            <div
+              className="absolute -bottom-5 left-1/2 -translate-x-1/2
+              bg-white border border-green-100 rounded-full px-4 py-1.5 shadow-md
+              flex items-center gap-2 pointer-events-auto"
+            >
+              <span className="text-green-600 text-lg font-bold leading-none">
+                {data.stats[2]?.value}
+              </span>
+              <span className="text-xs text-gray-500">
+                {data.stats[2]?.label}
+              </span>
+            </div>
+            {/* Left badge */}
+            <div
+              className="absolute top-1/2 -left-6 -translate-y-1/2
+              bg-white border border-blue-100 rounded-full px-4 py-1.5 shadow-md
+              flex items-center gap-2 pointer-events-auto"
+            >
+              <span className="text-blue-600 text-lg font-bold leading-none">
+                {data.stats[3]?.value}
+              </span>
+              <span className="text-xs text-gray-500">
+                {data.stats[3]?.label}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-      <div className="w-full    rounded-lg  mx-4 md:mx-0">
-        <TitleText title="DTU Hotel" tilteSub="Giới thiệu về chúng tôi" />
-        <p className="text-gray-600 md:my-10 leading-relaxed whitespace-pre-line">
-          <strong>DTU Hotel</strong> — điểm dừng chân lý tưởng giữa trái tim TP.
-          Hồ Chí Minh. Với vị trí chiến lược tại giao điểm của bốn quận trung
-          tâm, khách sạn kết nối thuận tiện tới các khu thương mại, giải trí và
-          văn hóa hàng đầu của thành phố.{"\n\n"}
-          Mỗi phòng nghỉ tại <strong>DTU</strong> được thiết kế tỉ mỉ theo tiêu
-          chuẩn quốc tế, trang bị nội thất cao cấp, tiện nghi hiện đại và dịch
-          vụ phòng 24/7 để đảm bảo mọi nhu cầu của quý khách được chăm sóc tận
-          tâm.{"\n\n"}
-          Kiến trúc và không gian được chế tác hài hoà giữa phong cách đương đại
-          và nét trang nhã Á — Âu, tạo nên bầu không khí thanh lịch nhưng vẫn ấm
-          cúng.{"\n\n"}
-          Tại <strong>DTU Hotel</strong>, chúng tôi cam kết mang đến trải nghiệm
-          thực sự khác biệt: từ <strong>ẩm thực tinh tế</strong> tại nhà hàng,{" "}
-          <strong>dịch vụ spa thư giãn</strong>,
-          <strong>phòng gym hiện đại</strong> đến{" "}
-          <strong>phòng hội nghị tiện nghi</strong> cho các sự kiện doanh
-          nghiệp.{"\n\n"}
-          Đến với chúng tôi, quý khách sẽ cảm nhận được
-          <strong>
-            {" "}
-            sự chuyên nghiệp, tận tâm và tinh thần hiếu khách đúng chuẩn quốc
-            tế.
-          </strong>
-        </p>
+
+      {/* ── Text content ─────────────────────────────────────────────────── */}
+      <div className="w-full ">
+        <TitleText
+          title="DTU Hotel"
+          tilteSub="Giới thiệu về chúng tôi"
+          align="center"
+        />
+
+        {/* Description paragraphs */}
+        <div className="space-y-4 mt-6 text-gray-600 leading-relaxed text-[15px]">
+          {data.description.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+        </div>
+
+        {/* Feature list */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-8">
+          {data.features.map((f, i) => (
+            <div key={i} className="flex items-center gap-2.5">
+              <CheckCircle size={16} className="text-green-500 shrink-0" />
+              <span className="text-sm text-gray-700">{f}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Divider line */}
+        <div className="mt-8 flex items-center gap-3">
+          <div className="h-px flex-1 bg-gray-200" />
+          <span className="text-xs text-gray-400 tracking-widest uppercase">
+            Since 2025 · Đà Nẵng
+          </span>
+          <div className="h-px flex-1 bg-gray-200" />
+        </div>
       </div>
     </div>
   );

@@ -26,14 +26,14 @@ const ListItems: IListHeader[] = [
   { id: 2, link: "#", title: "Phòng", hasDropdown: true },
   { id: 3, link: "/blog", title: "Bài viết " },
   { id: 4, link: "/about", title: "Giới Thiệu" },
-  { id: 5, link: "/imageshotel", title: "Thư Viện ảnh" },
+  { id: 5, link: "/gallery", title: "Thư Viện ảnh" },
 ];
 
 const ListItem = () => {
   const pathname = usePathname();
   const { setRoomTypes } = useRoomTypeStore();
   const { data, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`
+    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`,
   );
   useEffect(() => {
     if (data?.roomType) setRoomTypes(data.roomType);
@@ -164,7 +164,7 @@ const ListItem = () => {
           >
             {item.title}
           </Link>
-        )
+        ),
       )}
     </div>
   );

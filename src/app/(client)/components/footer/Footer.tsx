@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
             </li>
             <li>
               <Link
-                href="/imageshotel"
+                href="/gallery"
                 className="hover:text-yellow-400 transition-colors"
               >
                 Thư Viện Ảnh
