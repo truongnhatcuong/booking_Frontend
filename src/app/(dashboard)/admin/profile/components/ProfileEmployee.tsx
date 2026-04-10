@@ -14,6 +14,10 @@ import {
 import { UserProfile, UserStatus } from "./employee";
 import { formatDate } from "@/lib/formatDate";
 import { translateDepartment, translatePosition } from "@/lib/translate";
+import { useEffect, useState } from "react";
+import { URL_API } from "@/lib/fetcher";
+import FaceRegisterWidget from "@/app/(client)/profile/components/FaceRegisterWidget";
+import toast from "react-hot-toast";
 
 // Format date function with proper typing
 
@@ -28,7 +32,40 @@ interface EmployeeProfileProps {
 
 export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
   const router = useRouter();
+  const [hasFace, setHasFace] = useState<boolean | null>(null);
+  const [faceLoading, setFaceLoading] = useState(true);
+  const [showFaceModal, setShowFaceModal] = useState(false);
 
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  // Lấy trạng thái khuôn mặt
+  useEffect(() => {
+    if (!token) return;
+    fetch(`${URL_API}/api/auth/face-descriptor/status`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((d) => setHasFace(d.hasFace))
+      .catch(() => setHasFace(false))
+      .finally(() => setFaceLoading(false));
+  }, [token]);
+
+  const handleDeleteFace = async () => {
+    if (!confirm("Bạn có chắc muốn xóa khuôn mặt đã đăng ký?")) return;
+    try {
+      const res = await fetch(`${URL_API}/api/auth/face-descriptor`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setHasFace(false);
+        toast.success("Đã xóa khuôn mặt");
+      }
+    } catch {
+      toast.error("Xóa thất bại");
+    }
+  };
   // Format status with proper typing
   const formatStatus = (status: UserStatus): StatusInfo => {
     const statuses: Record<UserStatus, StatusInfo> = {
@@ -46,13 +83,13 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
   // Calculate work duration in months
   const calculateWorkDuration = (
-    hireDate: string | null | undefined
+    hireDate: string | null | undefined,
   ): number => {
     if (!hireDate) return 0;
     const start = new Date(hireDate);
     const now = new Date();
     return Math.floor(
-      (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 30)
+      (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 30),
     );
   };
 
@@ -230,6 +267,105 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
                 </div>
               )}
             </div>
+            <div className="p-8 space-y-8">
+              {/* ── FACE SECTION ── */}
+              <div
+                className="rounded-2xl p-5 flex items-center gap-4"
+                style={{ background: "#f9fafb", border: "1px solid #e5e7eb" }}
+              >
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl bg-white shadow-sm border border-gray-100">
+                  👤
+                </div>
+
+                {/* Text */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                    <span className="font-semibold text-gray-800">
+                      Nhận diện khuôn mặt
+                    </span>
+                    {faceLoading ? (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
+                        Đang kiểm tra...
+                      </span>
+                    ) : hasFace ? (
+                      <span
+                        className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
+                        style={{
+                          background: "#dcfce7",
+                          color: "#16a34a",
+                          border: "1px solid #bbf7d0",
+                        }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+                        Đã đăng ký
+                      </span>
+                    ) : (
+                      <span
+                        className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
+                        style={{
+                          background: "#f3f4f6",
+                          color: "#6b7280",
+                          border: "1px solid #e5e7eb",
+                        }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-gray-400 inline-block" />
+                        Chưa đăng ký
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    Đăng nhập nhanh không cần mật khẩu bằng khuôn mặt của bạn
+                  </p>
+                </div>
+
+                {/* Action */}
+                <div className="flex-shrink-0">
+                  {faceLoading ? null : hasFace ? (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setShowFaceModal(true)}
+                        className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all hover:scale-105"
+                        style={{
+                          background: "#fef3c7",
+                          color: "#d97706",
+                          border: "1px solid #fde68a",
+                        }}
+                      >
+                        Cập nhật
+                      </button>
+                      <button
+                        onClick={handleDeleteFace}
+                        className="text-sm font-medium px-3 py-1.5 rounded-lg transition-all hover:scale-105"
+                        style={{
+                          background: "#fee2e2",
+                          color: "#dc2626",
+                          border: "1px solid #fecaca",
+                        }}
+                      >
+                        Xóa
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setShowFaceModal(true)}
+                      className="text-sm font-semibold px-4 py-2 rounded-xl text-white transition-all hover:scale-105 hover:shadow-md bg-blue-600"
+                    >
+                      Đăng ký ngay
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* ── DIVIDER ── */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-sm text-gray-400 font-medium">
+                  Đổi mật khẩu
+                </span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+            </div>
 
             {/* Notice */}
             <div className="mt-8 p-5 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
@@ -296,6 +432,23 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
           </div>
         </div>
       </div>
+
+      {showFaceModal && token && (
+        <FaceRegisterWidget
+          token={token}
+          isUpdate={!!hasFace}
+          onSuccess={() => {
+            setHasFace(true);
+            setShowFaceModal(false);
+            toast.success(
+              hasFace
+                ? "Cập nhật khuôn mặt thành công!"
+                : "Đăng ký khuôn mặt thành công! 🎉",
+            );
+          }}
+          onClose={() => setShowFaceModal(false)}
+        />
+      )}
     </div>
   );
 }

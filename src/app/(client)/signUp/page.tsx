@@ -19,10 +19,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
+import dynamic from "next/dynamic";
+
+// Lazy load FaceCapture tránh SSR issue
+const FaceCapture = dynamic(() => import("./components/Facecapture"), {
+  ssr: false,
+});
+
 interface IProvide {
   code: number;
   name: string;
 }
+
 const fetcher = (url: string) =>
   fetch(url, { credentials: "omit" }).then((res) => res.json());
 
@@ -40,47 +48,59 @@ export default function SignUpForm() {
     idNumber: "",
   });
 
+  // Lưu face descriptor riêng — không trộn vào formData
+  const [faceDescriptor, setFaceDescriptor] = useState<number[] | null>(null);
+
   const { data: dataProvide } = useSWR<IProvide[]>(
     `https://provinces.open-api.vn/api/v1/p`,
-    fetcher
+    fetcher,
   );
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${URL_API}/api/auth/signUp`, formData);
+      const payload = {
+        ...formData,
+        // Chỉ gửi faceDescriptor nếu user đã chụp
+        ...(faceDescriptor ? { faceDescriptor } : {}),
+      };
+
+      const res = await axios.post(`${URL_API}/api/auth/signUp`, payload);
       if (res.data) {
+        if (formData.email) {
+          localStorage.setItem("remembered_email", formData.email);
+        }
         Mutate(`${URL_API}/api/auth/customer`);
-        toast.success("Đăng Kí Thành Công");
+        toast.success(
+          faceDescriptor
+            ? "Đăng ký thành công! Khuôn mặt đã được lưu 🎉"
+            : "Đăng Ký Thành Công",
+        );
         setTimeout(() => {
           router.push("/signIn");
           router.refresh();
         }, 1800);
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Đăng ký thất bại");
     }
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      router.push("/");
-    }
+    if (token) router.push("/");
   }, [router]);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-blue-200/50">
         <div className="flex flex-col md:flex-row">
-          {/* Left side decorative image */}
+          {/* Left — Image */}
           <div className="md:w-2/5 h-64 md:h-auto relative group">
             <Image
               src="/image/anhsignin.jpg"
@@ -91,7 +111,7 @@ export default function SignUpForm() {
             />
           </div>
 
-          {/* Right side form */}
+          {/* Right — Form */}
           <div className="md:w-3/5 p-8 md:p-12 bg-linear-to-br from-white to-blue-50/30">
             {/* Header */}
             <div className="mb-8 animate-fade-in">
@@ -126,7 +146,7 @@ export default function SignUpForm() {
                 <div className="animate-slide-in-left">
                   <Label
                     htmlFor="firstName"
-                    className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
+                    className="text-gray-700 font-semibold mb-2 flex items-center gap-2"
                   >
                     <svg
                       className="w-4 h-4 text-blue-600"
@@ -154,7 +174,7 @@ export default function SignUpForm() {
                 <div className="animate-slide-in-right">
                   <Label
                     htmlFor="lastName"
-                    className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
+                    className="text-gray-700 font-semibold mb-2 flex items-center gap-2"
                   >
                     <svg
                       className="w-4 h-4 text-blue-600"
@@ -182,10 +202,7 @@ export default function SignUpForm() {
 
               {/* Email */}
               <div className="animate-fade-in">
-                <Label
-                  htmlFor="email"
-                  className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                >
+                <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                   <svg
                     className="w-4 h-4 text-blue-600"
                     fill="none"
@@ -210,12 +227,9 @@ export default function SignUpForm() {
                 />
               </div>
 
-              {/* Số điện thoại */}
+              {/* Phone */}
               <div className="animate-fade-in">
-                <Label
-                  htmlFor="phone"
-                  className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                >
+                <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                   <svg
                     className="w-4 h-4 text-blue-600"
                     fill="none"
@@ -240,12 +254,9 @@ export default function SignUpForm() {
                 />
               </div>
 
-              {/* Mật khẩu */}
+              {/* Password */}
               <div className="animate-fade-in">
-                <Label
-                  htmlFor="password"
-                  className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                >
+                <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                   <svg
                     className="w-4 h-4 text-blue-600"
                     fill="none"
@@ -273,15 +284,12 @@ export default function SignUpForm() {
                 </p>
               </div>
 
+              {/* Address fields */}
               {formData.country === "VietNam" ? (
                 <>
-                  {/* Thành phố và Quốc gia */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="animate-slide-in-right w-full">
-                      <Label
-                        htmlFor="country"
-                        className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                      >
+                      <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                         <svg
                           className="w-4 h-4 text-blue-600"
                           fill="none"
@@ -299,9 +307,9 @@ export default function SignUpForm() {
                       </Label>
                       <Select
                         value={formData.country}
-                        onValueChange={(val) => {
-                          setFormData((prev) => ({ ...prev, country: val }));
-                        }}
+                        onValueChange={(val) =>
+                          setFormData((prev) => ({ ...prev, country: val }))
+                        }
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Chọn quốc tịch" />
@@ -313,10 +321,7 @@ export default function SignUpForm() {
                       </Select>
                     </div>
                     <div className="animate-slide-in-left">
-                      <Label
-                        htmlFor="city"
-                        className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                      >
+                      <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                         <svg
                           className="w-4 h-4 text-blue-600"
                           fill="none"
@@ -354,12 +359,8 @@ export default function SignUpForm() {
                       </Select>
                     </div>
                   </div>
-                  {/* Địa chỉ */}
                   <div className="animate-fade-in">
-                    <Label
-                      htmlFor="address"
-                      className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                    >
+                    <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                       <svg
                         className="w-4 h-4 text-blue-600"
                         fill="none"
@@ -389,10 +390,7 @@ export default function SignUpForm() {
                     />
                   </div>
                   <div className="animate-fade-in">
-                    <Label
-                      htmlFor="idNumber"
-                      className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                    >
+                    <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                       <svg
                         className="w-4 h-4 text-blue-600"
                         fill="none"
@@ -419,30 +417,14 @@ export default function SignUpForm() {
               ) : (
                 <>
                   <div className="animate-slide-in-right w-full">
-                    <Label
-                      htmlFor="country"
-                      className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                    >
-                      <svg
-                        className="w-4 h-4 text-blue-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                    <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                       Quốc gia
                     </Label>
                     <Select
                       value={formData.country}
-                      onValueChange={(val) => {
-                        setFormData((prev) => ({ ...prev, country: val }));
-                      }}
+                      onValueChange={(val) =>
+                        setFormData((prev) => ({ ...prev, country: val }))
+                      }
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Chọn quốc tịch" />
@@ -454,23 +436,7 @@ export default function SignUpForm() {
                     </Select>
                   </div>
                   <div className="animate-fade-in">
-                    <Label
-                      htmlFor="idNumber"
-                      className="text-gray-700 font-semibold  mb-2 flex items-center gap-2"
-                    >
-                      <svg
-                        className="w-4 h-4 text-blue-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                        />
-                      </svg>
+                    <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
                       Passport number
                     </Label>
                     <Input
@@ -482,9 +448,61 @@ export default function SignUpForm() {
                   </div>
                 </>
               )}
-              {/* Số CMND/CCCD */}
 
-              {/* Submit Button */}
+              {/* ── FACE CAPTURE ── */}
+              {/* <div className="animate-fade-in">
+                <Label className="text-gray-700 font-semibold mb-2 flex items-center gap-2">
+                  <svg
+                    className="w-4 h-4 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                  Nhận diện khuôn mặt
+                  <span className="text-xs font-normal text-gray-400 ml-1">
+                    (tuỳ chọn — dùng để đăng nhập nhanh)
+                  </span>
+                </Label>
+                <FaceCapture
+                  onCapture={(descriptor) => setFaceDescriptor(descriptor)}
+                  onClear={() => setFaceDescriptor(null)}
+                />
+
+                {faceDescriptor && (
+                  <div className="flex items-center gap-2 mt-2 text-xs text-green-600">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Khuôn mặt đã được ghi nhận — bạn có thể đăng nhập bằng khuôn
+                    mặt sau này
+                  </div>
+                )}
+              </div> */}
+
+              {/* Submit */}
               <Button
                 className="w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 mt-6 animate-bounce-in"
                 type="submit"
@@ -507,7 +525,6 @@ export default function SignUpForm() {
                 </span>
               </Button>
 
-              {/* Sign in link */}
               <div className="text-center text-gray-600 animate-fade-in pt-4">
                 Đã có tài khoản?{" "}
                 <Link

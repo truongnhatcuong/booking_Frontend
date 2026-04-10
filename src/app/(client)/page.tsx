@@ -26,6 +26,7 @@ const Page = () => {
       <HotelMapWrapper />
       <TestimonialCarousel />
       <Footer2 />
+      {/* Thêm VoiceAssistant vào đây, nó sẽ hiển thị nút mic ở góc dưới bên phải */}
     </div>
   );
 };
