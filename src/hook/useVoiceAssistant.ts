@@ -314,11 +314,9 @@ export function useVoiceAssistant() {
             break;
 
           default:
-            speak(
-              "Xin lỗi tôi chưa hiểu. Bạn có thể nói xem phòng và số phòng",
-            );
+            speak("Xin lỗi tôi chưa hiểu");
             updateState("error");
-            setFeedback('❓ Không hiểu lệnh. Thử: "xem phòng 101"');
+            setFeedback('❓ Không hiểu lệnh của bạn: "' + cleanCommand + '"');
             resetAfterDelay();
             break;
         }
