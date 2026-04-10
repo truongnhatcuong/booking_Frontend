@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
 import HeaderTop from "./components/header/HeaderTop";
+import VoiceAssistant from "./components/main/Voiceassistant";
 
 export const metadata: Metadata = {
   title: "XTRAVEL - Travel Agency",
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Header />
       </header>
       <main className="flex-1">{children}</main>
+      <VoiceAssistant />
       <footer>
         <Footer />
       </footer>

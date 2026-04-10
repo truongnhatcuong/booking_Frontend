@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
   images: {
     remotePatterns: [
       {
@@ -26,7 +27,7 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
-      
+
       {
         protocol: "https",
         hostname: "cdn3.ivivu.com",

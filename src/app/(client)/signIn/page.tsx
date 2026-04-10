@@ -11,6 +11,13 @@ import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import { useUserStore } from "@/hook/useUserStore";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import { Eye } from "lucide-react";
+
+// Lazy load modal (tránh SSR issue với face-api.js)
+const FaceLoginModal = dynamic(() => import("./components/FaceLoginModal"), {
+  ssr: false,
+});
 
 export default function SignInForm() {
   const { login, user } = useUserStore();
@@ -21,62 +28,82 @@ export default function SignInForm() {
     remember: false,
   });
   const [message, setMessage] = useState("");
+  const [showFaceModal, setShowFaceModal] = useState(true);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Lưu ngay lập tức khi gõ (Tùy chọn)
+    if (name === "email") {
+      localStorage.setItem("remembered_email", value);
+    }
   };
 
   const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      remember: checked,
-    }));
+    setFormData((prev) => ({ ...prev, remember: checked }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await axios.post(`${URL_API}/api/auth/login`, formData, {
         withCredentials: true,
       });
-
-      if (res.data && res.data.accessToken) {
-        const token = res.data.accessToken;
-        localStorage.setItem("token", token);
-
-        const decoded: any = jwtDecode(token);
-        login({
-          id: decoded.id,
-          lastName: decoded.lastName,
-          userType: decoded.userType,
-          token: res.data.accessToken,
-          role: decoded.role,
-        });
+      if (res.data?.accessToken) {
+        handleLoginSuccess(res.data.accessToken);
       }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Đăng nhập không thành công");
     }
   };
+
+  // Dùng chung cho cả password login và face login
+  const handleLoginSuccess = (token: string) => {
+    localStorage.setItem("token", token);
+    const decoded: any = jwtDecode(token);
+    login({
+      id: decoded.id,
+      lastName: decoded.lastName,
+      userType: decoded.userType,
+      token,
+      role: decoded.role,
+    });
+  };
+
+  // Callback khi face login thành công
+  const handleFaceSuccess = (data: { accessToken: string }) => {
+    handleLoginSuccess(data.accessToken);
+    if (formData.email) {
+      localStorage.setItem("remembered_email", formData.email);
+    }
+    setShowFaceModal(false);
+  };
+
+  // Thêm useEffect này vào trong component SignInForm
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      document.location.href = "/";
+    // Key này phải trùng với key bạn đã set ở trang SignUp hoặc trang Login trước đó
+    const savedEmail = localStorage.getItem("remembered_email");
+
+    if (savedEmail) {
+      setFormData((prev) => ({
+        ...prev,
+        email: savedEmail,
+      }));
     }
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (localStorage.getItem("token")) document.location.href = "/";
+  }, []);
 
+  useEffect(() => {
+    if (!user) return;
     if (
       user.userType === "EMPLOYEE" ||
       user.userType === "ADMIN" ||
-      (user.role && user.role !== "")
+      user.role
     ) {
       router.push("/admin");
     } else {
@@ -85,18 +112,15 @@ export default function SignInForm() {
   }, [user, router]);
 
   useEffect(() => {
-    if (message) {
-      const timeout = setTimeout(() => {
-        setMessage("");
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
+    if (!message) return;
+    const t = setTimeout(() => setMessage(""), 3000);
+    return () => clearTimeout(t);
   }, [message]);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:shadow-blue-200/50 flex flex-col md:flex-row">
-        {/* Left side - Image with overlay */}
+        {/* Left — Image */}
         <div className="md:w-1/2 h-64 md:h-auto relative group">
           <Image
             src="/image/khach-san-14.jpg"
@@ -107,12 +131,12 @@ export default function SignInForm() {
           />
         </div>
 
-        {/* Right side - Form */}
+        {/* Right — Form */}
         <div className="md:w-1/2 p-12 flex flex-col justify-center bg-linear-to-br from-white to-blue-50/30">
           {/* Header */}
           <div className="mb-10 animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-linear-to-brfrom-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
                 <svg
                   className="w-7 h-7 text-white"
                   fill="none"
@@ -141,7 +165,7 @@ export default function SignInForm() {
             <div className="animate-slide-in-left">
               <Label
                 htmlFor="email"
-                className="text-base text-gray-700 font-semibold  mb-2 flex items-center gap-2"
+                className="text-base text-gray-700 font-semibold mb-2 flex items-center gap-2"
               >
                 <svg
                   className="w-5 h-5 text-blue-600"
@@ -172,7 +196,7 @@ export default function SignInForm() {
             <div className="animate-slide-in-right">
               <Label
                 htmlFor="password"
-                className="text-base text-gray-700 font-semibold  mb-2 flex items-center gap-2"
+                className="text-base text-gray-700 font-semibold mb-2 flex items-center gap-2"
               >
                 <svg
                   className="w-5 h-5 text-blue-600"
@@ -204,7 +228,6 @@ export default function SignInForm() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="remember"
-                  name="remember"
                   checked={formData.remember}
                   onCheckedChange={handleCheckboxChange}
                   className="h-5 w-5 rounded border-2 border-blue-300 text-blue-600 focus:ring-blue-500"
@@ -224,7 +247,7 @@ export default function SignInForm() {
               </Link>
             </div>
 
-            {/* Submit button */}
+            {/* Submit */}
             <Button
               className="w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 shadow-lg hover:shadow-xl hover:shadow-blue-500/50 animate-bounce-in mt-2"
               type="submit"
@@ -248,7 +271,7 @@ export default function SignInForm() {
             </Button>
           </form>
 
-          {/* Error message */}
+          {/* Error */}
           {message && (
             <div className="flex items-center gap-2 p-4 mt-4 bg-red-50 border border-red-200 rounded-xl text-red-600 animate-fade-in">
               <svg
@@ -266,7 +289,7 @@ export default function SignInForm() {
             </div>
           )}
 
-          {/* Sign up link */}
+          {/* Sign up */}
           <div className="text-center text-base text-gray-600 animate-fade-in mt-8">
             Bạn chưa có tài khoản?{" "}
             <Link
@@ -277,10 +300,10 @@ export default function SignInForm() {
             </Link>
           </div>
 
-          {/* Social login divider */}
-          <div className="relative my-8 animate-fade-in">
+          {/* Divider */}
+          <div className="relative my-6 animate-fade-in">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t-2 border-gray-200"></div>
+              <div className="w-full border-t-2 border-gray-200" />
             </div>
             <div className="relative flex justify-center">
               <span className="px-4 bg-white text-gray-500 text-base font-medium">
@@ -289,11 +312,12 @@ export default function SignInForm() {
             </div>
           </div>
 
-          {/* Social buttons */}
-          <div className="flex justify-center gap-4 animate-fade-in">
+          {/* Social + Face buttons */}
+          <div className="flex gap-3 animate-fade-in">
+            {/* Google */}
             <Button
               variant="outline"
-              className="w-full gap-2 py-4 text-base border-2 border-gray-200  hover:border-gray-400 hover:bg-gray-50 transition-all group"
+              className="flex-1 gap-2 py-4 text-base border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all group"
               onClick={() => router.push(`${URL_API}/api/auth/google`)}
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -302,6 +326,26 @@ export default function SignInForm() {
               <span className="group-hover:text-gray-700 transition-colors">
                 Google
               </span>
+            </Button>
+
+            {/* ── FACE LOGIN BUTTON ── */}
+            <Button
+              size="icon-lg"
+              variant="outline"
+              onClick={() => {
+                if (!formData.email.trim()) {
+                  setMessage(
+                    "Vui lòng nhập email trước khi dùng nhận diện khuôn mặt",
+                  );
+                  return;
+                }
+                setShowFaceModal(true);
+              }}
+              className="flex-1 gap-2 py-4 text-base border-2 transition-all group hover:scale-[1.02]"
+            >
+              {/* Face scan icon */}
+              <Eye size={20} />
+              <span>Khuôn mặt</span>
             </Button>
           </div>
 
@@ -340,6 +384,15 @@ export default function SignInForm() {
           </div>
         </div>
       </div>
+
+      {/* Face Login Modal */}
+      {showFaceModal && formData.email && (
+        <FaceLoginModal
+          email={formData.email}
+          onSuccess={handleFaceSuccess}
+          onClose={() => setShowFaceModal(false)}
+        />
+      )}
     </div>
   );
 }

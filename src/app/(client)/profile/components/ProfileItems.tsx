@@ -25,7 +25,7 @@ export const profileSidebarItems: ProfileSidebarItem[] = [
   },
   {
     id: 3,
-    label: "Đổi mật khẩu",
+    label: "Cài đặt bảo mật",
     path: "/profile/change-password",
     icon: <KeyRound />,
   },
