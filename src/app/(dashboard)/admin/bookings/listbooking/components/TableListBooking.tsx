@@ -17,11 +17,11 @@ import {
   translatePaymentStatus,
   translateStatus,
 } from "@/lib/translate";
-import { IBooking } from "./bookingad";
+import { IBookingRecord } from "./bookingad";
 import { formatDate } from "@/lib/formatDate";
 
 interface BookingProps {
-  booking: IBooking[];
+  booking: IBookingRecord[];
   selectedStatus: string;
   setSelectedStatus: (value: string) => void;
   order: "default" | "asc" | "desc";
@@ -52,13 +52,13 @@ const TableListBooking = ({
   return (
     <div className="bg-white rounded-lg shadow-md overflow-x-auto">
       <Table className="w-full divide-y divide-gray-200">
-        <TableHeader className="bg-gray-50">
+        <TableHeader>
           <TableRow>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Mã đặt phòng
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Khách hàng{"_ "}Số điện thoại
+              Khách hàng
             </TableHead>
             <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Loại Phòng
@@ -113,12 +113,12 @@ const TableListBooking = ({
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 *:flex items-center gap-2">
                   #{booking.id.replace(/-/g, "").slice(0, 8)}
                 </TableCell>
-                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex gap-4">
+                <TableCell className="px-6 py-4 whitespace-nowrap ">
                   <p>
                     {booking.customer.user.firstName}
                     {booking.customer.user.lastName}
                   </p>
-                  <p className="flex gap-1 items-center">
+                  <p className="flex gap-0.5 items-center">
                     <Phone size={15} className="text-green-500" />
                     {booking.customer.user.phone}
                   </p>
@@ -150,10 +150,10 @@ const TableListBooking = ({
                       booking.status === "CHECKED_OUT"
                         ? "bg-green-100 text-green-800"
                         : booking.status === "CHECKED_IN"
-                        ? "bg-blue-100 text-blue-800"
-                        : booking.status === "CANCELLED"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
+                          ? "bg-blue-100 text-blue-800"
+                          : booking.status === "CANCELLED"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
                     }`}
                   >
                     {translateStatus(booking.status)}
@@ -166,8 +166,8 @@ const TableListBooking = ({
                       booking.payments[0]?.status === "COMPLETED"
                         ? "bg-green-100 text-green-800"
                         : booking.payments[0]?.status === "PENDING"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-red-100 text-red-800"
                     }`}
                   >
                     {translatePaymentStatus(booking.payments[0]?.status) ||

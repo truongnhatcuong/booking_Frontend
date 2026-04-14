@@ -8,6 +8,7 @@ import BookingResourceChart from "../components/statistical/BookingResourceChart
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 import CalendarBooking from "../components/statistical/CalendaBooking";
+import TopRoomStats from "../components/statistical/TopRoomStats";
 
 interface RevenueDataType {
   months: string[];
@@ -88,10 +89,7 @@ const Page = () => {
       <CardStatistical />
       {/* lichj ddt phong */}
       <CalendarBooking />
-      <div className="bg-white p-5 rounded-2xl ">
-        <h2 className="text-2xl text-center font-bold py-4 mb-2">
-          Biểu đồ doanh thu theo tháng và khách hàng
-        </h2>
+      <div className="rounded-2xl ">
         <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 items-center">
           <RevenueTotalMonth data={revenueData || []} />
           <CustomerBarChart data={customerData || []} />
@@ -99,6 +97,7 @@ const Page = () => {
       </div>
 
       <BookingResourceChart data={formattedData || []} />
+      <TopRoomStats />
     </div>
   );
 };

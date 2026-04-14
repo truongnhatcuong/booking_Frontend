@@ -6,7 +6,6 @@ import { fetcher, URL_API } from "@/lib/fetcher";
 import { useDebounce } from "../../../../../hook/Debounce";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
-import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 const Page = () => {
   const [search, setSearch] = useState("");
@@ -18,7 +17,7 @@ const Page = () => {
   const { data, isLoading } = useSWR(
     `${URL_API}/api/auth/employee?${
       search && `search=${encodeURIComponent(debouncedSearch)}`
-    }&page=${currentPage}&limit=${limit}`
+    }&page=${currentPage}&limit=${limit}`,
   );
   useEffect(() => {
     if (data) isFirstLoad.current = false;
@@ -27,7 +26,6 @@ const Page = () => {
 
   return (
     <div className="bg-white p-6 rounded-xl">
-      <ElegantTitle title="Quản Lý Nhân Viên" className="mb-5" />
       {isLoading && isFirstLoad.current ? (
         <div className="text-center col-span-5">Đang tải dữ liệu...</div>
       ) : (

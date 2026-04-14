@@ -24,23 +24,56 @@ interface BookingEvent {
   checkOutDate: string;
 }
 
+interface BookingResponse {
+  bookings: BookingEvent[];
+  total: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+}
+
+// Fetch toàn bộ booking với limit lớn — calendar cần hiển thị tất cả
+const fetchAllBookings = async (url: string): Promise<BookingEvent[]> => {
+  // Bước 1: lấy trang đầu để biết total
+  const res = await fetch(`${url}?page=1&limit=100`);
+  const data: BookingResponse = await res.json();
+
+  if (data.totalPages <= 1) return data.bookings;
+
+  // Bước 2: fetch song song các trang còn lại
+  const remainingPages = Array.from(
+    { length: data.totalPages - 1 },
+    (_, i) => i + 2,
+  );
+
+  const results = await Promise.all(
+    remainingPages.map((page) =>
+      fetch(`${url}?page=${page}&limit=100`).then((r) => r.json()),
+    ),
+  );
+
+  return [
+    ...data.bookings,
+    ...results.flatMap((r: BookingResponse) => r.bookings),
+  ];
+};
+
 const CalendarBooking = () => {
-  const { data } = useSWR<{ bookings: BookingEvent[] }>(
-    `${URL_API}/api/booking`
+  const { data: bookings = [], isLoading } = useSWR<BookingEvent[]>(
+    `${URL_API}/api/booking`,
+    fetchAllBookings,
+    { revalidateOnFocus: false },
   );
 
   const events = useMemo(() => {
-    if (!data) return [];
-    return data.bookings.map((booking) => ({
+    return bookings.map((booking) => ({
       id: booking.id,
       title: `${booking.customer.user.firstName} ${booking.customer.user.lastName}`,
       start: new Date(booking.checkInDate),
-      end: new Date(booking.checkOutDate), // Đã sửa: không cần +1 ngày
+      end: new Date(booking.checkOutDate),
       booking,
     }));
-  }, [data]);
-
-  console.log(events);
+  }, [bookings]);
 
   const [date, setDate] = useState(new Date());
 
@@ -50,15 +83,15 @@ const CalendarBooking = () => {
     const checkOutDate = moment(b.checkOutDate).format("DD/MM");
 
     return (
-      <div className="bg-accent text-accent-foreground p-2 rounded-md shadow-sm border-l-4 border-primary h-full overflow-hidden">
+      <div className="h-full overflow-hidden">
         <div className="font-semibold text-xs truncate">
           {b.customer.user.firstName} {b.customer.user.lastName}
         </div>
         <div className="text-xs opacity-90 truncate">
-          P{b.bookingItems[0].room.roomNumber} -{" "}
-          {b.bookingItems[0].room.roomType.name}
+          P{b.bookingItems[0]?.room.roomNumber} -{" "}
+          {b.bookingItems[0]?.room.roomType.name}
         </div>
-        <div className="text-xs opacity-75 mt-1">
+        <div className="text-xs opacity-75 mt-0.5">
           {checkInDate} → {checkOutDate}
         </div>
       </div>
@@ -66,16 +99,23 @@ const CalendarBooking = () => {
   };
 
   return (
-    <div className="">
+    <div>
       <Card className="bg-card border-border shadow-lg">
         <CardHeader>
-          <CardTitle className="text-xl font-semibold text-card-foreground flex items-center">
-            <CalendarDays className="w-5 h-5 mr-2 text-primary" />
-            Lịch Đặt Phòng
+          <CardTitle className="text-xl font-semibold text-card-foreground flex items-center justify-between">
+            <div className="flex items-center">
+              <CalendarDays className="w-5 h-5 mr-2 text-primary" />
+              Lịch Đặt Phòng
+            </div>
+            {isLoading && (
+              <span className="text-xs text-gray-400 font-normal animate-pulse">
+                Đang tải...
+              </span>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="calendar-container" style={{ height: "700px" }}>
+          <div style={{ height: "700px" }}>
             <Calendar
               localizer={localizer}
               events={events}
@@ -98,19 +138,12 @@ const CalendarBooking = () => {
                 noEventsInRange: "Không có sự kiện trong khoảng thời gian này",
                 showMore: (total) => `+${total} sự kiện nữa`,
               }}
-              components={{
-                event: CustomEvent,
-              }}
-              // Thêm các props mới để xử lý sự kiện chồng chéo
-              eventPropGetter={(event) => ({
-                style: {
-                  backgroundColor: "transparent",
-                  zIndex: 2,
-                },
+              components={{ event: CustomEvent }}
+              eventPropGetter={() => ({
+                style: { backgroundColor: "transparent", zIndex: 2 },
               })}
-              className="modern-calendar"
-              // Sử dụng month view với layout tự động
               views={["month"]}
+              className="modern-calendar"
             />
           </div>
         </CardContent>
@@ -120,11 +153,9 @@ const CalendarBooking = () => {
         .modern-calendar {
           font-family: inherit;
         }
-
         .rbc-calendar {
           background: transparent;
         }
-
         .rbc-header {
           background: hsl(var(--muted));
           color: hsl(var(--muted-foreground));
@@ -132,7 +163,6 @@ const CalendarBooking = () => {
           padding: 12px 8px;
           border-bottom: 1px solid hsl(var(--border));
         }
-
         .rbc-month-view {
           border: 1px solid hsl(210, 40%, 90%);
           border-radius: 8px;
@@ -140,33 +170,28 @@ const CalendarBooking = () => {
           background-color: hsl(210, 60%, 99%);
         }
         .rbc-event {
-          background-color: #e6f7ff !important; /* Màu xanh nhạt */
+          background-color: #e6f7ff !important;
           border: 1px solid #91d5ff !important;
           border-left: 4px solid #1890ff !important;
           color: #0050b3 !important;
           border-radius: 4px;
           padding: 2px 4px;
         }
-
         .rbc-event:hover {
-          background-color: #bae7ff !important; /* Màu xanh đậm hơn khi hover */
+          background-color: #bae7ff !important;
           box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
         }
-
         .rbc-date-cell {
           padding: 8px;
           color: hsl(var(--foreground));
         }
-
         .rbc-today {
           background-color: hsl(var(--accent) / 0.1);
         }
-
         .rbc-toolbar {
           margin-bottom: 20px;
           padding: 0 10px;
         }
-
         .rbc-toolbar button {
           background: hsl(var(--primary));
           color: hsl(var(--primary-foreground));
@@ -176,25 +201,20 @@ const CalendarBooking = () => {
           font-weight: 500;
           transition: all 0.2s;
         }
-
         .rbc-toolbar button:hover {
           background: hsl(var(--primary) / 0.9);
         }
-
         .rbc-toolbar button.rbc-active {
           background: hsl(var(--accent));
         }
-
         .rbc-toolbar-label {
           font-size: 18px;
           font-weight: 600;
           color: hsl(var(--foreground));
         }
-
         .rbc-day-bg {
           border-right: 1px solid hsl(var(--border));
         }
-
         .rbc-month-row {
           border-bottom: 1px solid hsl(var(--border));
         }

@@ -44,13 +44,13 @@ const TableCustomer = ({ customers }: ITableCustomer) => {
   // Filter customers based on search term
 
   return (
-    <div className="space-y-4 bg-white p-5 border rounded-xl">
-      <div className="rounded-md border">
+    <div className="space-y-4 bg-white  border rounded-xl">
+      <div className="rounded-md  ">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-blue-600  [&>tr>th]:!text-white p-2 ">
             <TableRow>
-              <TableHead>Họ tên</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead>Mã Khách hàng</TableHead>
+              <TableHead>Họ và Tên</TableHead>
               <TableHead className="hidden md:table-cell">
                 Số điện thoại
               </TableHead>
@@ -64,17 +64,26 @@ const TableCustomer = ({ customers }: ITableCustomer) => {
             {customers.length > 0 ? (
               customers.map((customer) => (
                 <TableRow key={customer.id}>
+                  <TableCell className="hidden md:table-cell">
+                    #{customer.id.slice(0, 8)}{" "}
+                  </TableCell>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
                         <UserRound className="h-4 w-4" />
                       </div>
                       <div>
-                        {customer.firstName} {customer.lastName}
+                        {" "}
+                        <div>
+                          {customer.firstName} {customer.lastName}
+                        </div>
+                        <p className="text-sm text-gray-500">
+                          {customer.email}
+                        </p>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{customer.email}</TableCell>
+
                   <TableCell className="hidden md:table-cell">
                     {customer.phone || "—"}
                   </TableCell>

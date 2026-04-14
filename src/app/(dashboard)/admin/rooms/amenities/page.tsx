@@ -5,12 +5,11 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 import AddAmenies from "./components/AddAmenies";
 import { Input } from "@/components/ui/input";
-import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 const Page = () => {
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_URL_API}/api/amenity`,
-    fetcher
+    fetcher,
   );
 
   // Nếu còn loading
@@ -22,7 +21,6 @@ const Page = () => {
   // Kiểm tra trạng thái loading và hiển thị thông báo
   return (
     <div className="bg-white p-6 rounded-xl">
-      <ElegantTitle title="Quản lý tiện nghi" />
       <div className="flex justify-end items-center ">
         <AddAmenies />
       </div>

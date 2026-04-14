@@ -1,6 +1,5 @@
 import { useUserStore } from "@/hook/useUserStore";
 import axios from "axios";
-import { URL_API } from "./fetcher";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_URL_API,
@@ -10,12 +9,8 @@ const axiosInstance = axios.create({
 
 export const refreshAccessToken = async () => {
   try {
-    const response = await axios.post(
-      `${URL_API}/api/auth/refresh-token`,
-      {},
-      { withCredentials: true }
-    );
-    const newAccessToken = response.data.accessToken;
+    const response = await axiosInstance.post(`/api/auth/refresh-token`, {});
+    const newAccessToken = response?.data?.accessToken;
     localStorage.setItem("token", newAccessToken);
     return newAccessToken;
   } catch (error) {
@@ -37,7 +32,7 @@ axiosInstance.interceptors.request.use(
   (error) => {
     console.error("[Request Error]", error);
     return error;
-  }
+  },
 );
 
 axiosInstance.interceptors.response.use(
@@ -62,7 +57,7 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject({ ...error, message });
-  }
+  },
 );
 
 export default axiosInstance;

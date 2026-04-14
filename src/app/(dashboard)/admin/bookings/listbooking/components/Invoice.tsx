@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import Image from "next/image";
-import { IBooking } from "./bookingad";
+import { IBookingRecord } from "./bookingad";
 import { formatPrice } from "@/lib/formatPrice";
 import {
   translatePaymentMethod,
@@ -11,7 +11,7 @@ import {
 } from "@/lib/translate";
 import { calculateNights, formatDate } from "@/lib/formatDate";
 
-const Invoice = ({ booking }: { booking: IBooking }) => {
+const Invoice = ({ booking }: { booking: IBookingRecord }) => {
   // ✅ Khai báo ref với type rõ ràng
   const invoiceRef = useRef<HTMLDivElement>(null);
 
@@ -26,7 +26,7 @@ const Invoice = ({ booking }: { booking: IBooking }) => {
     address: "03 Quang Trung,Đà Nẵng, Việt Nam",
     phone: "0258 123 4567",
     email: "contact@bienxanhhotel.vn",
-    logo: "/image/logo.png", // Đảm bảo đường dẫn đúng với file logo của bạn
+    logo: "/image/logo.png",
   };
 
   return (

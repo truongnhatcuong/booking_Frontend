@@ -151,12 +151,9 @@ export default function FaceRegisterWidget({
       setStep("saving");
       setMessage("Đang lưu khuôn mặt...");
 
-      const res = await axiosInstance.put(
-        `${URL_API}/api/auth/face-descriptor`,
-        {
-          descriptor: pendingDescriptor,
-        },
-      );
+      const res = await axiosInstance.put(`/api/auth/face-descriptor`, {
+        descriptor: pendingDescriptor,
+      });
 
       if (!res.data) throw new Error(res.data.message);
 

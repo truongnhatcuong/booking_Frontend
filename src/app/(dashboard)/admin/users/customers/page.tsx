@@ -7,7 +7,6 @@ import { URL_API } from "@/lib/fetcher";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
 import { useDebounce } from "../../../../../hook/Debounce";
-import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 const Page = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,12 +15,11 @@ const Page = () => {
   const [limit, setLimit] = useState(10);
 
   const { data, isLoading } = useSWR(
-    `${URL_API}/api/auth/customer?search=${debouncedSearch}&page=${currentPage}&limit=${limit}`
+    `/api/auth/customer?search=${debouncedSearch}&page=${currentPage}&limit=${limit}`,
   );
 
   return (
     <div className="bg-white p-6 rounded-xl">
-      <ElegantTitle title="Quản Lý Khách Hàng" />
       <div className="my-6">
         <SearchForm
           placeholder="Tìm Kiếm Theo Tên / CCCD..."
