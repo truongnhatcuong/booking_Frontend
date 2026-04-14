@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { Button } from "@/components/ui/button";
 import { URL_API } from "@/lib/fetcher";
 import Mutate from "@/hook/Mutate";
+import axiosInstance from "@/lib/axios";
 
 Modal.setAppElement("#root");
 
@@ -35,9 +36,7 @@ const CreateDiscount = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${URL_API}/api/discount`, formData, {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.post(`/api/discount`, formData);
       if (res.data) {
         Mutate(`${URL_API}/api/discount/getAll`);
         toast.success("Thêm Mã Giảm Giá Thành Công");
@@ -56,12 +55,7 @@ const CreateDiscount = () => {
 
   return (
     <div>
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors cursor-pointer"
-      >
-        Thêm Mã Giảm Giá
-      </Button>
+      <Button onClick={() => setIsOpen(true)}>Thêm Mã Giảm Giá</Button>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
@@ -77,6 +71,7 @@ const CreateDiscount = () => {
             <input
               type="text"
               name="code"
+              min={0}
               value={formData.code.toUpperCase()}
               onChange={handleChange}
               className="w-full p-2 border rounded-md"

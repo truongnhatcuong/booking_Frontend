@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { URL_API } from "@/lib/fetcher";
 import axiosInstance from "@/lib/axios";
 import { generateVoicePrompt } from "@/lib/voice-prompts";
-import { ca } from "date-fns/locale";
 
 const WAKE_WORD = "xin chào";
 const SILENCE_TIMEOUT = 4000;
@@ -16,6 +15,24 @@ type VoiceState =
   | "processing"
   | "navigating"
   | "error";
+
+export const removeWakePhrase = (text: string) => {
+  const noisePatterns = [
+    "dạ tôi nghe bạn cần gì à",
+    "tôi nghe bạn cần gì à",
+    "tôi nghe bạn cần gì",
+    "dạ tôi nghe",
+    "xin chào",
+  ];
+
+  let result = text.toLowerCase().trim();
+  for (const pattern of noisePatterns) {
+    while (result.includes(pattern)) {
+      result = result.replace(pattern, "").trim();
+    }
+  }
+  return result.trim();
+};
 
 export function useVoiceAssistant() {
   const router = useRouter();
@@ -43,7 +60,7 @@ export function useVoiceAssistant() {
       if (!isListeningRef.current) {
         try {
           isListeningRef.current = true;
-          recognitionRef.current.start();
+          recognitionRef?.current?.start();
           console.log("🔄 Mic restarted");
         } catch (e) {
           isListeningRef.current = false;
@@ -59,26 +76,6 @@ export function useVoiceAssistant() {
     stateRef.current = s;
     setState(s);
   }, []);
-
-  const removeWakePhrase = (text: string) => {
-    const noisePatterns = [
-      "tôi nghe bạn cần gì à",
-      "tôi nghe bạn cần gì",
-      "dạ tôi nghe",
-      "xin chào",
-    ];
-
-    let result = text.toLowerCase().trim(); // ← lowercase trước
-
-    for (const pattern of noisePatterns) {
-      while (result.includes(pattern)) {
-        // ← dùng while để xóa hết
-        result = result.replace(pattern, "").trim();
-      }
-    }
-
-    return result.trim();
-  };
 
   const isSpeakingRef = useRef(false);
 
@@ -195,7 +192,6 @@ export function useVoiceAssistant() {
         setFeedback("🎤 Đang nghe...");
         return;
       }
-      console.log("🧹 Clean command:", cleanCommand); // ← thêm log này
 
       updateState("processing");
       setFeedback(`Đang xử lý: "${cleanCommand}"`);
@@ -256,12 +252,8 @@ export function useVoiceAssistant() {
                 `🛏️ Tìm thấy ${data.rooms.length} phòng ${data.roomType}`,
               );
 
-              const path =
-                data.rooms.length === 1
-                  ? `/rooms/${data.rooms[0].roomType.id}/${data.rooms[0].id}`
-                  : `/rooms/${data.roomTypeId}`;
-
-              navigateAfterDelay(path);
+              // Luôn vào trang loại phòng, không nhảy thẳng vào phòng cụ thể
+              navigateAfterDelay(`/rooms/${data.roomTypeId}`, 800);
             } else {
               speak(`Xin lỗi, hiện không có phòng ${data.roomType} trống`);
               updateState("error");
@@ -294,10 +286,32 @@ export function useVoiceAssistant() {
             }
             break;
 
-          case "go_home":
-            speak("Đang về trang chủ");
-            setFeedback("🏠 Về trang chủ...");
-            navigateAfterDelay("/", 500);
+          // Xóa case "go_home", thay bằng
+          case "navigate":
+            const pageConfig: Record<
+              string,
+              { label: string; spoken: string }
+            > = {
+              home: { label: "🏠 Trang chủ", spoken: "trang chủ" },
+              blog: { label: "📖 Trang blog", spoken: "trang blog" },
+              about: {
+                label: "ℹ️ Trang giới thiệu",
+                spoken: "trang giới thiệu",
+              },
+              gallery: {
+                label: "🖼️ Trang bộ sưu tập",
+                spoken: "trang bộ sưu tập",
+              },
+            };
+
+            const page = pageConfig[data.page] ?? {
+              label: "🔗 Trang yêu cầu",
+              spoken: "trang yêu cầu",
+            };
+
+            speak(`Đang chuyển đến ${page.spoken}`);
+            setFeedback(`${page.label}...`);
+            navigateAfterDelay(data.path, 500);
             break;
 
           case "hotel_info":
@@ -312,7 +326,20 @@ export function useVoiceAssistant() {
               resetAfterDelay();
             }
             break;
-
+          case "search_by_criteria":
+            if (data.rooms?.length > 0) {
+              speak(`Đang chuyển đến phòng phù hợp nhất`);
+              setFeedback(`🔍 Đang tìm phòng phù hợp...`);
+              navigateAfterDelay(data.path, 1200);
+            } else {
+              speak(data.answer ?? "Xin lỗi, không tìm thấy phòng phù hợp");
+              updateState("error");
+              setFeedback(
+                `❌ ${data.answer ?? "Không tìm thấy phòng phù hợp"}`,
+              );
+              resetAfterDelay();
+            }
+            break;
           default:
             speak("Xin lỗi tôi chưa hiểu");
             updateState("error");

@@ -1,5 +1,5 @@
 "use client";
-import { useVoiceAssistant } from "@/hook/useVoiceAssistant";
+import { removeWakePhrase, useVoiceAssistant } from "@/hook/useVoiceAssistant";
 import { useEffect, useRef } from "react";
 
 const STATE_CONFIG = {
@@ -48,23 +48,60 @@ export default function VoiceAssistant() {
   }, [state]);
 
   useEffect(() => {
-    const unlock = () => {
-      if (!globalUnlocked) {
-        globalUnlocked = true;
-        const ctx = new AudioContext();
-        ctx.resume().then(() => ctx.close());
-      }
+    let audioContext: AudioContext | null = null;
+    let analyser: AnalyserNode | null = null;
+    let microphone: MediaStreamAudioSourceNode | null = null;
+    let stream: MediaStream | null = null;
+    let animFrameId: number | null = null;
 
-      if (stateRef.current !== "idle") {
-        stopRef.current();
-      } else {
-        startRef.current();
+    const startPassiveListening = async () => {
+      try {
+        // Xin quyền mic ngay khi load trang
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext = new AudioContext();
+        analyser = audioContext.createAnalyser();
+        microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        analyser.fftSize = 512;
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const detect = () => {
+          analyser!.getByteFrequencyData(dataArray);
+          const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+
+          // Nếu phát hiện tiếng ồn đủ lớn → start recognition
+          if (avg > 15 && stateRef.current === "idle") {
+            startRef.current();
+          }
+
+          animFrameId = requestAnimationFrame(detect);
+        };
+
+        detect();
+      } catch (e) {
+        console.error("Mic permission denied:", e);
       }
     };
 
-    document.addEventListener("click", unlock);
-    return () => document.removeEventListener("click", unlock);
-  }, []); // ← [] vì dùng ref, không cần dependency
+    // Unlock AudioContext bằng click lần đầu
+    const unlock = () => {
+      if (!globalUnlocked) {
+        globalUnlocked = true;
+        startPassiveListening();
+      }
+    };
+
+    document.addEventListener("click", unlock, { once: true });
+
+    return () => {
+      document.removeEventListener("click", unlock);
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+      if (microphone) microphone.disconnect();
+      if (audioContext) audioContext.close();
+      if (stream) stream.getTracks().forEach((t) => t.stop());
+    };
+  }, []);
 
   const showUI = state !== "idle" && state !== "listening_wake";
   if (!showUI) return null;
@@ -77,7 +114,7 @@ export default function VoiceAssistant() {
       >
         {(feedback || transcript) && (
           <div
-            className="max-w-xs rounded-2xl px-4 py-3 text-sm shadow-2xl"
+            className="max-w-xs rounded-2xl px-3 py-2 text-sm shadow-2xl"
             style={{
               background: "rgba(15,23,42,0.95)",
               border: `1px solid ${cfg.color}40`,
@@ -91,13 +128,15 @@ export default function VoiceAssistant() {
               </p>
             )}
             {transcript && state === "listening_command" && (
-              <p className="text-xs opacity-60 italic">{transcript}</p>
+              <p className="text-xs opacity-60 italic">
+                {removeWakePhrase(transcript)}
+              </p>
             )}
           </div>
         )}
 
         <div
-          className="relative w-14 h-14 rounded-full flex items-center justify-center shadow-2xl"
+          className="relative w-10 h-10 rounded-full flex items-center justify-center shadow-2xl"
           style={{
             background: `linear-gradient(135deg, ${cfg.color}, ${cfg.color}cc)`,
             border: `2px solid ${cfg.color}`,
@@ -122,12 +161,12 @@ export default function VoiceAssistant() {
               />
             </>
           )}
-          <span className="text-xl relative z-10">{cfg.icon}</span>
+          <span className="text-lg relative z-10">{cfg.icon}</span>
         </div>
 
         {cfg.label && (
           <p
-            className="text-xs w-14"
+            className="text-xs font-medium"
             style={{ color: cfg.color, textShadow: "0 0 8px currentColor" }}
           >
             {cfg.label}

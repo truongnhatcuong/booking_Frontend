@@ -20,6 +20,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import PublishedBlog from "./PublishedBlog";
 import DeleteBlog from "./DeleteBlog";
 import UpdateBlog from "./UpdateBlog";
+import Image from "next/image";
 
 // Define interfaces based on Prisma schema
 interface Employee {
@@ -47,33 +48,47 @@ const TableBlog = ({ posts }: TableBlogProps) => {
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
 
   return (
-    <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
-      <h2 className="text-2xl font-bold mb-4">Quản Lý Bài Viết</h2>
+    <div className="mt-5">
       <div className="border rounded-md">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Người Đăng</TableHead>
-              <TableHead>Tiêu Đề</TableHead>
+              <TableHead className="">Tiêu Đề</TableHead>
               <TableHead>Xuất Bản</TableHead>
               <TableHead>Ngày Xuất Bản</TableHead>
               <TableHead>Hành Động</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {posts.map((post) => (
+            {posts?.map((post) => (
               <TableRow key={post.id}>
                 <TableCell>
                   {(post.employee?.user.firstName || "") +
                     " " +
                     post.employee?.user.lastName || ""}
                 </TableCell>
-                <TableCell>{post.title}</TableCell>
+                <TableCell className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <Image
+                      alt={post.title}
+                      src={post.coverImage}
+                      width={40}
+                      height={40}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <p>{post.title}</p>
+                </TableCell>
                 <TableCell>
                   {post.published ? (
-                    <span className="text-green-600">Đã Xuất Bản</span>
+                    <span className=" bg-green-600 text-green-50 px-2 py-1  text-xs rounded-full">
+                      Đã Xuất Bản
+                    </span>
                   ) : (
-                    <span className="text-red-600">Chưa Xuất Bản</span>
+                    <span className="bg-red-600 text-red-50 px-2 py-1 rounded-full text-xs">
+                      Chưa Xuất Bản
+                    </span>
                   )}
                 </TableCell>
                 <TableCell>

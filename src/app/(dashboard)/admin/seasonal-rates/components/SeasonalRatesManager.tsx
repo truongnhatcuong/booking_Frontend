@@ -27,20 +27,10 @@ export function SeasonalRatesManager({
   return (
     <div className="w-full space-y-6">
       <Card className="overflow-hidden">
-        <div className="flex items-center justify-between p-5">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              Quản Lý Giá Mùa
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Quản lý giá phòng theo các mùa khác nhau
-            </p>
-          </div>
-        </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto ">
           <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/50">
+            <TableHeader className="border ">
+              <TableRow>
                 <TableHead className="font-semibold">Tên Mùa</TableHead>
                 <TableHead className="font-semibold">Số Phòng</TableHead>
                 <TableHead className="font-semibold">Ngày Bắt Đầu</TableHead>
@@ -120,7 +110,7 @@ export function SeasonalRatesManager({
       </Card>
 
       {initialData.length > 0 && (
-        <Card className="p-4 bg-muted/50">
+        <Card className="p-4 bg-white">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Tổng Số Mục</p>

@@ -2,6 +2,14 @@
 import React from "react";
 import moment from "moment";
 import DeleteReview from "./DeleteReview";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 moment.locale("vi");
 
@@ -30,55 +38,36 @@ export interface ReviewTableFormProps {
 export default function ReviewTableForm({ reviews }: ReviewTableFormProps) {
   return (
     <div className="bg-white p-8">
-      <h1 className="text-2xl font-semibold mb-6">
-        Danh Sách Đánh Giá của Hotel
-      </h1>
-
-      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Khách Hàng
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Thời Gian
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Đánh Giá
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Bình Luận
-              </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Hành Động
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+      <div className="shadow-md rounded-lg border border-gray-200 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Khách Hàng</TableHead>
+              <TableHead>Thời Gian</TableHead>
+              <TableHead>Đánh Giá</TableHead>
+              <TableHead>Bình Luận</TableHead>
+              <TableHead className="text-center">Hành Động</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {reviews && reviews.length > 0 ? (
               reviews.map((review) => (
-                <tr
-                  key={review.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {review.customer.user.firstName}{" "}
-                      {review.customer.user.lastName}
-                    </div>
-                  </td>
+                <TableRow key={review.id}>
+                  <TableCell className="font-medium">
+                    {review.customer.user.firstName}{" "}
+                    {review.customer.user.lastName}
+                  </TableCell>
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <TableCell>
                     <div className="text-sm text-gray-500">
                       {moment(review.reviewDate).fromNow()}
                     </div>
                     <div className="text-xs text-gray-400">
                       {moment(review.reviewDate).format("DD/MM/YYYY")}
                     </div>
-                  </td>
+                  </TableCell>
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <TableCell>
                     <div className="flex items-center space-x-1">
                       {[...Array(5)].map((_, index) => (
                         <svg
@@ -95,30 +84,36 @@ export default function ReviewTableForm({ reviews }: ReviewTableFormProps) {
                         </svg>
                       ))}
                     </div>
-                  </td>
+                  </TableCell>
 
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-600 max-w-md">
+                  <TableCell>
+                    <div
+                      className="max-w-md truncate text-sm text-gray-600"
+                      title={review.comment}
+                    >
                       {review.comment}
                     </div>
-                  </td>
+                  </TableCell>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <div className="flex justify-center space-x-2">
+                  <TableCell className="text-center">
+                    <div className="flex justify-center">
                       <DeleteReview id={review.id} />
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))
             ) : (
-              <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="py-8 text-center text-gray-500"
+                >
                   Chưa có đánh giá nào!!!
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

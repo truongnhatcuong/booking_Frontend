@@ -80,7 +80,7 @@ const TableEmployee = ({
       setIsPermissionModalOpen(false);
     } catch (error: any) {
       toast.error(
-        error.response.data.message || "Đã xảy ra lỗi khi hủy quyền nhân viên."
+        error.response.data.message || "Đã xảy ra lỗi khi hủy quyền nhân viên.",
       );
     }
   }
@@ -90,7 +90,7 @@ const TableEmployee = ({
     setIdEmployee(id);
   }
   return (
-    <div className="space-y-4 bg-white p-5 rounded border">
+    <div className="space-y-4 bg-white ">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <SearchForm
           placeholder="Tìm Theo Tên Nhân Viên .... "
@@ -104,10 +104,10 @@ const TableEmployee = ({
 
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="">
             <TableRow>
+              <TableHead>Mã nhân viên</TableHead>
               <TableHead className="w-[250px]">Họ và tên</TableHead>
-              <TableHead>Email</TableHead>
               <TableHead className="hidden md:table-cell">
                 Số điện thoại
               </TableHead>
@@ -126,10 +126,17 @@ const TableEmployee = ({
             {employee.length > 0 ? (
               employee.map((employee) => (
                 <TableRow key={employee.id}>
-                  <TableCell className="font-medium">
-                    {employee.lastName} {employee.firstName}
+                  <TableCell>
+                    #{employee.id.slice(0, 8).toUpperCase()}
                   </TableCell>
-                  <TableCell>{employee.email}</TableCell>
+                  <TableCell className="font-medium ">
+                    <div className="text-base">
+                      {" "}
+                      {employee.lastName} {employee.firstName}
+                    </div>
+                    <p className="text-sm text-gray-500">{employee.email}</p>
+                  </TableCell>
+
                   <TableCell className="hidden md:table-cell">
                     {employee.phone}
                   </TableCell>
@@ -146,7 +153,7 @@ const TableEmployee = ({
                   <TableCell className="hidden md:table-cell">
                     {employee.employee?.hireDate
                       ? formatDate(
-                          new Date(employee.employee.hireDate).toString()
+                          new Date(employee.employee.hireDate).toString(),
                         )
                       : "Chưa cập nhật"}
                   </TableCell>

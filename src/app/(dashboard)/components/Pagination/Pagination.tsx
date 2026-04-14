@@ -1,4 +1,3 @@
-// components/Pagination/Pagination.tsx
 "use client";
 
 import React from "react";
@@ -14,51 +13,62 @@ const Pagination: React.FC<PaginationProps> = ({
   setPage,
   totalPages,
 }) => {
-  // Hàm xử lý chuyển trang trước
-  const handlePrevPage = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
-
-  // Hàm xử lý chuyển trang tiếp theo
-  const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  };
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex justify-end mr-4 items-center mt-4 space-x-2">
+    <div className="flex justify-end mr-4 items-center mt-4 gap-1.5">
       {/* Nút Previous */}
       <button
-        onClick={handlePrevPage}
+        onClick={() => setPage((p) => Math.max(p - 1, 1))}
         disabled={page === 1}
-        className={`px-3 py-1 rounded font-semibold ${
-          page === 1
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-blue-500 text-gray-50 hover:bg-blue-600"
-        }`}
+        className="w-9 h-9 rounded-full flex items-center justify-center border border-gray-200
+          disabled:opacity-35 disabled:cursor-not-allowed
+          hover:bg-gray-100 transition-colors"
       >
-        Trước
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M9 11L5 7L9 3"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
 
-      {/* Hiển thị trang hiện tại và tổng số trang */}
-      <span className="px-3 py-1 text-gray-700">
-        Trang {page} của {totalPages}
-      </span>
+      {/* Số trang */}
+      {pages.map((p) => (
+        <button
+          key={p}
+          onClick={() => setPage(p)}
+          className={`w-9 h-9 rounded-full flex items-center justify-center text-sm border transition-colors
+            ${
+              p === page
+                ? "bg-blue-500 text-white border-blue-500 font-medium"
+                : "border-gray-200 text-gray-500 hover:bg-gray-100"
+            }`}
+        >
+          {p}
+        </button>
+      ))}
 
       {/* Nút Next */}
       <button
-        onClick={handleNextPage}
+        onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
         disabled={page === totalPages}
-        className={`px-3 py-1 rounded font-semibold ${
-          page === totalPages
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-blue-500 text-gray-50 hover:bg-blue-600"
-        }`}
+        className="w-9 h-9 rounded-full flex items-center justify-center border border-gray-200
+          disabled:opacity-35 disabled:cursor-not-allowed
+          hover:bg-gray-100 transition-colors"
       >
-        Tiếp theo
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M5 3L9 7L5 11"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
     </div>
   );

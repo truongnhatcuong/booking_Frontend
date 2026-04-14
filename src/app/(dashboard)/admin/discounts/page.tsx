@@ -4,7 +4,6 @@ import React from "react";
 import useSWR from "swr";
 import TableDiscount from "./components/TableDisCount";
 import CreateDiscount from "./components/CreateDisCount";
-import ElegantTitle from "../../components/TitleDashboard/ElegantTitle";
 
 export interface IDiscount {
   id: string;
@@ -16,7 +15,7 @@ export interface IDiscount {
 const Page = () => {
   const { data, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_URL_API}/api/discount/getAll`,
-    fetcher
+    fetcher,
   );
 
   if (isLoading) {
@@ -24,7 +23,6 @@ const Page = () => {
   }
   return (
     <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
-      <ElegantTitle title="Quản Lý Giảm Giá" />
       <div className="flex justify-end mb-4 ">
         {" "}
         <CreateDiscount />

@@ -11,7 +11,7 @@ interface CardBlogProps {
 
 const CardBlog = ({ data }: CardBlogProps) => {
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-8 my-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 my-10">
       {data.map((item) => (
         <Link href={`blog/${item.slug}`} key={item.id}>
           <div className="border border-gray-200 bg-[#E7E7E7] md:h-100 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 group relative">

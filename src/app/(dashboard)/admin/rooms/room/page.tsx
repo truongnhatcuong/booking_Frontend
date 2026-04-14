@@ -8,7 +8,6 @@ import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import { RoomTypeFilter } from "./components/RoomTypeFilter";
 import { StatusFilter } from "./components/StatusFilter";
-import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
 
 const Page = () => {
@@ -22,18 +21,16 @@ const Page = () => {
 
   selectedRoomTypes.forEach((item) => params.append("roomType", item));
   const { data: dataRoom } = useSWR(
-    `${URL_API}/api/room?search=${search}&limit=${limit}&page=${page}&${params.toString()}&status=${selectedStatuses}`
+    `${URL_API}/api/room?search=${search}&limit=${limit}&page=${page}&${params.toString()}&status=${selectedStatuses}`,
   );
   const { data: DataTypeRoom } = useSWR(
-    `${URL_API}/api/roomtype?page=1&limit=9999`
+    `${URL_API}/api/roomtype?page=1&limit=9999`,
   );
 
   const totalPages: number = dataRoom?.room.pagination?.totalPages || 1;
 
   return (
     <div className="bg-white p-4 rounded-md shadow-md">
-      <ElegantTitle title="Quản Lý Danh Sách Phòng" className="mb-5 ml-5" />
-
       <div className="lg:flex lg:justify-between items-center my-5">
         <div className="hidden lg:block">
           <SearchForm

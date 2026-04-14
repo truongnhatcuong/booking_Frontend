@@ -27,9 +27,9 @@ import { URL_API } from "@/lib/fetcher";
 import axios from "axios";
 import Mutate from "@/hook/Mutate";
 import Invoice from "./Invoice";
-import { IBooking } from "./bookingad";
+import { IBookingRecord } from "./bookingad";
 interface IUpdateStatus {
-  booking: IBooking;
+  booking: IBookingRecord;
 }
 const UpdateStatus = ({ booking }: IUpdateStatus) => {
   const handleUpdateStatus = async () => {
@@ -53,7 +53,7 @@ const UpdateStatus = ({ booking }: IUpdateStatus) => {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
 
       if (res.data) {
@@ -71,7 +71,7 @@ const UpdateStatus = ({ booking }: IUpdateStatus) => {
         `${URL_API}/api/booking/employee/${booking.id}`,
         {
           withCredentials: true,
-        }
+        },
       );
 
       if (res.data) {
@@ -106,8 +106,8 @@ const UpdateStatus = ({ booking }: IUpdateStatus) => {
                 {booking.status === "PENDING"
                   ? "Nhận Phòng"
                   : booking.status === "CHECKED_IN"
-                  ? "Trả Phòng"
-                  : "Hoàn Thành"}
+                    ? "Trả Phòng"
+                    : "Hoàn Thành"}
               </button>
             </DropdownMenuItem>
             {booking.status !== "CHECKED_OUT" && (

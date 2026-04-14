@@ -5,7 +5,6 @@ import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 import { Label } from "@/components/ui/label";
 import useSWR from "swr";
 import { URL_API } from "@/lib/fetcher";
-import ElegantTitle from "@/app/(dashboard)/components/TitleDashboard/ElegantTitle";
 
 export interface UserResult {
   id: string;
@@ -85,7 +84,6 @@ const Page = () => {
 
   return (
     <div className="bg-white px-4 lg:px-10 py-4 rounded-2xl">
-      <ElegantTitle title="Đặt Phòng" />
       <div className="flex justify-end my-5 mx-9">
         <Label>
           <SearchForm

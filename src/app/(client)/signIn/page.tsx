@@ -1,3 +1,4 @@
+// src/app/(auth)/signIn/page.tsx
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,14 +14,20 @@ import { useUserStore } from "@/hook/useUserStore";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Eye } from "lucide-react";
+import { useCheckFaceLog } from "@/hook/useCheckFaceLog";
 
-// Lazy load modal (tránh SSR issue với face-api.js)
 const FaceLoginModal = dynamic(() => import("./components/FaceLoginModal"), {
   ssr: false,
 });
 
 export default function SignInForm() {
   const { login, user } = useUserStore();
+  const {
+    hasFace,
+    checked,
+    loading: faceLoading,
+    checkFace,
+  } = useCheckFaceLog();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -28,14 +35,56 @@ export default function SignInForm() {
     remember: false,
   });
   const [message, setMessage] = useState("");
-  const [showFaceModal, setShowFaceModal] = useState(true);
+  const [showFaceModal, setShowFaceModal] = useState(false);
   const router = useRouter();
+
+  // Load saved email
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("remembered_email");
+    if (savedEmail) {
+      setFormData((prev) => ({ ...prev, email: savedEmail }));
+    }
+  }, []);
+
+  // Check face khi email thay đổi
+  useEffect(() => {
+    if (!formData.email || !formData.email.includes("@")) return;
+    const timer = setTimeout(() => checkFace(formData.email), 500);
+    return () => clearTimeout(timer);
+  }, [formData.email]);
+
+  // Auto open modal khi check xong có face
+  useEffect(() => {
+    if (checked && hasFace) setShowFaceModal(true);
+  }, [checked, hasFace]);
+
+  // Redirect nếu đã login
+  useEffect(() => {
+    if (localStorage.getItem("token")) router.push("/");
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    if (
+      user.userType === "EMPLOYEE" ||
+      user.userType === "ADMIN" ||
+      user.role
+    ) {
+      router.push("/admin");
+    } else {
+      router.push("/");
+    }
+  }, [user, router]);
+
+  useEffect(() => {
+    if (!message) return;
+    const t = setTimeout(() => setMessage(""), 3000);
+    return () => clearTimeout(t);
+  }, [message]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
-    // Lưu ngay lập tức khi gõ (Tùy chọn)
     if (name === "email") {
       localStorage.setItem("remembered_email", value);
     }
@@ -59,7 +108,6 @@ export default function SignInForm() {
     }
   };
 
-  // Dùng chung cho cả password login và face login
   const handleLoginSuccess = (token: string) => {
     localStorage.setItem("token", token);
     const decoded: any = jwtDecode(token);
@@ -72,7 +120,6 @@ export default function SignInForm() {
     });
   };
 
-  // Callback khi face login thành công
   const handleFaceSuccess = (data: { accessToken: string }) => {
     handleLoginSuccess(data.accessToken);
     if (formData.email) {
@@ -80,42 +127,6 @@ export default function SignInForm() {
     }
     setShowFaceModal(false);
   };
-
-  // Thêm useEffect này vào trong component SignInForm
-  useEffect(() => {
-    // Key này phải trùng với key bạn đã set ở trang SignUp hoặc trang Login trước đó
-    const savedEmail = localStorage.getItem("remembered_email");
-
-    if (savedEmail) {
-      setFormData((prev) => ({
-        ...prev,
-        email: savedEmail,
-      }));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) document.location.href = "/";
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    if (
-      user.userType === "EMPLOYEE" ||
-      user.userType === "ADMIN" ||
-      user.role
-    ) {
-      router.push("/admin");
-    } else {
-      router.push("/");
-    }
-  }, [user, router]);
-
-  useEffect(() => {
-    if (!message) return;
-    const t = setTimeout(() => setMessage(""), 3000);
-    return () => clearTimeout(t);
-  }, [message]);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
@@ -181,6 +192,12 @@ export default function SignInForm() {
                   />
                 </svg>
                 Email
+                {/* Loading indicator khi đang check face */}
+                {faceLoading && (
+                  <span className="text-xs text-blue-400 font-normal">
+                    đang kiểm tra...
+                  </span>
+                )}
               </Label>
               <Input
                 name="email"
@@ -328,9 +345,8 @@ export default function SignInForm() {
               </span>
             </Button>
 
-            {/* ── FACE LOGIN BUTTON ── */}
+            {/* Face Login Button */}
             <Button
-              size="icon-lg"
               variant="outline"
               onClick={() => {
                 if (!formData.email.trim()) {
@@ -343,7 +359,6 @@ export default function SignInForm() {
               }}
               className="flex-1 gap-2 py-4 text-base border-2 transition-all group hover:scale-[1.02]"
             >
-              {/* Face scan icon */}
               <Eye size={20} />
               <span>Khuôn mặt</span>
             </Button>

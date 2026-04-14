@@ -60,7 +60,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
           {options.map((opt) => (
             <label
               key={opt.value}
-              className="flex items-center space-x-2 text-xs p-1"
+              className="flex items-center text-gray-700 space-x-2 text-xs p-0.5"
             >
               <input
                 type="checkbox"
@@ -73,7 +73,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
                   }
                 }}
               />
-              <span>{opt.label}</span>
+              <span>{opt.label.toLowerCase()}</span>
             </label>
           ))}
 

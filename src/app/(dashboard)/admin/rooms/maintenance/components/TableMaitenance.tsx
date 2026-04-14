@@ -51,7 +51,7 @@ export function getMaintenanceStatusText(status: string): string {
 
 const TableMaintenance = ({ maintenance }: TableMaintenanceProps) => {
   return (
-    <Table className="w-full bg-white py-9 px-6 *:rounded-lg shadow-md mt-5">
+    <Table className="w-full border">
       <TableHeader>
         <TableRow>
           <TableHead> Ảnh Phòng</TableHead>

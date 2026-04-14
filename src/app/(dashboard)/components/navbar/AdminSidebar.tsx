@@ -7,9 +7,8 @@ import {
   ChevronRight,
   Menu,
   UserPen,
-  Settings,
   LogOut,
-  X,
+  LayoutDashboard,
 } from "lucide-react";
 import { adminMenu, IListItemAdmin } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
@@ -121,18 +120,18 @@ const AdminSidebar = () => {
               {/* Action icons */}
               <div className="flex items-center gap-1 pt-1">
                 <Link
+                  href="/admin"
+                  className="flex-1 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                  title="Dashboard"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                </Link>
+                <Link
                   href="/admin/profile"
                   className="flex-1 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                   title="Hồ sơ"
                 >
                   <UserPen className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="#"
-                  className="flex-1 flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-                  title="Cài đặt"
-                >
-                  <Settings className="h-4 w-4" />
                 </Link>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>

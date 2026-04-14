@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import { useSidebar } from "../../context/contextAdmin";
@@ -6,9 +7,15 @@ import {
   ChevronRightIcon as ChevronRightDouble,
 } from "lucide-react";
 import AdminNotifications from "../AdminNotifications";
+import useAuth from "@/lib/authUser";
+import { useUserStore } from "@/hook/useUserStore";
 
 const AdminHeader = () => {
+  const { user } = useAuth();
+  const { logout, user: storedUser } = useUserStore();
   const { isCollapsed, toggleCollapse } = useSidebar();
+
+  console.log("storedUser?.role", storedUser?.role);
 
   return (
     <div className="navbar bg-base-100 shadow-sm mb-5">
@@ -26,11 +33,19 @@ const AdminHeader = () => {
       </div>
       <div className="flex-1">
         <Link className="btn btn-ghost text-xl" href="/admin">
-          Bảng Điều Khiển
+          Trang Quản Trị
         </Link>
       </div>
-      <AdminNotifications />
-      <div className="flex-none">
+      <div className="mx-6">
+        <AdminNotifications />
+      </div>
+      <div className="flex items-center gap-3">
+        <div>
+          <p className="text-base font-bold">
+            {user?.firstName} {user?.lastName}
+          </p>
+          <p className="text-xs text-gray-500">{user?.email}</p>
+        </div>
         <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
@@ -39,7 +54,9 @@ const AdminHeader = () => {
           >
             <div className="w-10 rounded-full">
               <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-sm font-medium">AD</span>
+                <span className="text-sm font-medium">
+                  {user?.firstName?.charAt(0).toUpperCase()}
+                </span>
               </div>
             </div>
           </div>
@@ -53,11 +70,21 @@ const AdminHeader = () => {
                 <span className="badge">New</span>
               </Link>
             </li>
+            {storedUser?.role === "Quản Lý" && (
+              <li>
+                <Link
+                  href={
+                    "https://docs.google.com/spreadsheets/d/1-1k7Mcmh7pIX8qfXdpT-QVTf5dqaLn7Nw_GPcx7IaBY/edit?gid=0#gid=0"
+                  }
+                  target="_blank"
+                >
+                  Quản Lý Dữ Liệu
+                </Link>
+              </li>
+            )}
+
             <li>
-              <Link href={"#"}>Cài Đặt</Link>
-            </li>
-            <li>
-              <Link href={"/"}>Quay Lại </Link>
+              <button onClick={logout}>Đăng Xuất</button>
             </li>
           </ul>
         </div>
