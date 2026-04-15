@@ -27,7 +27,7 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
   const faceapiRef = useRef<any>(null);
   const referenceDescriptorRef = useRef<Float32Array | null>(null);
   const failCountRef = useRef(0);
-  const MAX_FAIL = 10; // sau 10 lần không khớp → dừng
+  const MAX_FAIL = 5; // sau 5 lần không khớp → dừng
   const [step, setStep] = useState<FaceLoginStep>("idle");
   const [faceStatus, setFaceStatus] = useState<FaceStatus>("idle");
   const [message, setMessage] = useState("");

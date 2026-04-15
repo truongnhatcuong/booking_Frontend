@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Eye } from "lucide-react";
 import { useCheckFaceLog } from "@/hook/useCheckFaceLog";
+import axiosInstance from "@/lib/axios";
 
 const FaceLoginModal = dynamic(() => import("./components/FaceLoginModal"), {
   ssr: false,
@@ -63,18 +64,18 @@ export default function SignInForm() {
     if (localStorage.getItem("token")) router.push("/");
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
+  const redirectAfterLogin = (token: string) => {
+    const decoded: any = jwtDecode(token);
     if (
-      user.userType === "EMPLOYEE" ||
-      user.userType === "ADMIN" ||
-      user.role
+      decoded.userType === "EMPLOYEE" ||
+      decoded.userType === "ADMIN" ||
+      decoded.role
     ) {
       router.push("/admin");
     } else {
       router.push("/");
     }
-  }, [user, router]);
+  };
 
   useEffect(() => {
     if (!message) return;
@@ -97,11 +98,10 @@ export default function SignInForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${URL_API}/api/auth/login`, formData, {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.post(`/api/auth/login`, formData);
       if (res.data?.accessToken) {
         handleLoginSuccess(res.data.accessToken);
+        redirectAfterLogin(res.data.accessToken);
       }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Đăng nhập không thành công");
@@ -122,9 +122,11 @@ export default function SignInForm() {
 
   const handleFaceSuccess = (data: { accessToken: string }) => {
     handleLoginSuccess(data.accessToken);
+    redirectAfterLogin(data.accessToken);
     if (formData.email) {
       localStorage.setItem("remembered_email", formData.email);
     }
+
     setShowFaceModal(false);
   };
 

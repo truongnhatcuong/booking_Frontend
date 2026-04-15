@@ -139,23 +139,6 @@ export function useVoiceAssistant() {
           onEnd?.();
           isSpeakingRef.current = false;
           commandBufferRef.current = "";
-          restartMic(); // ← thay hết, bỏ setTimeout ở đây
-          setTimeout(() => {
-            if (
-              (stateRef.current === "listening_wake" ||
-                stateRef.current === "listening_command") &&
-              !isListeningRef.current
-            ) {
-              try {
-                isListeningRef.current = true;
-                recognitionRef.current?.start();
-                console.log("🔄 Mic restarted after speak");
-              } catch (e) {
-                isListeningRef.current = false;
-                console.error("Restart error:", e);
-              }
-            }
-          }, 300);
         };
 
         audio.onerror = () => {
@@ -199,10 +182,9 @@ export function useVoiceAssistant() {
       try {
         const prompt = generateVoicePrompt(cleanCommand);
 
-        const res = await axiosInstance.post(
-          `${URL_API}/api/chatai/voice/parse`,
-          { prompt },
-        );
+        const res = await axiosInstance.post(`/api/chatai/voice/parse`, {
+          prompt,
+        });
 
         const data = res.data;
 
@@ -443,25 +425,9 @@ export function useVoiceAssistant() {
     recognition.onend = () => {
       isListeningRef.current = false;
       console.log("🔴 Mic ended, state:", stateRef.current);
-      restartMic(); // ← thay hết
-      if (
-        stateRef.current === "listening_wake" ||
-        stateRef.current === "listening_command"
-      ) {
-        setTimeout(() => {
-          if (recognitionRef.current && !isListeningRef.current) {
-            try {
-              isListeningRef.current = true; // ← set true TRƯỚC khi start
 
-              recognitionRef?.current?.start();
-              console.log("🔄 Mic restarted");
-            } catch (e) {
-              isListeningRef.current = false; // ← reset nếu start fail
-              console.error("Restart error:", e);
-            }
-          }
-        }, 500);
-      }
+      // ✅ Chỉ dùng restartMic, xóa setTimeout bên dưới
+      restartMic();
     };
 
     recognition.onerror = (e: any) => {

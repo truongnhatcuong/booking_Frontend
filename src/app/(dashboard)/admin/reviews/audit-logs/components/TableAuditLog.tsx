@@ -1,13 +1,15 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import React from "react";
 import moment from "moment";
+import {
+  BedDouble,
+  BedSingle,
+  LogIn,
+  LogOut,
+  CreditCard,
+  XCircle,
+  Activity,
+} from "lucide-react";
+
 export interface AuditLog {
   id: string;
   action: string;
@@ -25,45 +27,113 @@ interface IAuditLogProps {
   auditLogs: AuditLog[];
 }
 
+type ActionConfig = {
+  icon: React.ElementType;
+  iconColor: string;
+  bgColor: string;
+  label: string;
+};
+
+const ACTION_CONFIG: Record<string, ActionConfig> = {
+  CREATE_BOOKING: {
+    icon: BedDouble,
+    iconColor: "text-blue-600",
+    bgColor: "bg-blue-50",
+    label: "Đặt phòng mới",
+  },
+  CANCEL_BOOKING: {
+    icon: XCircle,
+    iconColor: "text-red-500",
+    bgColor: "bg-red-50",
+    label: "Huỷ đặt phòng",
+  },
+  CHECK_IN: {
+    icon: LogIn,
+    iconColor: "text-green-600",
+    bgColor: "bg-green-50",
+    label: "Nhận phòng",
+  },
+  CHECK_OUT: {
+    icon: LogOut,
+    iconColor: "text-orange-500",
+    bgColor: "bg-orange-50",
+    label: "Trả phòng",
+  },
+  PAYMENT_SUCCESS: {
+    icon: CreditCard,
+    iconColor: "text-purple-600",
+    bgColor: "bg-purple-50",
+    label: "Thanh toán thành công",
+  },
+};
+
+const getActionConfig = (action: string): ActionConfig =>
+  ACTION_CONFIG[action] ?? {
+    icon: Activity,
+    iconColor: "text-gray-500",
+    bgColor: "bg-gray-100",
+    label: action,
+  };
+
 const TableAuditLog = ({ auditLogs }: IAuditLogProps) => {
-  return (
-    <div className=" bg-white border rounded-xl ">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Hành Động</TableHead>
-              <TableHead>Đối Tượng</TableHead>
-              <TableHead>Người Dùng</TableHead>
-              <TableHead>Chi Tiết</TableHead>
-              <TableHead>Thời Gian</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {
-              auditLogs && auditLogs.length > 0 ? (
-                auditLogs.map((log) => (
-                  <TableRow key={log.id}>
-                    <TableCell className="font-medium">{log.action}</TableCell>
-                    <TableCell>{log.userType || "Hệ thống"}</TableCell>
-                    <TableCell>
-                      {log.firstName + " " + log.lastName || "Hệ thống"}
-                    </TableCell>
-                    <TableCell>{log.details || "-"}</TableCell>
-                    <TableCell>{moment(log.createdAt).fromNow()}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-7">
-                    Hôm Nay Chưa Có Hoạt Động Nào
-                  </TableCell>
-                </TableRow>
-              ) // ✅ dùng null nếu không render gì
-            }
-          </TableBody>
-        </Table>
+  if (!auditLogs || auditLogs.length === 0) {
+    return (
+      <div className="bg-white border rounded-xl p-10 text-center text-gray-400 text-sm">
+        Hôm nay chưa có hoạt động nào
       </div>
+    );
+  }
+
+  return (
+    <div className="bg-white border rounded-xl divide-y divide-gray-100">
+      {auditLogs.map((log) => {
+        const {
+          icon: Icon,
+          iconColor,
+          bgColor,
+          label,
+        } = getActionConfig(log.action);
+        const fullName =
+          `${log.firstName} ${log.lastName}`.trim() || "Hệ thống";
+
+        return (
+          <div
+            key={log.id}
+            className="flex items-start gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
+          >
+            {/* Icon */}
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${bgColor}`}
+            >
+              <Icon className={`w-4 h-4 ${iconColor}`} />
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-900">{label}</p>
+              {log.details && (
+                <p className="text-sm text-gray-600 mt-0.5 line-clamp-2">
+                  {log.details}
+                </p>
+              )}
+              <p className="text-xs text-gray-400 mt-1">
+                {moment(log.createdAt).format("HH:mm - DD/MM/YYYY")}
+              </p>
+            </div>
+
+            {/* User type badge */}
+            {log.userType && (
+              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-500 flex-shrink-0 self-start mt-0.5">
+                {log.userType === "Customer"
+                  ? "Khách"
+                  : log.userType === "Employee"
+                    ? "Nhân viên"
+                    : "Hệ thống"}
+              </span>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };

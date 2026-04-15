@@ -55,7 +55,7 @@ Người dùng nói: "${command}"
 Yêu cầu:
 - Trả về JSON hợp lệ (KHÔNG markdown, KHÔNG text thừa)
 - Nếu là điều hướng → answer = null
-- Nếu là hotel_info → trả lời NGẮN GỌN (1-2 câu)
+- Nếu là hotel_info → trả lời đầy đủ 
 
 Format:
 {

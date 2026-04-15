@@ -2,7 +2,7 @@
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
 import Link from "next/link";
-import { Users, Star, ArrowRight } from "lucide-react";
+import { Users, ArrowRight, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ShowCurrentPrice } from "@/lib/showCurrentPrice";
 
@@ -13,7 +13,6 @@ interface Iroom {
     originalPrice: number;
     roomType: {
       maxOccupancy: number;
-
       name: string;
     };
     images: { imageUrl: string }[];
@@ -21,79 +20,81 @@ interface Iroom {
 }
 
 const RoomCard = ({ room }: Iroom) => {
-  const [price, setPrice] = useState(null);
+  const [price, setPrice] = useState<number | null>(null);
+
   useEffect(() => {
     async function fetchPrice() {
-      const res = await ShowCurrentPrice({
-        roomId: room.id,
-      });
+      const res = await ShowCurrentPrice({ roomId: room.id });
       setPrice(res.displayPrice);
     }
     fetchPrice();
   }, [room.id]);
 
   return (
-    <div className=" group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
-      <div className="relative h-40 w-full bg-linear-to-br from-blue-50 to-indigo-100 overflow-hidden">
+    <div className="group w-full bg-white rounded-2xl border border-gray-100 overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+      {/* Image */}
+      <div className="relative aspect-[3/2] overflow-hidden bg-slate-100">
         <Image
-          src={room.images[0].imageUrl || "/images/room-placeholder.jpg"}
+          src={room.images[0]?.imageUrl || "/images/room-placeholder.jpg"}
           alt={room.roomType.name}
-          width={500}
-          height={500}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          fill
+          sizes="(max-width: 768px) 100vw, 320px"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Floating badge */}
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1 transform translate-x-8 group-hover:translate-x-0 transition-transform duration-300">
-          <Star className="w-4 h-4 text-yellow-500 fill-current" />
-          <span className="text-sm font-medium text-gray-700">Premium</span>
+        {/* Badge bottom-left */}
+        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-white/90 rounded-lg px-2.5 py-1">
+          <Star className="w-3 h-3 fill-blue-600 text-blue-600" />
+          <span className="text-xs font-medium text-blue-800">Premium</span>
         </div>
       </div>
 
-      <div className="p-6">
-        <div className="mb-4">
-          <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
-            {room.roomType.name}
-          </h3>
+      {/* Body */}
+      <div className="p-5">
+        {/* Name */}
+        <h3
+          className="text-[20px] font-semibold text-gray-900 mb-2 leading-snug"
+          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+        >
+          {room.roomType.name}
+        </h3>
 
-          <div className="flex items-center gap-2 text-gray-600">
-            <Users className="w-5 h-5 text-blue-500" />
-            <span className="font-medium">Sức chứa:</span>
-            <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-sm font-semibold">
-              {room.roomType.maxOccupancy} người
-            </span>
-          </div>
+        {/* Occupancy */}
+        <div className="flex items-center gap-1.5 text-[13px] text-gray-500 mb-5">
+          <Users className="w-3.5 h-3.5 text-gray-400" />
+          Tối đa
+          <span className="bg-blue-50 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
+            {room.roomType.maxOccupancy} người
+          </span>
         </div>
 
-        <div className="mb-6 py-2 px-3 bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-700 font-medium">Giá từ:</span>
-            <div className="text-right">
-              <span className="text-xl font-bold text-blue-600 block">
-                {formatPrice(Number(price))}
+        {/* Price + CTA */}
+        <div className="flex items-end justify-between pt-4 border-t border-gray-100">
+          <div>
+            <p className="text-[11px] text-gray-400 mb-0.5">Giá từ</p>
+            <div className="flex items-baseline gap-1">
+              <span
+                className="text-[22px] font-semibold text-blue-700 leading-none"
+                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+              >
+                {price !== null ? formatPrice(price) : "—"}
               </span>
-              <span className="text-sm text-gray-500">VND/đêm</span>
+              <span className="text-xs text-gray-400">/đêm</span>
             </div>
           </div>
+
+          <Link
+            href={`/rooms/${room.roomTypeId}/${room.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800
+                       text-white text-[13px] font-medium
+                       px-4 py-2.5 rounded-[10px] transition-colors"
+          >
+            Đặt ngay
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          </Link>
         </div>
-
-        <Link
-          href={`/rooms/${room.roomTypeId}/${room.id}`}
-          className="group/btn relative block w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
-        >
-          <span className="flex items-center justify-center gap-2">
-            Đặt phòng ngay
-            <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
-          </span>
-
-          {/* Animated background effect */}
-          <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 rounded-xl" />
-        </Link>
       </div>
-
-      <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-blue-200 transition-colors duration-300 pointer-events-none" />
     </div>
   );
 };

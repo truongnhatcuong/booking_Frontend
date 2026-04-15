@@ -358,13 +358,6 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
               </div>
 
               {/* ── DIVIDER ── */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-sm text-gray-400 font-medium">
-                  Đổi mật khẩu
-                </span>
-                <div className="flex-1 h-px bg-gray-200" />
-              </div>
             </div>
 
             {/* Notice */}

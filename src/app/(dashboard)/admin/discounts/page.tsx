@@ -1,6 +1,5 @@
 "use client";
-import { fetcher } from "@/lib/fetcher";
-import React from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
 import TableDiscount from "./components/TableDisCount";
 import CreateDiscount from "./components/CreateDisCount";
@@ -13,21 +12,33 @@ export interface IDiscount {
   validTo: string;
 }
 const Page = () => {
-  const { data, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/discount/getAll`,
-    fetcher,
+  const { data, isLoading } = useSWR(`/api/discount/getAll`);
+  const [statusFilter, setStatusFilter] = useState<"" | "EXPIRED" | "ACTIVE">(
+    "",
   );
 
-  if (isLoading) {
-    return <div>Dữ Liệu Đang Cập Nhật</div>;
-  }
   return (
-    <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
-      <div className="flex justify-end mb-4 ">
-        {" "}
+    <div className=" py-3  rounded-2xl bg-white">
+      <div className="flex mx-4 justify-between mb-4 ">
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as any)}
+          className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm shadow-sm 
+             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+             hover:border-gray-400 transition-all"
+        >
+          <option value="">Tất cả</option>
+          <option value="ACTIVE">Còn hạn</option>
+          <option value="EXPIRED">Hết hạn</option>
+        </select>
         <CreateDiscount />
       </div>
-      <TableDiscount discounts={data?.allDisCode} />
+      <TableDiscount
+        discounts={data?.allDisCode}
+        isLoading={isLoading}
+        setStatusFilter={setStatusFilter}
+        statusFilter={statusFilter}
+      />
     </div>
   );
 };
