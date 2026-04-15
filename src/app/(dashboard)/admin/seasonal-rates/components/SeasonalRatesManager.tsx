@@ -74,7 +74,7 @@ export function SeasonalRatesManager({
                       {formatPrice(rate.room.originalPrice)}
                     </TableCell>
                     <TableCell className="font-semibold text-primary">
-                      {formatPrice(rate.room.currentPrice)}
+                      {formatPrice(rate.room.originalPrice * rate.multiplier)}
                     </TableCell>
                     <TableCell>
                       <button className="inline-flex items-center gap-1">
@@ -84,11 +84,7 @@ export function SeasonalRatesManager({
                             Hoạt Động
                           </Badge>
                         ) : (
-                          <Badge
-                            variant="outline"
-                            className="text-muted-foreground"
-                          >
-                            <X className="w-3 h-3 mr-1" />
+                          <Badge variant="destructive" className=" text-white">
                             Không Hoạt Động
                           </Badge>
                         )}

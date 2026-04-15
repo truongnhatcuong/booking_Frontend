@@ -9,7 +9,6 @@ async function fetchHighlights() {
   try {
     const res = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`,
-      { next: { revalidate: 3600 }, cache: "force-cache" },
     );
     const data = await res.json();
     return data.values.map((row: string[]) => ({

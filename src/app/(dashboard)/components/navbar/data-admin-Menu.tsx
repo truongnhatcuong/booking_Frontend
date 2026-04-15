@@ -170,7 +170,7 @@ export const adminMenu: IListItemAdmin[] = [
       {
         id: 901,
         link: "/admin/seasonal-rates",
-        title: "Danh sách giá theo mùa",
+        title: "Danh sách giá mùa",
         icon: CalendarRange,
       },
       {

@@ -13,13 +13,13 @@ const RoomRelative = ({
   RoomTypeId: string;
   currentRoomId: string;
 }) => {
-  const { data } = useSWR<RoomCustomer[]>(`${URL_API}/api/room/customer`);
+  const { data } = useSWR<RoomCustomer[]>(`/api/room/customer`);
 
   // Filter rooms with same roomTypeId but different id
   const relatedRooms = useMemo(() => {
     if (!data) return [];
     return data.filter(
-      (room) => room.roomTypeId === RoomTypeId && room.id !== currentRoomId
+      (room) => room.roomTypeId === RoomTypeId && room.id !== currentRoomId,
     );
   }, [data, RoomTypeId, currentRoomId]);
   if (!data) return <div>Đang tải dữ liệu...</div>;
@@ -31,19 +31,17 @@ const RoomRelative = ({
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 2xl:gap-3">
-          {relatedRooms && relatedRooms.length > 0 ? (
-            relatedRooms.slice(0, 4).map((room, index) => (
-              <div
-                className="animate-fade-in-up"
-                style={{ animationDelay: `${index * 200}ms` }}
-                key={`related-${room.id}`}
-              >
-                <ListRoom roomtype={room} />
-              </div>
-            ))
-          ) : (
-            <div className="">Không có phòng liên quan</div>
-          )}
+          {relatedRooms && relatedRooms.length > 0
+            ? relatedRooms.slice(0, 4).map((room, index) => (
+                <div
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 200}ms` }}
+                  key={`related-${room.id}`}
+                >
+                  <ListRoom roomtype={room} />
+                </div>
+              ))
+            : null}
         </div>
       </div>
     </>

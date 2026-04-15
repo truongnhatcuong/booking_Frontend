@@ -9,7 +9,7 @@ async function fetchBannerImages(): Promise<string[]> {
   try {
     const res = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`,
-      { next: { revalidate: 3600 } }, // cache 1 tiếng, dùng 0 nếu muốn luôn mới
+      { next: { revalidate: 60 } }, // cache 1 tiếng, dùng 0 nếu muốn luôn mới
     );
     const data = await res.json();
     return data.values?.[0] ?? [];

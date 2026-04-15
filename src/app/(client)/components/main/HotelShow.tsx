@@ -69,7 +69,7 @@ const HotelShow = () => {
   const currentTab = tabData[hotel];
 
   return (
-    <div className=" bg-linear-to-br from-slate-50 to-slate-100 p-4 mt-8  lg:mt-10">
+    <div className=" bg-linear-to-br from-slate-50 to-slate-100 py-4 md:py-8 ">
       <div className="flex flex-col lg:flex-row gap-5  justify-center space-x-2 mb-8  lg:max-w-6xl mx-auto">
         {(Object.keys(tabData) as TabType[]).map((tabKey) => {
           const tab = tabData[tabKey];
@@ -98,8 +98,8 @@ const HotelShow = () => {
                   {tabKey === "hotel"
                     ? "Khách Sạn"
                     : tabKey === "meeting"
-                    ? "Phòng Họp"
-                    : "Làm Đẹp"}
+                      ? "Phòng Họp"
+                      : "Làm Đẹp"}
                 </span>
               </div>
               {isActive && (

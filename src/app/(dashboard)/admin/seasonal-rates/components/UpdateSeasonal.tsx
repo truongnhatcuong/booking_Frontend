@@ -49,6 +49,7 @@ interface SeasonalRateForm {
   endDate: Date | null;
   seasonName: string;
   multiplier: number;
+  isActive?: boolean;
 }
 
 export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
@@ -59,6 +60,7 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
     endDate: null,
     seasonName: "",
     multiplier: 0,
+    isActive: false,
   });
 
   // Check status
@@ -78,6 +80,7 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
         endDate: new Date(rate.endDate) || null,
         seasonName: rate.seasonName,
         multiplier: rate.multiplier,
+        isActive: rate.isActive,
       });
     }
   }, [open, rate]);
@@ -87,6 +90,12 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+  const handleBooleanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      isActive: e.target.value === "true",
     }));
   };
 
@@ -119,13 +128,15 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
         endDate: formData.endDate,
         seasonName: formData.seasonName,
         multiplier: multiplierNum,
+        isActive: formData.isActive,
       });
       toast.dismiss(loadingToast);
-      const data = await response.status;
+      const data = response.status;
+
       if (data === 200) {
         Mutate(`${URL_API}/api/seasonal`);
         toast.success(
-          `Đã cập nhật seasonal rate ${formData.seasonName} cho Phong${rate.room.roomNumber}`
+          `Đã cập nhật seasonal rate ${formData.seasonName} cho Phong${rate.room.roomNumber}`,
         );
 
         setOpen(false);
@@ -134,7 +145,7 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
       toast.dismiss(loadingToast);
       console.log(
         "llai error update seasonal rate:",
-        error.response.data.message
+        error.response.data.message,
       );
 
       toast.error(error.message);
@@ -142,6 +153,8 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
       setIsUpdating(false);
     }
   };
+
+  console.log("formdata", formData);
 
   const calculateNewPrice = () => {
     const original = rate.room.originalPrice;
@@ -213,10 +226,10 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
               <span className="text-gray-600">Trạng thái:</span>
               <p className="font-bold text-purple-600">
                 {rate.isActive
-                  ? "🟢 Active"
+                  ? "🟢 Hoạt Động"
                   : isUpcoming
-                  ? "🟡 Upcoming"
-                  : "🔴 Expired"}
+                    ? "🟡 Sắp diễn ra"
+                    : "🔴 Hết hạn"}
               </p>
             </div>
           </div>
@@ -325,6 +338,18 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
                 )}
             </div>
           </div>
+          <div>
+            <select
+              onChange={handleBooleanChange}
+              name="isActive"
+              value={formData.isActive ? "true" : "false"}
+              className="w-full text-center px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm shadow-sm
+               focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="true">Đang hoạt động</option>
+              <option value="false"> tắt hoạt động</option>
+            </select>
+          </div>
 
           {/* Price comparison */}
           {formData.multiplier !== rate.multiplier && (
@@ -359,7 +384,7 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
                       {Math.abs(
                         ((calculateNewPrice() - calculateOldPrice()) /
                           calculateOldPrice()) *
-                          100
+                          100,
                       ).toFixed(1)}
                       %)
                     </span>

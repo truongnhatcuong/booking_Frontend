@@ -39,7 +39,7 @@ const AdminHeader = () => {
       <div className="mx-6">
         <AdminNotifications />
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ">
         <div>
           <p className="text-base font-bold">
             {user?.firstName} {user?.lastName}
@@ -60,14 +60,14 @@ const AdminHeader = () => {
               </div>
             </div>
           </div>
+
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
             <li>
               <Link href={"/admin/profile"} className="justify-between">
-                Thông Tin Cá Nhân
-                <span className="badge">New</span>
+                Thông Tin Tài Khoản
               </Link>
             </li>
             {storedUser?.role === "Quản Lý" && (
@@ -79,6 +79,9 @@ const AdminHeader = () => {
                   target="_blank"
                 >
                   Quản Lý Dữ Liệu
+                  <span className="badge bg-red-600 text-white px-2 py-3">
+                    New
+                  </span>
                 </Link>
               </li>
             )}

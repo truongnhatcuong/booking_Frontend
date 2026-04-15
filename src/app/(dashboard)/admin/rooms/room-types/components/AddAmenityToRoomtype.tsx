@@ -32,18 +32,18 @@ const AddAmenityToRoomtype = ({
       setSelectedAmenities((prev) => [...prev, value]);
     } else {
       setSelectedAmenities((prev) =>
-        prev.filter((amenityId) => amenityId !== value)
+        prev.filter((amenityId) => amenityId !== value),
       );
     }
   };
-  const { data } = useSWR(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
+  const { data } = useSWR(`/api/amenity`);
   useEffect(() => {
     if (data) {
       setAmenity(data.amenity);
     }
   }, [data]);
   const filteredAmenities = (amenity || []).filter(
-    (item) => !roomTypeAmenities?.includes(item.id)
+    (item) => !roomTypeAmenities?.includes(item.id),
   );
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const AddAmenityToRoomtype = ({
         `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype/${roomTypeId}/amenities`,
         {
           amenityIds: selectedAmenities,
-        }
+        },
       );
       if (res.data) {
         toast.success("Thêm tiện nghi thành công!");
@@ -91,7 +91,7 @@ const AddAmenityToRoomtype = ({
               />
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {filteredAmenities.map((item) => (
                 <div key={item.id} className="flex items-center gap-2">
                   <Input

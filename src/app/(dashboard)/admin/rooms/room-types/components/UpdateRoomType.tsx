@@ -39,7 +39,7 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -76,7 +76,7 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype/${roomTypes.id}`,
-        formData
+        formData,
       );
       if (res.data) {
         toast.success("Cập nhật loại phòng thành công!");
@@ -85,7 +85,7 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
       }
     } catch (error: any) {
       toast.error(
-        error.response.data.message || "Cập nhật loại phòng thất bại!"
+        error.response.data.message || "Cập nhật loại phòng thất bại!",
       );
       console.log(error);
     }
@@ -170,12 +170,12 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
                       height={400}
                       src={image || "/placeholder.svg"}
                       alt="Uploaded"
-                      className="w-128 h-auto  object-cover rounded-lg shadow-md"
+                      className="w-lg h-auto  object-cover rounded-lg shadow-md"
                     />
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-0 right-3 cursor-pointer bg-white text-red-500 hover:text-red-600 shadow-md"
+                      className="absolute top-0 right-3 cursor-pointer text-red-500 hover:text-red-600 shadow-md"
                       onClick={() => {
                         setImage(null);
                       }}
@@ -201,7 +201,7 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
                       onUploadError={(error) => {
                         toast.error(
                           `Upload failed. ${error.message}` ||
-                            "Tải lên không thành công!"
+                            "Tải lên không thành công!",
                         );
                       }}
                       content={{
@@ -233,15 +233,15 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
                     />
                   </div>
                   <div className="border rounded-lg p-4 max-h-[200px] overflow-y-auto">
-                    <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
                       {roomTypes.amenities.map((amenity) => (
                         <div
                           key={amenity.amenity.id}
-                          className="flex items-center space-x-2"
+                          className="flex items-center justify-between gap-2 bg-gray-50 rounded-md px-3 py-1.5"
                         >
-                          <div className="text-sm text-gray-700">
-                            - {amenity.amenity.name}
-                          </div>
+                          <span className="text-sm text-gray-700 truncate">
+                            {amenity.amenity.name}
+                          </span>
                           <DeleteAmenityToRoomtype
                             amenityId={amenity.amenity.id}
                             roomTypeId={roomTypes.id}

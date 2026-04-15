@@ -24,7 +24,7 @@ const ImageToRoom = ({ rooms }: RoomProps) => {
       return;
     }
     const confirm = MySwal.fire({
-      title: "Bạn có muốn xóa tiện nghi này không ?",
+      title: "Bạn có muốn xóa hình ảnh này không ?",
       showCancelButton: true,
       confirmButtonText: "Có",
       cancelButtonText: "Không",
@@ -34,7 +34,7 @@ const ImageToRoom = ({ rooms }: RoomProps) => {
     if ((await confirm).isConfirmed) {
       try {
         const res = await axios.delete(
-          `${process.env.NEXT_PUBLIC_URL_API}/api/room/images/${id}`
+          `${process.env.NEXT_PUBLIC_URL_API}/api/room/images/${id}`,
         );
 
         if (res.data) {
@@ -43,6 +43,7 @@ const ImageToRoom = ({ rooms }: RoomProps) => {
         }
       } catch (error) {
         console.error("Error deleting image:", error);
+        toast.error("Xóa hình ảnh thất bại!");
       }
     }
   };

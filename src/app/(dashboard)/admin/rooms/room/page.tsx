@@ -21,11 +21,9 @@ const Page = () => {
 
   selectedRoomTypes.forEach((item) => params.append("roomType", item));
   const { data: dataRoom } = useSWR(
-    `${URL_API}/api/room?search=${search}&limit=${limit}&page=${page}&${params.toString()}&status=${selectedStatuses}`,
+    `/api/room?search=${search}&limit=${limit}&page=${page}&${params.toString()}&status=${selectedStatuses}`,
   );
-  const { data: DataTypeRoom } = useSWR(
-    `${URL_API}/api/roomtype?page=1&limit=9999`,
-  );
+  const { data: DataTypeRoom } = useSWR(`/api/roomtype?page=1&limit=9999`);
 
   const totalPages: number = dataRoom?.room.pagination?.totalPages || 1;
 
