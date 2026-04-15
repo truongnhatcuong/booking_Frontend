@@ -111,7 +111,7 @@ const TableListBooking = ({
             booking?.map((booking) => (
               <TableRow key={booking.id}>
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 *:flex items-center gap-2">
-                  #{booking.id.replace(/-/g, "").slice(0, 8)}
+                  #{booking.id.replace(/-/g, "").slice(0, 8).toUpperCase()}
                 </TableCell>
                 <TableCell className="px-6 py-4 whitespace-nowrap ">
                   <p>
@@ -132,7 +132,7 @@ const TableListBooking = ({
                   ))}
                 </TableCell>
 
-                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex items-center gap-20 ">
+                <TableCell className="px-6 py-7 whitespace-nowrap text-sm text-gray-900 flex items-center gap-20  justify-center">
                   <p className="text-right ">
                     {" "}
                     {formatDate(booking.checkInDate)}

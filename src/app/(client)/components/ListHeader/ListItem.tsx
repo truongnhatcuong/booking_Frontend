@@ -66,7 +66,7 @@ const ListItem = () => {
               </HoverCardTrigger>
               <HoverCardContent
                 align="center"
-                className="w-70 mt-2 p-2 bg-white shadow-lg rounded-lg border hidden md:block "
+                className="w-85 mt-2 p-2 bg-white shadow-lg rounded-lg border hidden md:block "
               >
                 {isLoading && (
                   <p className="text-gray-500 text-sm">Loading...</p>
