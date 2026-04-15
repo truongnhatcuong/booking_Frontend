@@ -10,7 +10,6 @@ interface INavBar {
 const NavBar = ({ open, setOpen }: INavBar) => {
   return (
     <>
-      {" "}
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden block  cursor-pointer"
