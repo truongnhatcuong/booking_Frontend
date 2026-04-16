@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { URL_API } from "@/lib/fetcher";
 import FaceRegisterWidget from "@/app/(client)/profile/components/FaceRegisterWidget";
 import toast from "react-hot-toast";
+import axiosInstance from "@/lib/axios";
 
 // Format date function with proper typing
 
@@ -42,10 +43,9 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
   // Lấy trạng thái khuôn mặt
   useEffect(() => {
     if (!token) return;
-    fetch(`${URL_API}/api/auth/face-descriptor/status`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.json())
+    axiosInstance
+      .get(`/api/auth/face-descriptor/status`)
+      .then((r) => r.data)
       .then((d) => setHasFace(d.hasFace))
       .catch(() => setHasFace(false))
       .finally(() => setFaceLoading(false));
@@ -53,16 +53,15 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
   const handleDeleteFace = async () => {
     if (!confirm("Bạn có chắc muốn xóa khuôn mặt đã đăng ký?")) return;
+
     try {
-      const res = await fetch(`${URL_API}/api/auth/face-descriptor`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
+      const res = await axiosInstance.delete(`/api/auth/face-descriptor`);
+
+      if (res.status === 200) {
         setHasFace(false);
         toast.success("Đã xóa khuôn mặt");
       }
-    } catch {
+    } catch (err) {
       toast.error("Xóa thất bại");
     }
   };
@@ -320,7 +319,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
                 </div>
 
                 {/* Action */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   {faceLoading ? null : hasFace ? (
                     <div className="flex gap-2">
                       <button
@@ -428,7 +427,6 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
 
       {showFaceModal && token && (
         <FaceRegisterWidget
-          token={token}
           isUpdate={!!hasFace}
           onSuccess={() => {
             setHasFace(true);

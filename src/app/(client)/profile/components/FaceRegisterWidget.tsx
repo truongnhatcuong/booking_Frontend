@@ -1,25 +1,21 @@
 "use client";
 import { useRef, useState, useCallback, useEffect } from "react";
-import { URL_API } from "@/lib/fetcher";
 import Image from "next/image";
 import axiosInstance from "@/lib/axios";
+import { loadFaceApi } from "@/lib/faceapi-loader";
 
 interface FaceRegisterWidgetProps {
-  token: string;
   isUpdate: boolean;
   onSuccess: () => void;
   onClose: () => void;
 }
 
 export default function FaceRegisterWidget({
-  token,
   isUpdate,
   onSuccess,
   onClose,
 }: FaceRegisterWidgetProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  // Thêm state
-  const [snapshotUrl, setSnapshotUrl] = useState<string>("");
   const streamRef = useRef<MediaStream | null>(null);
   const faceapiRef = useRef<any>(null);
 
@@ -28,10 +24,14 @@ export default function FaceRegisterWidget({
   >("idle");
   const [message, setMessage] = useState("");
   const [videoReady, setVideoReady] = useState(false);
+  const [snapshotUrl, setSnapshotUrl] = useState<string>("");
   const [pendingDescriptor, setPendingDescriptor] = useState<number[] | null>(
     null,
   );
 
+  // ─────────────────────────────────────────────
+  // Camera helpers
+  // ─────────────────────────────────────────────
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
@@ -43,14 +43,8 @@ export default function FaceRegisterWidget({
       setStep("loading");
       setMessage("Đang tải mô hình nhận diện...");
 
-      const faceapi = await import("face-api.js");
-      faceapiRef.current = faceapi;
-
-      await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-        faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-        faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-      ]);
+      // 🔥 FIX 1: Dùng shared cache — lần 2+ gần như instant
+      faceapiRef.current = await loadFaceApi();
 
       setMessage("Đang mở camera...");
 
@@ -64,7 +58,6 @@ export default function FaceRegisterWidget({
       });
       streamRef.current = stream;
 
-      // Set step trước để React render video element
       setStep("scanning");
       setMessage("Nhìn thẳng vào camera rồi nhấn Chụp");
 
@@ -86,6 +79,9 @@ export default function FaceRegisterWidget({
     }
   }, []);
 
+  // ─────────────────────────────────────────────
+  // Capture
+  // ─────────────────────────────────────────────
   const handleCapture = useCallback(async () => {
     const faceapi = faceapiRef.current;
     const video = videoRef.current;
@@ -106,37 +102,37 @@ export default function FaceRegisterWidget({
       return;
     }
 
-    // Chụp snapshot
-    const snap = snapshotUrl ? null : document.createElement("canvas"); // Nếu đã có snapshot thì không tạo lại canvas
-    if (snap) {
-      snap.width = video.videoWidth || 640;
-      snap.height = video.videoHeight || 480;
-      const ctx = snap.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(video, 0, 0);
+    // ✅ FIX 2: Luôn tạo canvas mới — không check snapshotUrl cũ
+    const snap = document.createElement("canvas");
+    snap.width = video.videoWidth || 640;
+    snap.height = video.videoHeight || 480;
+    const ctx = snap.getContext("2d");
 
-        // Corner brackets
-        const { x, y, width, height } = detection.detection.box;
-        const len = Math.min(width, height) * 0.2;
-        ctx.strokeStyle = "#22c55e";
-        ctx.lineWidth = 3;
-        ctx.lineCap = "round";
-        const corners: [number, number, number, number][] = [
-          [x, y, 1, 1],
-          [x + width, y, -1, 1],
-          [x, y + height, 1, -1],
-          [x + width, y + height, -1, -1],
-        ];
-        corners.forEach(([bx, by, dx, dy]) => {
-          ctx.beginPath();
-          ctx.moveTo(bx, by + dy * len);
-          ctx.lineTo(bx, by);
-          ctx.lineTo(bx + dx * len, by);
-          ctx.stroke();
-        });
-        const url = snap.toDataURL("image/jpeg");
-        setSnapshotUrl(url); // ← thêm dòng này
-      }
+    if (ctx) {
+      ctx.drawImage(video, 0, 0);
+
+      // Vẽ corner brackets
+      const { x, y, width, height } = detection.detection.box;
+      const len = Math.min(width, height) * 0.2;
+      ctx.strokeStyle = "#22c55e";
+      ctx.lineWidth = 3;
+      ctx.lineCap = "round";
+
+      const corners: [number, number, number, number][] = [
+        [x, y, 1, 1],
+        [x + width, y, -1, 1],
+        [x, y + height, 1, -1],
+        [x + width, y + height, -1, -1],
+      ];
+      corners.forEach(([bx, by, dx, dy]) => {
+        ctx.beginPath();
+        ctx.moveTo(bx, by + dy * len);
+        ctx.lineTo(bx, by);
+        ctx.lineTo(bx + dx * len, by);
+        ctx.stroke();
+      });
+
+      setSnapshotUrl(snap.toDataURL("image/jpeg"));
     }
 
     stopCamera();
@@ -145,40 +141,49 @@ export default function FaceRegisterWidget({
     setMessage("Khuôn mặt đã được nhận diện. Xác nhận để lưu?");
   }, [videoReady, stopCamera]);
 
+  // ─────────────────────────────────────────────
+  // Confirm save
+  // ─────────────────────────────────────────────
   const handleConfirm = useCallback(async () => {
     if (!pendingDescriptor) return;
+
     try {
       setStep("saving");
       setMessage("Đang lưu khuôn mặt...");
 
-      const res = await axiosInstance.put(`/api/auth/face-descriptor`, {
+      // ✅ FIX 3: Axios tự throw nếu status >= 400
+      // Không cần check !res.data (luôn truthy nếu không throw)
+      await axiosInstance.put(`/api/auth/face-descriptor`, {
         descriptor: pendingDescriptor,
       });
-
-      if (!res.data) throw new Error(res.data.message);
 
       setStep("done");
       setMessage("Khuôn mặt đã được lưu thành công!");
       setTimeout(() => onSuccess(), 1500);
     } catch (err: any) {
       setStep("error");
-      console.error(
-        "Lỗi khi cập nhật:",
-        err.response?.data?.message || err.message,
+      setMessage(
+        err.response?.data?.message || err.message || "Lưu thất bại, thử lại",
       );
     }
-  }, [pendingDescriptor, token, onSuccess]);
+  }, [pendingDescriptor, onSuccess]);
 
+  // ─────────────────────────────────────────────
+  // Retake / Reset
+  // ─────────────────────────────────────────────
   const handleRetake = useCallback(() => {
     setPendingDescriptor(null);
-    setSnapshotUrl(""); // ← thêm
-
+    setSnapshotUrl("");
     setStep("idle");
     setMessage("");
   }, []);
 
+  // Cleanup khi unmount
   useEffect(() => () => stopCamera(), [stopCamera]);
 
+  // ─────────────────────────────────────────────
+  // Render
+  // ─────────────────────────────────────────────
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -231,7 +236,7 @@ export default function FaceRegisterWidget({
         </div>
 
         <div className="p-6 flex flex-col items-center gap-5">
-          {/* Step: idle */}
+          {/* ── Step: idle ── */}
           {step === "idle" && (
             <div className="flex flex-col items-center gap-4 py-4 w-full">
               <div
@@ -308,7 +313,7 @@ export default function FaceRegisterWidget({
             </div>
           )}
 
-          {/* Step: loading */}
+          {/* ── Step: loading ── */}
           {step === "loading" && (
             <div className="flex flex-col items-center gap-4 py-8">
               <div className="relative w-14 h-14">
@@ -333,7 +338,7 @@ export default function FaceRegisterWidget({
             </div>
           )}
 
-          {/* Video — luôn render khi scanning */}
+          {/* ── Video (luôn render khi scanning) ── */}
           <div
             className="relative rounded-xl overflow-hidden w-full"
             style={{
@@ -351,7 +356,6 @@ export default function FaceRegisterWidget({
               autoPlay
             />
 
-            {/* Oval guide */}
             {videoReady && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div
@@ -366,7 +370,6 @@ export default function FaceRegisterWidget({
               </div>
             )}
 
-            {/* Spinner chờ video */}
             {!videoReady && (
               <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80">
                 <div
@@ -379,7 +382,6 @@ export default function FaceRegisterWidget({
               </div>
             )}
 
-            {/* LIVE */}
             <div
               className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-md text-xs z-10"
               style={{ background: "rgba(0,0,0,0.6)", color: "#9ca3af" }}
@@ -392,7 +394,7 @@ export default function FaceRegisterWidget({
             </div>
           </div>
 
-          {/* Buttons khi scanning */}
+          {/* ── Buttons khi scanning ── */}
           {step === "scanning" && (
             <div className="flex gap-2 w-full">
               <button
@@ -422,28 +424,26 @@ export default function FaceRegisterWidget({
             </div>
           )}
 
-          {/* Message khi scanning */}
           {step === "scanning" && message && (
             <p className="text-xs text-center" style={{ color: "#94a3b8" }}>
               {message}
             </p>
           )}
 
-          {/* Step: confirm — hiển thị snapshot */}
+          {/* ── Step: confirm ── */}
           {step === "confirm" && (
             <div className="flex flex-col items-center gap-4 w-full">
               <div
                 className="relative rounded-xl overflow-hidden w-full"
                 style={{ aspectRatio: "4/3" }}
               >
-                {/* Dùng img tag lấy dataURL từ canvas thay vì render canvas trực tiếp */}
                 {snapshotUrl && (
                   <Image
                     src={snapshotUrl}
                     className="w-full h-full object-cover"
                     alt="snapshot"
-                    width={300}
-                    height={300}
+                    width={640}
+                    height={480}
                   />
                 )}
                 <div
@@ -487,7 +487,7 @@ export default function FaceRegisterWidget({
             </div>
           )}
 
-          {/* Step: saving */}
+          {/* ── Step: saving ── */}
           {step === "saving" && (
             <div className="flex flex-col items-center gap-3 py-6">
               <div
@@ -503,7 +503,7 @@ export default function FaceRegisterWidget({
             </div>
           )}
 
-          {/* Step: done */}
+          {/* ── Step: done ── */}
           {step === "done" && (
             <div className="flex flex-col items-center gap-3 py-6">
               <div
@@ -531,7 +531,7 @@ export default function FaceRegisterWidget({
             </div>
           )}
 
-          {/* Step: error */}
+          {/* ── Step: error ── */}
           {step === "error" && (
             <div className="flex flex-col items-center gap-4 py-4 w-full">
               <div

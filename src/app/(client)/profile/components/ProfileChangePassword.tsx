@@ -430,7 +430,6 @@ const ProfileChangePassword = () => {
       {/* Face Register Modal */}
       {showFaceModal && token && (
         <FaceRegisterWidget
-          token={token}
           isUpdate={!!hasFace}
           onSuccess={() => {
             setHasFace(true);

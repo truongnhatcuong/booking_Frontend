@@ -10,9 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Mutate from "@/hook/Mutate";
-import { URL_API } from "@/lib/fetcher";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,6 +17,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
 import dynamic from "next/dynamic";
+import axiosInstance from "@/lib/axios";
 
 // Lazy load FaceCapture tránh SSR issue
 const FaceCapture = dynamic(() => import("./components/Facecapture"), {
@@ -52,7 +50,7 @@ export default function SignUpForm() {
   const [faceDescriptor, setFaceDescriptor] = useState<number[] | null>(null);
 
   const { data: dataProvide } = useSWR<IProvide[]>(
-    `https://provinces.open-api.vn/api/v1/p`,
+    `https://provinces.open-api.vn/api/v2/p`,
     fetcher,
   );
 
@@ -70,12 +68,11 @@ export default function SignUpForm() {
         ...(faceDescriptor ? { faceDescriptor } : {}),
       };
 
-      const res = await axios.post(`${URL_API}/api/auth/signUp`, payload);
+      const res = await axiosInstance.post(`/api/auth/signUp`, payload);
       if (res.data) {
         if (formData.email) {
           localStorage.setItem("remembered_email", formData.email);
         }
-        Mutate(`${URL_API}/api/auth/customer`);
         toast.success(
           faceDescriptor
             ? "Đăng ký thành công! Khuôn mặt đã được lưu 🎉"
@@ -348,10 +345,7 @@ export default function SignUpForm() {
                         </SelectTrigger>
                         <SelectContent>
                           {dataProvide?.map((item) => (
-                            <SelectItem
-                              key={item.code}
-                              value={item.name.toString()}
-                            >
+                            <SelectItem key={item.code} value={item.name}>
                               {item.name}
                             </SelectItem>
                           ))}

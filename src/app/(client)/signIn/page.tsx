@@ -7,7 +7,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { URL_API } from "@/lib/fetcher";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import { useUserStore } from "@/hook/useUserStore";
@@ -61,7 +60,12 @@ export default function SignInForm() {
 
   // Redirect nếu đã login
   useEffect(() => {
-    if (localStorage.getItem("token")) router.push("/");
+    if (user)
+      router.push(
+        user.userType === "ADMIN" || user.userType === "EMPLOYEE"
+          ? "/admin"
+          : "/",
+      );
   }, []);
 
   const redirectAfterLogin = (token: string) => {
