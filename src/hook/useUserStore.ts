@@ -21,13 +21,15 @@ export const useUserStore = create<UserStore>((set) => ({
   user: null,
   login: (user) => set({ user }),
   logout: async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    try {
       await axiosInstance.get(`/api/auth/logOut`);
-      localStorage.removeItem("token");
-      window.location.href = "/logOut";
+    } catch (e) {
+      console.warn("Logout API failed, still clearing local");
     }
+
+    localStorage.removeItem("token");
     set({ user: null });
+    window.location.href = "/";
   },
   initUser: () => {
     const token = localStorage.getItem("token");

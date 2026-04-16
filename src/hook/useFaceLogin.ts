@@ -1,11 +1,54 @@
 "use client";
+import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
 import { useState, useRef, useCallback, useEffect } from "react";
 
 const MODEL_URL = "/models";
 const THRESHOLD = 0.5;
 const SCAN_INTERVAL = 300;
+const MAX_FAIL = 5;
 
+// ─────────────────────────────────────────────
+// 🔥 FIX 1: Module-level cache — chỉ load 1 lần duy nhất suốt session
+// ─────────────────────────────────────────────
+let _faceapiInstance: any = null;
+let _modelsLoaded = false;
+let _loadingPromise: Promise<any> | null = null;
+
+async function loadFaceApi() {
+  if (typeof window === "undefined") {
+    throw new Error("face-api chỉ chạy ở client");
+  }
+
+  // Đã load rồi → trả về ngay, gần như instant
+  if (_faceapiInstance && _modelsLoaded) return _faceapiInstance;
+
+  // Đang load (tránh load song song nếu gọi 2 lần cùng lúc)
+  if (_loadingPromise) return _loadingPromise;
+
+  _loadingPromise = (async () => {
+    const faceapi = await import("face-api.js");
+
+    if (!_modelsLoaded) {
+      await Promise.all([
+        faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
+        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+      ]);
+      _modelsLoaded = true;
+    }
+
+    _faceapiInstance = faceapi;
+    _loadingPromise = null;
+    return faceapi;
+  })();
+
+  return _loadingPromise;
+}
+
+// ─────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────
 export type FaceLoginStep =
   | "idle"
   | "loading"
@@ -19,33 +62,50 @@ interface UseFaceLoginProps {
   onSuccess: (data: { accessToken: string; message: string }) => void;
 }
 
+// ─────────────────────────────────────────────
+// Hook
+// ─────────────────────────────────────────────
 export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // ⚡ FIX 3: dùng setTimeout thay setInterval → tránh overlap
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isScanningRef = useRef(false); // flag để dừng loop
+
   const streamRef = useRef<MediaStream | null>(null);
   const faceapiRef = useRef<any>(null);
   const referenceDescriptorRef = useRef<Float32Array | null>(null);
   const failCountRef = useRef(0);
-  const MAX_FAIL = 5; // sau 5 lần không khớp → dừng
+
   const [step, setStep] = useState<FaceLoginStep>("idle");
   const [faceStatus, setFaceStatus] = useState<FaceStatus>("idle");
   const [message, setMessage] = useState("");
 
+  // ─────────────────────────────────────────────
+  // Camera helpers
+  // ─────────────────────────────────────────────
   const stopCamera = useCallback(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
+    isScanningRef.current = false; // ← dừng detect loop
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
   }, []);
 
   const reset = useCallback(() => {
     stopCamera();
-    failCountRef.current = 0; // ← thêm dòng này
+    failCountRef.current = 0;
     setStep("idle");
     setFaceStatus("idle");
     setMessage("");
   }, [stopCamera]);
 
+  // ─────────────────────────────────────────────
+  // Draw face box
+  // ─────────────────────────────────────────────
   const drawBox = useCallback((detection: any, color: string) => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
@@ -64,21 +124,25 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
     ctx.lineWidth = 3;
     ctx.lineCap = "round";
 
+    // Vẽ 4 góc
     ctx.beginPath();
     ctx.moveTo(x, y + len);
     ctx.lineTo(x, y);
     ctx.lineTo(x + len, y);
     ctx.stroke();
+
     ctx.beginPath();
     ctx.moveTo(x + width - len, y);
     ctx.lineTo(x + width, y);
     ctx.lineTo(x + width, y + len);
     ctx.stroke();
+
     ctx.beginPath();
     ctx.moveTo(x, y + height - len);
     ctx.lineTo(x, y + height);
     ctx.lineTo(x + len, y + height);
     ctx.stroke();
+
     ctx.beginPath();
     ctx.moveTo(x + width - len, y + height);
     ctx.lineTo(x + width, y + height);
@@ -88,91 +152,128 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
     faceapi.draw.drawFaceLandmarks(canvas, resized);
   }, []);
 
+  // ─────────────────────────────────────────────
+  // ⚡ FIX 3: Detect loop dùng recursive setTimeout
+  // ─────────────────────────────────────────────
   const startDetection = useCallback(() => {
     const faceapi = faceapiRef.current;
     const referenceDescriptor = referenceDescriptorRef.current;
     if (!faceapi || !referenceDescriptor) return;
 
-    intervalRef.current = setInterval(async () => {
+    isScanningRef.current = true;
+
+    const detect = async () => {
+      // Kiểm tra flag trước mỗi lần chạy
+      if (!isScanningRef.current) return;
+
       const video = videoRef.current;
-      if (!video || video.readyState < 2) return;
+      if (video && video.readyState >= 2) {
+        const detection = await faceapi
+          .detectSingleFace(
+            video,
+            new faceapi.SsdMobilenetv1Options({ minConfidence: 0.7 }),
+          )
+          .withFaceLandmarks()
+          .withFaceDescriptor();
 
-      const detection = await faceapi
-        .detectSingleFace(
-          video,
-          new faceapi.SsdMobilenetv1Options({ minConfidence: 0.7 }),
-        )
-        .withFaceLandmarks()
-        .withFaceDescriptor();
+        // Kiểm tra lại sau async — tránh race condition
+        if (!isScanningRef.current) return;
 
-      if (!detection) {
-        setFaceStatus("idle");
-        setMessage("Đưa khuôn mặt vào khung hình...");
-        canvasRef.current
-          ?.getContext("2d")
-          ?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        return;
-      }
-
-      const distance = faceapi.euclideanDistance(
-        detection.descriptor,
-        referenceDescriptor,
-      );
-
-      if (distance < THRESHOLD) {
-        failCountRef.current = 0; // reset khi khớp
-        drawBox(detection, "#22c55e");
-        setFaceStatus("matched");
-        setMessage("Đang xác thực...");
-        if (intervalRef.current) clearInterval(intervalRef.current);
-
-        const loginRes = await fetch(`${URL_API}/api/auth/login/face`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            email,
-            descriptor: Array.from(detection.descriptor),
-          }),
-        });
-        const loginData = await loginRes.json();
-
-        if (loginRes.ok) {
-          stopCamera();
-          setStep("success");
-          setMessage("Đăng nhập thành công!");
-          onSuccess(loginData);
+        if (!detection) {
+          setFaceStatus("idle");
+          setMessage("Đưa khuôn mặt vào khung hình...");
+          canvasRef.current
+            ?.getContext("2d")
+            ?.clearRect(
+              0,
+              0,
+              canvasRef.current.width,
+              canvasRef.current.height,
+            );
         } else {
-          setFaceStatus("failed");
-          setMessage(loginData.message || "Xác thực thất bại");
-          setTimeout(() => {
-            setFaceStatus("idle");
-            setMessage("Đưa khuôn mặt vào khung hình...");
-          }, 2000);
-        }
-      } else {
-        failCountRef.current += 1;
-
-        const remaining = MAX_FAIL - failCountRef.current;
-
-        if (failCountRef.current >= MAX_FAIL) {
-          // Hết lượt — dừng hẳn
-          if (intervalRef.current) clearInterval(intervalRef.current);
-          drawBox(detection, "#ef4444");
-          setFaceStatus("failed");
-          setStep("error");
-          setMessage(
-            "Không nhận ra khuôn mặt. Vui lòng thử lại hoặc đăng nhập bằng mật khẩu.",
+          const distance = faceapi.euclideanDistance(
+            detection.descriptor,
+            referenceDescriptor,
           );
-        } else {
-          drawBox(detection, "#ef4444");
-          setFaceStatus("detecting");
-          setMessage(`Khuôn mặt chưa khớp — còn ${remaining} lần thử`);
+
+          if (distance < THRESHOLD) {
+            // ── Matched ──────────────────────────────
+            failCountRef.current = 0;
+            isScanningRef.current = false; // dừng loop ngay
+            drawBox(detection, "#22c55e");
+            setFaceStatus("matched");
+            setMessage("Đang xác thực...");
+
+            try {
+              const loginRes = await axiosInstance.post(
+                `${URL_API}/api/auth/login/face`,
+                {
+                  email,
+                  descriptor: Array.from(detection.descriptor),
+                },
+              );
+              const loginData = loginRes.data;
+
+              if (loginData) {
+                stopCamera();
+                setStep("success");
+                setMessage("Đăng nhập thành công!");
+                onSuccess(loginData);
+              } else {
+                setFaceStatus("failed");
+                setMessage(loginData.message || "Xác thực thất bại");
+                // Cho scan lại sau 2s
+                setTimeout(() => {
+                  if (!isScanningRef.current) {
+                    setFaceStatus("idle");
+                    setMessage("Đưa khuôn mặt vào khung hình...");
+                    isScanningRef.current = true;
+                    timeoutRef.current = setTimeout(detect, SCAN_INTERVAL);
+                  }
+                }, 2000);
+                return; // không schedule lại ở cuối
+              }
+            } catch (err: any) {
+              setFaceStatus("failed");
+              setMessage(err.message || "Lỗi xác thực");
+            }
+            return; // đã dừng loop
+          } else {
+            // ── Not matched ──────────────────────────
+            failCountRef.current += 1;
+            const remaining = MAX_FAIL - failCountRef.current;
+
+            if (failCountRef.current >= MAX_FAIL) {
+              isScanningRef.current = false;
+              drawBox(detection, "#ef4444");
+              setFaceStatus("failed");
+              setStep("error");
+              setMessage(
+                "Không nhận ra khuôn mặt. Vui lòng thử lại hoặc đăng nhập bằng mật khẩu.",
+              );
+              return; // dừng hẳn
+            } else {
+              drawBox(detection, "#ef4444");
+              setFaceStatus("detecting");
+              setMessage(`Khuôn mặt chưa khớp — còn ${remaining} lần thử`);
+            }
+          }
         }
       }
-    }, SCAN_INTERVAL);
+
+      // Schedule lần tiếp SAU KHI xử lý xong (không overlap)
+      if (isScanningRef.current) {
+        timeoutRef.current = setTimeout(detect, SCAN_INTERVAL);
+      }
+    };
+
+    // Kick off
+    timeoutRef.current = setTimeout(detect, SCAN_INTERVAL);
   }, [email, drawBox, stopCamera, onSuccess]);
 
+  // ─────────────────────────────────────────────
+  // Main: start face scan
+  // ─────────────────────────────────────────────
   const startFaceScan = useCallback(async () => {
     if (!email.trim()) {
       setMessage("Vui lòng nhập email trước");
@@ -183,27 +284,22 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
       setStep("loading");
       setMessage("Đang tải mô hình nhận diện...");
 
-      const faceapi = await import("face-api.js");
-      faceapiRef.current = faceapi;
-
-      await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-      ]);
+      // 🔥 FIX 1: Dùng cached loader — lần 2+ gần như instant
+      faceapiRef.current = await loadFaceApi();
 
       setMessage("Đang lấy dữ liệu khuôn mặt...");
 
-      const res = await fetch(`${URL_API}/api/auth/login/face/descriptor`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      const res = await axiosInstance.post(`/api/auth/login/face/descriptor`, {
+        email,
       });
-      const data = await res.json();
-      if (!res.ok)
+      const data = res.data;
+
+      if (!data.faceDescriptor) {
         throw new Error(data.message || "Không thể lấy dữ liệu khuôn mặt");
+      }
 
       referenceDescriptorRef.current = new Float32Array(data.faceDescriptor);
+      failCountRef.current = 0;
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -215,12 +311,12 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
       });
       streamRef.current = stream;
 
-      // ✅ Set step TRƯỚC → React render <video> vào DOM
+      // Set step trước → React render <video> vào DOM
       setStep("scanning");
       setFaceStatus("idle");
       setMessage("Đang khởi động camera...");
 
-      // ✅ Đợi React render (100ms) rồi mới gán srcObject
+      // Đợi React render rồi mới gán srcObject
       setTimeout(() => {
         const video = videoRef.current;
         if (!video) {
@@ -245,6 +341,7 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
     }
   }, [email, stopCamera, startDetection]);
 
+  // Cleanup khi unmount
   useEffect(() => () => stopCamera(), [stopCamera]);
 
   return {

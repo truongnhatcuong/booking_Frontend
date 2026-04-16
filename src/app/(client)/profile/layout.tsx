@@ -21,17 +21,17 @@ const LayoutProfile = ({ children }: { children: React.ReactNode }) => {
     }
   }, [router]);
 
-  if (!ready) {
-    return <div>Loading...</div>; // Avoid SSR/client mismatch
-  }
-
   return (
-    <div className="md:mt-10 mt-0 lg:grid grid-cols-[15%_85%] md:grid-cols-[20%_80%] ">
-      <div>
-        <ProfileItems />
-      </div>
-      <div>{children}</div>
-    </div>
+    <>
+      {ready && (
+        <div className="md:mt-10 mt-0 lg:grid grid-cols-[20%_80%] md:grid-cols-[15%_85%] ">
+          <div>
+            <ProfileItems />
+          </div>
+          <div>{children}</div>
+        </div>
+      )}
+    </>
   );
 };
 
