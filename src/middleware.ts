@@ -63,36 +63,14 @@ export const ROLE_LABEL: Record<Role, string> = {
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Xử lý logout — xóa cookie và redirect
-  if (pathname === "/logOut") {
-    const response = NextResponse.redirect(new URL("/signIn", req.url));
-    response.cookies.set("token", "", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: -1,
-      path: "/",
-    });
-    response.cookies.set("refreshToken", "", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: -1,
-      path: "/",
-    });
-    return response;
-  }
-
   // Bỏ qua các route không phải /admin
   if (!pathname.startsWith("/admin")) return NextResponse.next();
   if (pathname === "/admin/unauthorized") return NextResponse.next();
   if (pathname === "/admin/profile") return NextResponse.next();
 
-  // Lấy token
-  const authHeader = req.headers.get("Authorization");
-  const token = authHeader
-    ? authHeader.split(" ")[1]
-    : req.cookies.get("token")?.value;
+  const token =
+    req.cookies.get("token")?.value ??
+    req.headers.get("authorization")?.split(" ")[1];
 
   // Chưa có token → về login
   if (!token) {
@@ -128,5 +106,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/logOut", "/admin/:path*"],
+  matcher: ["/admin/:path*"],
 };
