@@ -1,54 +1,12 @@
 "use client";
 import axiosInstance from "@/lib/axios";
-import { URL_API } from "@/lib/fetcher";
+import { loadFaceApi } from "@/lib/faceapi-loader";
 import { useState, useRef, useCallback, useEffect } from "react";
 
-const MODEL_URL = "/models";
 const THRESHOLD = 0.5;
 const SCAN_INTERVAL = 300;
 const MAX_FAIL = 5;
 
-// ─────────────────────────────────────────────
-// 🔥 FIX 1: Module-level cache — chỉ load 1 lần duy nhất suốt session
-// ─────────────────────────────────────────────
-let _faceapiInstance: any = null;
-let _modelsLoaded = false;
-let _loadingPromise: Promise<any> | null = null;
-
-async function loadFaceApi() {
-  if (typeof window === "undefined") {
-    throw new Error("face-api chỉ chạy ở client");
-  }
-
-  // Đã load rồi → trả về ngay, gần như instant
-  if (_faceapiInstance && _modelsLoaded) return _faceapiInstance;
-
-  // Đang load (tránh load song song nếu gọi 2 lần cùng lúc)
-  if (_loadingPromise) return _loadingPromise;
-
-  _loadingPromise = (async () => {
-    const faceapi = await import("face-api.js");
-
-    if (!_modelsLoaded) {
-      await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-      ]);
-      _modelsLoaded = true;
-    }
-
-    _faceapiInstance = faceapi;
-    _loadingPromise = null;
-    return faceapi;
-  })();
-
-  return _loadingPromise;
-}
-
-// ─────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────
 export type FaceLoginStep =
   | "idle"
   | "loading"
@@ -62,9 +20,6 @@ interface UseFaceLoginProps {
   onSuccess: (data: { accessToken: string; message: string }) => void;
 }
 
-// ─────────────────────────────────────────────
-// Hook
-// ─────────────────────────────────────────────
 export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -82,9 +37,6 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
   const [faceStatus, setFaceStatus] = useState<FaceStatus>("idle");
   const [message, setMessage] = useState("");
 
-  // ─────────────────────────────────────────────
-  // Camera helpers
-  // ─────────────────────────────────────────────
   const stopCamera = useCallback(() => {
     isScanningRef.current = false; // ← dừng detect loop
     if (timeoutRef.current) {
@@ -103,9 +55,6 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
     setMessage("");
   }, [stopCamera]);
 
-  // ─────────────────────────────────────────────
-  // Draw face box
-  // ─────────────────────────────────────────────
   const drawBox = useCallback((detection: any, color: string) => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
@@ -152,9 +101,6 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
     faceapi.draw.drawFaceLandmarks(canvas, resized);
   }, []);
 
-  // ─────────────────────────────────────────────
-  // ⚡ FIX 3: Detect loop dùng recursive setTimeout
-  // ─────────────────────────────────────────────
   const startDetection = useCallback(() => {
     const faceapi = faceapiRef.current;
     const referenceDescriptor = referenceDescriptorRef.current;
@@ -206,7 +152,7 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
 
             try {
               const loginRes = await axiosInstance.post(
-                `${URL_API}/api/auth/login/face`,
+                `/api/auth/login/face`,
                 {
                   email,
                   descriptor: Array.from(detection.descriptor),
@@ -271,9 +217,6 @@ export function useFaceLogin({ email, onSuccess }: UseFaceLoginProps) {
     timeoutRef.current = setTimeout(detect, SCAN_INTERVAL);
   }, [email, drawBox, stopCamera, onSuccess]);
 
-  // ─────────────────────────────────────────────
-  // Main: start face scan
-  // ─────────────────────────────────────────────
   const startFaceScan = useCallback(async () => {
     if (!email.trim()) {
       setMessage("Vui lòng nhập email trước");

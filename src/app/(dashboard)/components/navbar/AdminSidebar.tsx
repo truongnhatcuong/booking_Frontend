@@ -10,7 +10,7 @@ import {
   LogOut,
   LayoutDashboard,
 } from "lucide-react";
-import { adminMenu, IListItemAdmin } from "./data-admin-Menu";
+import { IListItemAdmin, getMenuByRole } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
 import useAuth from "@/lib/authUser";
 import { translatePosition } from "@/lib/translate";
@@ -26,13 +26,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Role, ROLE_LABEL } from "@/middleware";
 
 const AdminSidebar = () => {
   const pathname = usePathname();
   const { isCollapsed, toggleCollapse } = useSidebar();
   const { user } = useAuth();
-  const { logout } = useUserStore();
 
+  const { logout, user: userRole } = useUserStore();
+  const role = userRole?.role as Role;
+  const menu = getMenuByRole(role);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<number[]>([]);
 
@@ -53,9 +56,7 @@ const AdminSidebar = () => {
   const fullName = user?.employee
     ? `${user.firstName} ${user.lastName}`
     : "Admin";
-  const position = user?.employee
-    ? translatePosition(user.employee.position)
-    : "";
+  const position = role ? ROLE_LABEL[role] : "Chức vụ không xác định";
   const initials = fullName
     .split(" ")
     .map((n) => n[0])
@@ -169,7 +170,7 @@ const AdminSidebar = () => {
         {/* Nav menu */}
         <nav className="flex-1 overflow-y-auto py-3 px-2">
           <ul className="space-y-0.5">
-            {adminMenu.map((menuItem) => {
+            {menu.map((menuItem) => {
               const active = isMenuActive(menuItem);
               return (
                 <li key={menuItem.id}>

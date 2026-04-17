@@ -15,8 +15,6 @@ const AdminHeader = () => {
   const { logout, user: storedUser } = useUserStore();
   const { isCollapsed, toggleCollapse } = useSidebar();
 
-  console.log("storedUser?.role", storedUser?.role);
-
   return (
     <div className="navbar bg-base-100 shadow-sm mb-5">
       <div>
@@ -70,7 +68,9 @@ const AdminHeader = () => {
                 Thông Tin Tài Khoản
               </Link>
             </li>
-            {storedUser?.role === "Quản Lý" && (
+            {["ADMIN", "MARKETING", "MANAGER"].includes(
+              storedUser?.role || "",
+            ) && (
               <li>
                 <Link
                   href={

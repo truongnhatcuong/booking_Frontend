@@ -12,6 +12,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -35,6 +36,7 @@ import {
   translateUserStatus,
 } from "@/lib/translate";
 import { Department, Position } from "../../../profile/components/employee";
+import UpdateEmployee from "./UpdateEmployee";
 
 interface EmployeeDetails {
   id: string;
@@ -69,10 +71,14 @@ const TableEmployee = ({
   setCurrentPage,
 }: IEmployees) => {
   const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
-  const [idEmployee, setIdEmployee] = useState<string | null>(null);
+  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null,
+  );
+
   async function RemoveEmployeeRole(id: string) {
     try {
-      await axios.delete(`${URL_API}/api/role/${id}`, {
+      await axios.delete(`${URL_API}/api/role/removeRole/${id}`, {
         withCredentials: true,
       });
       toast.success("Hủy quyền thành công!");
@@ -85,10 +91,16 @@ const TableEmployee = ({
     }
   }
 
-  function OpenModalGetId(id: string) {
+  function OpenModalGetId(Employee: Employee) {
     setIsPermissionModalOpen(true);
-    setIdEmployee(id);
+    setSelectedEmployee(Employee);
   }
+  // ✅ Thêm hàm riêng cho update
+  function openUpdateModal(emp: Employee) {
+    setSelectedEmployee(emp);
+    setIsOpenUpdateModal(true);
+  }
+
   return (
     <div className="space-y-4 bg-white ">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
@@ -111,7 +123,7 @@ const TableEmployee = ({
               <TableHead className="hidden md:table-cell">
                 Số điện thoại
               </TableHead>
-              <TableHead className="hidden md:table-cell">Vị trí</TableHead>
+
               <TableHead className="hidden md:table-cell">Phòng ban</TableHead>
 
               <TableHead className="hidden md:table-cell">
@@ -141,10 +153,6 @@ const TableEmployee = ({
                     {employee.phone}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {translatePosition(employee.employee?.position) ||
-                      "Chưa phân công"}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
                     {employee.employee?.department
                       ? translateDepartment(employee.employee.department)
                       : "Chưa phân công"}
@@ -162,14 +170,14 @@ const TableEmployee = ({
                       variant={
                         employee.status === "ACTIVE" ? "default" : "destructive"
                       }
-                      className="capitalize"
+                      className={`${employee.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
                     >
                       {translateUserStatus(employee.status)}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     {employee.employee?.roles[0]?.role?.name ||
-                      "Chưa được Cấp Quyền"}
+                      "vui lòng phân quyền"}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -192,6 +200,13 @@ const TableEmployee = ({
                           employee={employee}
                         />
 
+                        <DropdownMenuItem
+                          onClick={() => openUpdateModal(employee)}
+                          className="cursor-pointer"
+                        >
+                          chỉnh sửa
+                        </DropdownMenuItem>
+
                         {/* vô hiệu hóa  */}
                         <DisabledUser employee={employee} />
                       </DropdownMenuContent>
@@ -210,9 +225,14 @@ const TableEmployee = ({
         </Table>
       </div>
       <PermissionEmployee
-        idEmployee={idEmployee ?? ""}
+        idEmployee={selectedEmployee?.id ?? ""}
         isOpen={isPermissionModalOpen}
         setIsOpen={setIsPermissionModalOpen}
+      />
+      <UpdateEmployee
+        employee={selectedEmployee}
+        isOpen={isOpenUpdateModal}
+        setIsOpen={setIsOpenUpdateModal}
       />
     </div>
   );

@@ -33,7 +33,7 @@ const PermissionEmployee = ({
         },
         {
           withCredentials: true,
-        }
+        },
       );
       Mutate(`${URL_API}/api/auth/employee`);
       toast.success("Cập nhật quyền thành công");
@@ -49,7 +49,7 @@ const PermissionEmployee = ({
         onRequestClose={() => setIsOpen(false)}
         className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-6xl mx-auto mt-40 outline-none"
         overlayClassName="fixed inset-0 bg-black/20 bg-opacity-50 flex justify-center items-start z-50"
-        contentLabel="Thêm nhân viên mới"
+        contentLabel="Phân quyền nhân viên"
       >
         <div className="space-y-4"></div>
         <h2 className="text-xl font-semibold">Phân quyền nhân viên</h2>
