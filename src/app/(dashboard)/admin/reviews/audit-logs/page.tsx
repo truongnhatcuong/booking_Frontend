@@ -25,7 +25,7 @@ const Page = () => {
     }
   };
   const { data, isLoading } = useSWR(
-    `${URL_API}/api/auth/auditlog${getDisplayDate()}`
+    `${URL_API}/api/auth/auditlog${getDisplayDate()}`,
   );
 
   // Nếu còn loading
@@ -33,8 +33,7 @@ const Page = () => {
   if (isLoading) return <div>loading....</div>;
   return (
     <div className="px-4 lg:px-10 py-4 rounded-2xl bg-white">
-      <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-6">Nhật Ký Hoạt Động</h1>
+      <div className="flex justify-end mb-3">
         <div className="flex gap-6">
           {["Ngày", "Tháng", "Năm"].map((item) => (
             <Button

@@ -1,88 +1,74 @@
 "use client";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// Dynamically import the MapContainer, Marker, and Popup to avoid SSR issues
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false },
-);
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false },
-);
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false },
-);
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
-  ssr: false,
-});
-
 export default function HotelMap() {
-  const [icon, setIcon] = useState<L.Icon | null>(null);
-  const [isClient, setIsClient] = useState(false); // Client-side check
-
-  // Explicitly type position as LatLngTuple (latitude, longitude)
-  const position: [number, number] = [16.07532073894757, 108.22268965344279]; // Hotel coordinates (Da Nang)
+  const mapDivRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const position: L.LatLngTuple = [16.07532073894757, 108.22268965344279];
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsClient(true); // Mark as client-side
+    if (!mapDivRef.current) return;
+
+    // ✅ Xóa _leaflet_id cũ trên DOM nếu có — ngăn lỗi "already initialized"
+    if ((mapDivRef.current as any)._leaflet_id) {
+      (mapDivRef.current as any)._leaflet_id = null;
     }
+
+    // ✅ Nếu map đã tồn tại thì không tạo lại
+    if (mapRef.current) return;
+
+    // Khởi tạo map thuần Leaflet — không dùng react-leaflet
+    const map = L.map(mapDivRef.current, {
+      center: position,
+      zoom: 15,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    // Fix icon mặc định
+    const icon = L.icon({
+      iconUrl:
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+      shadowUrl:
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+    });
+
+    const marker = L.marker(position, { icon }).addTo(map);
+    marker.bindPopup(`
+      <div style="font-family:sans-serif;display:flex;flex-direction:column;align-items:center;gap:8px">
+        <h3 style="color:#2563eb;font-weight:bold;margin:0">DTU Hotel</h3>
+        <p style="font-size:14px;margin:0">Vị trí tuyệt vời ngay mặt sông!</p>
+        <a 
+          href="https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}"
+          target="_blank"
+          style="background:#3b82f6;color:white;padding:6px 16px;border-radius:6px;text-decoration:none;font-weight:bold"
+        >Đi Đến</a>
+      </div>
+    `);
+
+    mapRef.current = map;
+
+    // ✅ Cleanup đúng cách
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
   }, []);
 
-  useEffect(() => {
-    if (isClient) {
-      const customIcon = new L.Icon({
-        iconUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-        shadowUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-      });
-      setIcon(customIcon);
-    }
-  }, [isClient]);
-
-  if (!icon || !isClient)
-    return <div className="h-[500px] bg-gray-100 animate-pulse" />;
-
   return (
-    <div className=" h-[500px] md:h-[700px]  w-auto md:w-full mx-4 lg:mx-0 z-0 my-10 overflow-auto rounded-xl shadow-inner">
-      <MapContainer
-        center={position} // `position` is now typed as LatLngTuple
-        zoom={15}
-        scrollWheelZoom={false}
-        style={{ height: "100%", width: "100%" }}
-        touchZoom={true}
-        doubleClickZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={position} icon={icon}>
-          <Popup>
-            <div className="font-sans flex flex-col items-center gap-2">
-              <h3 className="font-bold text-blue-600">DTU Hotel</h3>
-              <p className="text-sm">Vị trí tuyệt vời ngay mặt sông!</p>
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-center text-white font-bold py-2 px-4 rounded"
-                onClick={() => {
-                  const url = `https://www.google.com/maps/dir/?api=1&destination=${position[0]},${position[1]}`;
-                  window.open(url, "_blank");
-                }}
-              >
-                Đi Đến
-              </button>
-            </div>
-          </Popup>
-        </Marker>
-      </MapContainer>
-    </div>
+    <div
+      ref={mapDivRef}
+      className="h-[500px] md:h-[700px] w-auto md:w-full mx-4 lg:mx-0 z-0 my-10 rounded-xl shadow-inner"
+    />
   );
 }

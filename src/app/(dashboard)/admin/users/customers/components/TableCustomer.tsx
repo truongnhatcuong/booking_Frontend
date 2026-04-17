@@ -104,8 +104,8 @@ const TableCustomer = ({ customers }: ITableCustomer) => {
                       }
                       className={
                         customer.status === "ACTIVE"
-                          ? "bg-green-100 text-green-800 hover:bg-green-100"
-                          : "bg-gray-100 text-gray-800 hover:bg-gray-100"
+                          ? "bg-green-50 text-green-600 hover:bg-green-100"
+                          : "bg-red-50 text-red-600 hover:bg-red-100"
                       }
                     >
                       {translateUserStatus(customer.status)}

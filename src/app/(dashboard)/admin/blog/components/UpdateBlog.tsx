@@ -8,6 +8,8 @@ import axiosInstance from "@/lib/axios";
 import toast from "react-hot-toast";
 import Mutate from "@/hook/Mutate";
 import { URL_API } from "@/lib/fetcher";
+import RichTextEditor from "./RichTextEditor";
+
 Modal.setAppElement("#root");
 interface IUpdateProps {
   data: BlogPost;
@@ -25,7 +27,7 @@ const UpdateBlog: React.FC<IUpdateProps> = ({ data, isOpen, setIsOpen }) => {
 
   // Cập nhật giá trị field khi thay đổi
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -97,16 +99,14 @@ const UpdateBlog: React.FC<IUpdateProps> = ({ data, isOpen, setIsOpen }) => {
           </div>
           <div>
             <div className="flex justify-between">
-              {" "}
               <label className="block mb-1 font-semibold">Nội dung</label>
               <PreviewButton postData={form} />
             </div>
-            <textarea
-              name="content"
+            <RichTextEditor
               value={form.content}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              rows={25}
+              onChange={(value) =>
+                setForm((prev) => ({ ...prev, content: value }))
+              }
             />
           </div>
 

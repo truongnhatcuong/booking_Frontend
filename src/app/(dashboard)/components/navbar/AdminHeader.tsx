@@ -3,36 +3,51 @@ import Link from "next/link";
 import React from "react";
 import { useSidebar } from "../../context/contextAdmin";
 import {
-  ChevronLeft,
-  ChevronRightIcon as ChevronRightDouble,
+  IndentDecrease as ListIndentDecrease,
+  IndentIncrease as ListIndentIncrease,
 } from "lucide-react";
 import AdminNotifications from "../AdminNotifications";
 import useAuth from "@/lib/authUser";
 import { useUserStore } from "@/hook/useUserStore";
+import { usePathname } from "next/navigation";
+import { adminMenu } from "./data-admin-Menu";
 
 const AdminHeader = () => {
   const { user } = useAuth();
   const { logout, user: storedUser } = useUserStore();
   const { isCollapsed, toggleCollapse } = useSidebar();
+  const pathname = usePathname();
 
+  const getPageTitle = () => {
+    for (const item of adminMenu) {
+      // Khớp submenu trước
+      const sub = item.subMenuItem?.find((s) => pathname === s.link);
+      if (sub) return sub.title;
+      // Khớp menu cha
+      if (pathname === item.link) return item.title;
+    }
+    return "Trang Quản Trị";
+  };
   return (
     <div className="navbar bg-base-100 shadow-sm mb-5">
       <div>
         <button
           onClick={toggleCollapse}
-          className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+          className="p-1 rounded-md hover:bg-gray-100 transition-colors mr-3"
         >
           {isCollapsed ? (
-            <ChevronRightDouble className="h-7 w-7" />
+            <ListIndentIncrease className="h-7 w-7" />
           ) : (
-            <ChevronLeft className="h-7 w-7" />
+            <ListIndentDecrease className="h-7 w-7" />
           )}
         </button>
       </div>
       <div className="flex-1">
-        <Link className="btn btn-ghost text-xl" href="/admin">
-          Trang Quản Trị
-        </Link>
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg font-semibold text-gray-800 tracking-wide">
+            {getPageTitle()}
+          </span>
+        </div>
       </div>
       <div className="mx-6">
         <AdminNotifications />
