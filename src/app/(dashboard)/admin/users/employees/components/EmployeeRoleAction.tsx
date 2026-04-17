@@ -4,7 +4,7 @@ import React from "react";
 interface EmployeeRoleActionProps {
   employee: any;
   RemoveEmployeeRole: (id: string) => Promise<void>;
-  OpenModalGetId: (id: string) => void;
+  OpenModalGetId: (value: any) => void;
 }
 const EmployeeRoleAction = ({
   employee,
@@ -16,7 +16,7 @@ const EmployeeRoleAction = ({
     if (hasRole) {
       RemoveEmployeeRole(employee.employee.roles[0].id);
     } else {
-      OpenModalGetId(employee.employee?.id ?? "");
+      OpenModalGetId(employee.employee ?? "");
     }
   }
   return (

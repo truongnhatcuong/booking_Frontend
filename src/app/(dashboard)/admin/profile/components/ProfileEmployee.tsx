@@ -15,10 +15,11 @@ import { UserProfile, UserStatus } from "./employee";
 import { formatDate } from "@/lib/formatDate";
 import { translateDepartment, translatePosition } from "@/lib/translate";
 import { useEffect, useState } from "react";
-import { URL_API } from "@/lib/fetcher";
 import FaceRegisterWidget from "@/app/(client)/profile/components/FaceRegisterWidget";
 import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios";
+import { useUserStore } from "@/hook/useUserStore";
+import { ROLE_LABEL } from "@/middleware";
 
 // Format date function with proper typing
 
@@ -36,6 +37,7 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
   const [hasFace, setHasFace] = useState<boolean | null>(null);
   const [faceLoading, setFaceLoading] = useState(true);
   const [showFaceModal, setShowFaceModal] = useState(false);
+  const { user } = useUserStore();
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -245,7 +247,8 @@ export default function EmployeeProfile({ profile }: EmployeeProfileProps) {
                       <div className="flex-1">
                         <p className="text-sm text-gray-600 mb-1">Chức vụ</p>
                         <p className="font-medium text-gray-800">
-                          {translatePosition(profile.employee.position)}
+                          {ROLE_LABEL[user?.role as keyof typeof ROLE_LABEL] ??
+                            "Chức vụ không xác định"}
                         </p>
                       </div>
                     </div>

@@ -10,7 +10,7 @@ import { URL_API } from "@/lib/fetcher";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import { useUserStore } from "@/hook/useUserStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Eye } from "lucide-react";
 import { useCheckFaceLog } from "@/hook/useCheckFaceLog";

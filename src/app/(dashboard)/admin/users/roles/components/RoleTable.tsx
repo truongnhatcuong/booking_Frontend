@@ -1,5 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,19 +19,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import axiosInstance from "@/lib/axios";
 import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-
-interface Permission {
-  id: string;
-  name: string;
-  description?: string;
-}
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import useSWR from "swr";
+import { PERM_LABELS } from "./role";
+import RoleDeleteButton from "./RoleDeleteButton";
 
 interface Role {
   id: string;
   name: string;
-  permissions: Permission[];
+  permissions: string[];
 }
 
 interface RoleTableProps {
@@ -58,7 +68,6 @@ const RoleTable = ({ roles }: RoleTableProps) => {
         <TableBody>
           {roles.map((role) => (
             <React.Fragment key={role.id}>
-              {/* Main Row */}
               <TableRow
                 className="cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => toggleRow(role.id)}
@@ -70,7 +79,6 @@ const RoleTable = ({ roles }: RoleTableProps) => {
                       toggleRow(role.id);
                     }}
                     className="p-1 hover:bg-gray-200 rounded transition-colors"
-                    aria-label={isExpanded(role.id) ? "Collapse" : "Expand"}
                   >
                     {isExpanded(role.id) ? (
                       <ChevronDownIcon className="w-5 h-5 text-gray-600" />
@@ -88,17 +96,7 @@ const RoleTable = ({ roles }: RoleTableProps) => {
                   </span>
                 </TableCell>
                 <TableCell className="space-x-2">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Handle delete
-                      console.log("Delete role:", role.id);
-                    }}
-                  >
-                    Xóa
-                  </Button>
+                  <RoleDeleteButton roleId={role.id} roleName={role.name} />
                 </TableCell>
               </TableRow>
 
@@ -117,12 +115,10 @@ const RoleTable = ({ roles }: RoleTableProps) => {
                                 key={idx}
                                 className="flex items-center gap-2 p-2 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors"
                               >
-                                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
+                                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                                {/* fix: dùng PERM_LABELS thay vì JSON.stringify */}
                                 <span className="text-sm text-gray-700 font-medium">
-                                  {JSON.stringify(permission).replace(
-                                    /"/g,
-                                    ""
-                                  ) ?? ""}
+                                  {PERM_LABELS[permission] ?? permission}
                                 </span>
                               </div>
                             ))}
