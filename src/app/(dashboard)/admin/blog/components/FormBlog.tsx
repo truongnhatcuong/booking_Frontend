@@ -1,63 +1,28 @@
 import { UploadButton } from "@/utils/uploadthing";
-import { EditorContent } from "@tiptap/react";
-import {
-  Bold,
-  Heading1,
-  Heading2,
-  ImageDownIcon,
-  Italic,
-  List,
-  ListOrdered,
-  Quote,
-  X,
-} from "lucide-react";
+import { ImageDownIcon, X } from "lucide-react";
 import React, { useEffect } from "react";
 import { PostData } from "../add/page";
 import Image from "next/image";
 import PreviewButton from "./PreviewButton";
+import RichTextEditor from "./RichTextEditor";
 
 interface IFormBlog {
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   postData: PostData;
   setPostData: React.Dispatch<React.SetStateAction<PostData>>;
-  editor: any;
 }
-const FormBlog = ({
-  handleSubmit,
-  postData,
-  setPostData,
-  editor,
-}: IFormBlog) => {
+
+const FormBlog = ({ handleSubmit, postData, setPostData }: IFormBlog) => {
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setPostData((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    if (!editor) return;
-
-    // Set content ban đầu
-    if (postData.content) {
-      editor.commands.setContent(postData.content);
-    }
-
-    // Cập nhật postData khi editor thay đổi
-    editor.on("update", () => {
-      setPostData((prev) => ({
-        ...prev,
-        content: editor.getHTML(),
-      }));
-    });
-
-    return () => {
-      editor.off("update");
-    };
-  }, [editor, postData.content]);
-
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
+      {/* Tiêu đề */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Tiêu đề
@@ -73,6 +38,7 @@ const FormBlog = ({
         />
       </div>
 
+      {/* Summary + Cover */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -88,7 +54,6 @@ const FormBlog = ({
             required
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Ảnh bìa
@@ -103,14 +68,11 @@ const FormBlog = ({
                   height={300}
                 />
                 <button
+                  type="button"
                   onClick={() =>
-                    setPostData((prev) => ({
-                      ...prev,
-                      coverImage: "",
-                    }))
+                    setPostData((prev) => ({ ...prev, coverImage: "" }))
                   }
                   className="absolute cursor-pointer top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors"
-                  aria-label="Close"
                 >
                   <X />
                 </button>
@@ -127,12 +89,9 @@ const FormBlog = ({
                 }}
                 content={{
                   button({ isUploading }) {
-                    if (isUploading) {
-                      return (
-                        <div className="text-gray-500">Đang tải lên...</div>
-                      );
-                    }
-                    return (
+                    return isUploading ? (
+                      <div className="text-gray-500">Đang tải lên...</div>
+                    ) : (
                       <div className="flex flex-col items-center justify-center gap-2">
                         <ImageDownIcon className="text-gray-500 w-8 h-8" />
                       </div>
@@ -150,123 +109,26 @@ const FormBlog = ({
         </div>
       </div>
 
-      <div className="prose whitespace-pre-line">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Nội dung
-        </label>
-        <div className="border rounded-lg overflow-hidden">
-          <div className=" flex justify-between gap-1 p-2 bg-gray-50 border-b items-center ">
-            <div className="flex ">
-              <button
-                type="button"
-                onClick={() => editor?.chain().focus().toggleBold().run()}
-                className={`p-2 rounded ${
-                  editor?.isActive("bold") ? "bg-gray-200" : "hover:bg-gray-100"
-                }`}
-                title="In đậm"
-              >
-                <Bold className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => editor?.chain().focus().toggleItalic().run()}
-                className={`p-2 rounded ${
-                  editor?.isActive("italic")
-                    ? "bg-gray-200"
-                    : "hover:bg-gray-100"
-                }`}
-                title="In nghiêng"
-              >
-                <Italic className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  editor?.chain().focus().toggleHeading({ level: 1 }).run()
-                }
-                className={`p-2 rounded ${
-                  editor?.isActive("heading", { level: 1 })
-                    ? "bg-gray-200"
-                    : "hover:bg-gray-100"
-                }`}
-                title="Tiêu đề 1"
-              >
-                <Heading1 className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  editor?.chain().focus().toggleHeading({ level: 2 }).run()
-                }
-                className={`p-2 rounded ${
-                  editor?.isActive("heading", { level: 2 })
-                    ? "bg-gray-200"
-                    : "hover:bg-gray-100"
-                }`}
-                title="Tiêu đề 2"
-              >
-                <Heading2 className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => editor?.chain().focus().toggleBulletList().run()}
-                className={`p-2 rounded ${
-                  editor?.isActive("bulletList")
-                    ? "bg-gray-200"
-                    : "hover:bg-gray-100"
-                }`}
-                title="Danh sách không thứ tự"
-              >
-                <List className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  editor?.chain().focus().toggleOrderedList().run()
-                }
-                className={`p-2 rounded ${
-                  editor?.isActive("orderedList")
-                    ? "bg-gray-200"
-                    : "hover:bg-gray-100"
-                }`}
-                title="Danh sách có thứ tự"
-              >
-                <ListOrdered className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-                className={`p-2 rounded ${
-                  editor?.isActive("blockquote")
-                    ? "bg-gray-200"
-                    : "hover:bg-gray-100"
-                }`}
-                title="Trích dẫn"
-              >
-                <Quote className="w-5 h-5" />
-              </button>
-            </div>
-            <PreviewButton postData={postData} />
-          </div>
-
-          <EditorContent
-            editor={editor}
-            className="min-h-[500px] p-4 bg-white focus:outline-none prose whitespace-pre-line"
-          />
+      {/* Nội dung — dùng RichTextEditor */}
+      <div>
+        <div className="flex justify-between items-center mb-1">
+          <label className="block text-sm font-medium text-gray-700">
+            Nội dung
+          </label>
+          <PreviewButton postData={postData} />
         </div>
+        <RichTextEditor
+          value={postData.content}
+          onChange={(value) =>
+            setPostData((prev) => ({ ...prev, content: value }))
+          }
+        />
       </div>
 
       <div className="flex justify-end mr-6">
-        {" "}
         <button
           type="submit"
-          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-end"
+          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
         >
           Đăng bài viết
         </button>

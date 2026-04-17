@@ -28,21 +28,6 @@ const PostBlog = () => {
     coverImage: "",
   });
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-
-      Image.configure({
-        inline: true,
-        allowBase64: true,
-      }),
-    ],
-    content: postData.content,
-    onUpdate: ({ editor }) => {
-      setPostData((prev) => ({ ...prev, content: editor.getHTML() }));
-    },
-  });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -68,7 +53,6 @@ const PostBlog = () => {
       </div>
 
       <FormBlog
-        editor={editor}
         handleSubmit={handleSubmit}
         postData={postData}
         setPostData={setPostData}

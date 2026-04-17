@@ -4,6 +4,7 @@ import { useUserStore } from "@/hook/useUserStore";
 import { jwtDecode } from "jwt-decode";
 import { refreshAccessToken } from "@/lib/axios";
 import { useRouter } from "next/navigation";
+
 export default function UserProvider({
   children,
 }: {
@@ -29,47 +30,44 @@ export default function UserProvider({
     let timer: ReturnType<typeof setTimeout>;
 
     const handleToken = async () => {
-      let token = localStorage.getItem("token");
-      token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
+
       if (!token) {
+        console.log("❌ Không có token trong localStorage");
         return;
       }
 
-      let remainingTime = getTokenRemainingTime(token);
-      console.log("Thời gian còn lại của token:", remainingTime, "ms");
+      const remainingTime = getTokenRemainingTime(token);
+      console.log("⏱ Token còn lại:", Math.round(remainingTime / 1000), "giây");
 
-      // nếu token đã hết hạn hoặc sắp hết hạn
       if (remainingTime <= 1000) {
+        console.log("🔄 Token hết hạn → đang refresh...");
         try {
           const newToken = await refreshAccessToken();
-          localStorage.setItem("token", newToken); // ✅ lưu lại
-          token = newToken;
-          remainingTime = getTokenRemainingTime(token);
-          initUser(); // ✅ cập nhật store sau khi có token mới
-        } catch (err) {
-          console.error("Refresh token thất bại:", err);
+          console.log("✅ Refresh thành công");
+          initUser();
+          const newRemaining = getTokenRemainingTime(newToken);
+          timer = setTimeout(
+            handleToken,
+            newRemaining > 1000 ? newRemaining - 1000 : 30_000,
+          );
+        } catch (err: any) {
+          console.log("❌ Refresh thất bại:", err?.message || err);
+          console.log("❌ Response:", err?.response?.data);
+          console.log("❌ Status:", err?.response?.status);
           localStorage.removeItem("token");
           router.push("/");
-          return;
         }
       } else {
-        // token còn hạn ngay từ đầu → vẫn phải init user
-        initUser(); // ✅ chỗ này trong code cũ bị thiếu
-      }
-
-      // đặt lịch kiểm tra/refresh tiếp theo
-      if (remainingTime > 1000) {
+        initUser();
         timer = setTimeout(handleToken, remainingTime - 1000);
-      } else {
-        // fallback nếu remainingTime quá nhỏ hoặc bằng 0
-        timer = setTimeout(handleToken, 30_000);
       }
     };
 
     handleToken();
 
     return () => clearTimeout(timer);
-  }, [router, initUser]);
+  }, []);
 
   return <>{children}</>;
 }
