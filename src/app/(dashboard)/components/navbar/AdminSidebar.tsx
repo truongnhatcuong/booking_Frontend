@@ -37,7 +37,20 @@ const AdminSidebar = () => {
   const role = userRole?.role as Role;
   const menu = getMenuByRole(role);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState<number[]>([]);
+  const [expandedMenus, setExpandedMenus] = useState<number[]>(() => {
+    // ADMIN và MANAGER có nhiều menu → không auto mở
+    if (role === "ADMIN" || role === "MANAGER") {
+      // Chỉ mở menu chứa trang hiện tại
+      return menu
+        .filter((item) =>
+          item.subMenuItem?.some((sub) => pathname === sub.link),
+        )
+        .map((item) => item.id);
+    }
+
+    // Các role khác ít menu → mở hết
+    return menu.map((item) => item.id);
+  });
 
   const toggleMobileMenu = () => setIsMobileOpen(!isMobileOpen);
 
@@ -204,7 +217,7 @@ const AdminSidebar = () => {
                           flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-colors
                           ${
                             active
-                              ? "bg-blue-50 text-blue-600"
+                              ? "text-blue-600"
                               : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                           }
                         `}
@@ -240,7 +253,7 @@ const AdminSidebar = () => {
 
                       {/* Submenu */}
                       {expandedMenus.includes(menuItem.id) && (
-                        <ul className="mt-0.5 ml-4 pl-3 border-l border-gray-100 space-y-0.5">
+                        <ul className="mt-1 ml-4 pl-3 border-l border-gray-100 space-y-1">
                           {menuItem.subMenuItem?.map((subItem) => (
                             <li key={subItem.id}>
                               <Link
