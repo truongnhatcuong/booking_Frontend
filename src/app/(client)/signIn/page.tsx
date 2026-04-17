@@ -113,7 +113,6 @@ export default function SignInForm() {
   };
 
   const handleLoginSuccess = (token: string) => {
-    localStorage.setItem("token", token);
     const decoded: any = jwtDecode(token);
     login({
       id: decoded.id,
