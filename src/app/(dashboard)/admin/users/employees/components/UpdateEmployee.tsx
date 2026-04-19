@@ -1,20 +1,52 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
+import { BookOpen, Building2, Hammer, PencilLine, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { Employee } from "./TableEmployee";
 import { URL_API } from "@/lib/fetcher";
 import toast from "react-hot-toast";
-import Mutate from "@/hook/Mutate";
 import axiosInstance from "@/lib/axios";
+import Mutate from "@/hook/Mutate";
 
 interface IUpdateEmployee {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   employee: Employee | null;
 }
+
+export const DEPARTMENTS = [
+  {
+    value: "FRONT_DESK",
+    label: "Lễ tân",
+    icon: <BookOpen className="h-4 w-4" />,
+  },
+  {
+    value: "MAINTENANCE",
+    label: "Bảo trì",
+    icon: <Hammer className="h-4 w-4" />,
+  },
+  {
+    value: "MANAGEMENT",
+    label: "Quản lý",
+    icon: <Building2 className="h-4 w-4" />,
+  },
+];
+
+const STATUS_OPTIONS = [
+  {
+    value: "ACTIVE",
+    label: "Hoạt động",
+    color: "bg-green-50 border-green-200 text-green-700",
+  },
+  {
+    value: "INACTIVE",
+    label: "Vô hiệu hóa",
+    color: "bg-red-50 border-red-200 text-red-700",
+  },
+];
 
 const UpdateEmployee = ({ isOpen, setIsOpen, employee }: IUpdateEmployee) => {
   useEffect(() => {
@@ -46,23 +78,6 @@ const UpdateEmployee = ({ isOpen, setIsOpen, employee }: IUpdateEmployee) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Gán cả department lẫn position cùng lúc
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = e.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      department: selectedValue,
-      position: selectedValue,
-    }));
-  };
-
-  const handleSectusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedStatus = e.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      status: selectedStatus,
-    }));
-  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -76,7 +91,12 @@ const UpdateEmployee = ({ isOpen, setIsOpen, employee }: IUpdateEmployee) => {
         toast.success("Cập nhật nhân viên thành công");
       }
     } catch (error: any) {
-      toast.error(error.response.data.message || "Cập nhật nhân viên thất bại");
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Cập nhật nhân viên thất bại";
+      toast.error(message);
+      console.log(error); // xem lỗi thật sự là gì
     }
   };
 
@@ -84,97 +104,164 @@ const UpdateEmployee = ({ isOpen, setIsOpen, employee }: IUpdateEmployee) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={() => setIsOpen(false)}
-      className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-6xl mx-auto mt-40 outline-none"
-      overlayClassName="fixed inset-0 bg-black/20 bg-opacity-50 flex justify-center items-start z-50"
+      className="bg-white rounded-xl shadow-xl w-[90%] max-w-4xl mx-auto mt-32 outline-none overflow-hidden"
+      overlayClassName="fixed inset-0 bg-black/30 flex justify-center items-start z-50"
       contentLabel="Chỉnh sửa nhân viên"
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold">Chỉnh sửa nhân viên</h2>
-        <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
-          <X className="h-4 w-4" />
-        </Button>
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+            <PencilLine className="h-4 w-4 text-amber-600" />
+          </div>
+          <div>
+            <h2 className="text-[15px] font-medium text-gray-900">
+              Chỉnh sửa nhân viên
+            </h2>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Cập nhật thông tin nhân viên
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => setIsOpen(false)}
+          className="w-7 h-7 rounded-md border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
       </div>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Họ</Label>
-            <Input
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-            />
+      {/* Form */}
+      <form onSubmit={handleSubmit}>
+        <div className="px-6 py-5 flex flex-col gap-4">
+          {/* Name row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-gray-500">Họ</Label>
+              <Input
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className="h-13 text-sm bg-gray-50 border-gray-200"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-gray-500">Tên</Label>
+              <Input
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className="h-13 text-sm bg-gray-50 border-gray-200"
+              />
+            </div>
           </div>
+
+          {/* Email & Phone row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-gray-500">Email</Label>
+              <Input
+                name="email"
+                type="email"
+                value={employee?.email || ""}
+                disabled
+                className="h-13 text-sm bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-gray-500">
+                Số điện thoại
+              </Label>
+              <Input
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="h-13 text-sm bg-gray-50 border-gray-200"
+              />
+            </div>
+          </div>
+
+          {/* Department toggle */}
           <div className="space-y-2">
-            <Label>Tên</Label>
-            <Input
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-            />
+            <Label className="text-xs font-medium text-gray-500">
+              Phòng ban
+            </Label>
+            <div className="grid grid-cols-3 gap-2">
+              {DEPARTMENTS.map((dept) => {
+                const isSelected = formData.position === dept.value;
+                return (
+                  <button
+                    key={dept.value}
+                    type="button"
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, position: dept.value }))
+                    }
+                    className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-lg border text-xs font-medium transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-amber-50 border-amber-200 text-amber-700"
+                        : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
+                    }`}
+                  >
+                    <span
+                      className={
+                        isSelected ? "text-amber-600" : "text-gray-400"
+                      }
+                    >
+                      {dept.icon}
+                    </span>
+                    {dept.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Status toggle */}
+          <div className="space-y-2">
+            <Label className="text-xs font-medium text-gray-500">
+              Trạng thái
+            </Label>
+            <div className="grid grid-cols-2 gap-2">
+              {STATUS_OPTIONS.map((s) => {
+                const isSelected = formData.status === s.value;
+                return (
+                  <button
+                    key={s.value}
+                    type="button"
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, status: s.value }))
+                    }
+                    className={`py-3 rounded-lg border text-xs font-medium transition-all cursor-pointer ${
+                      isSelected
+                        ? s.color
+                        : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Email</Label>
-            <Input
-              name="email"
-              type="email"
-              value={employee?.email || ""}
-              disabled
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Số điện thoại</Label>
-            <Input
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1  gap-4">
-          <div className="space-y-2">
-            <Label>Phòng ban</Label>
-            <select
-              name="department"
-              value={formData.position}
-              onChange={handleSelect}
-              className="flex h-10 w-full items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <option value="FRONT_DESK">Lễ tân</option>
-              <option value="MAINTENANCE">Bảo trì</option>
-              <option value="MANAGEMENT">Quản lý</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1  gap-4">
-          <div className="space-y-2">
-            <Label>Trạng thái</Label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleSectusChange}
-              className="flex h-10 w-full items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <option value="ACTIVE">Hoạt động</option>
-              <option value="INACTIVE">vô hiệu hóa</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-4 pt-4">
+        {/* Footer */}
+        <div className="flex items-center justify-end gap-2 px-6 py-4 bg-gray-50 border-t border-gray-100">
           <Button
             type="button"
             variant="outline"
             onClick={() => setIsOpen(false)}
+            className="h-9 px-4 text-sm"
           >
             Hủy
           </Button>
-          <Button type="submit">Cập nhật nhân viên</Button>
+          <Button
+            type="submit"
+            className="h-9 px-4 text-sm flex items-center gap-1.5"
+          >
+            <PencilLine className="h-3.5 w-3.5" />
+            Cập nhật nhân viên
+          </Button>
         </div>
       </form>
     </Modal>

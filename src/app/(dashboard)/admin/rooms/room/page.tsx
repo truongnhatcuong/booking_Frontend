@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import TableRoom from "./components/TableRoom";
 import CreateRoom from "./components/CreateRoom";
 import useSWR from "swr";
-import { URL_API } from "@/lib/fetcher";
 import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import { RoomTypeFilter } from "./components/RoomTypeFilter";

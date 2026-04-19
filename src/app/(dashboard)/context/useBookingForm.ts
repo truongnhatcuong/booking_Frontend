@@ -11,6 +11,7 @@ interface FormData {
   discountId: string | null;
   guestId: string | null;
   pricePerNight: number;
+  discountAmount: number; // ← thêm
   roomId: string;
 }
 
@@ -28,6 +29,7 @@ export const useBookingStore = create<BookingStore>((set) => ({
     specialRequests: "",
     bookingSource: "WEBSITE",
     totalAmount: 0,
+    discountAmount: 0, // ← thêm
     discountId: null,
     guestId: null,
     pricePerNight: 0,
@@ -44,6 +46,7 @@ export const useBookingStore = create<BookingStore>((set) => ({
         specialRequests: "",
         bookingSource: "WEBSITE",
         totalAmount: 0,
+        discountAmount: 0,
         discountId: null,
         guestId: null,
         pricePerNight: 0,

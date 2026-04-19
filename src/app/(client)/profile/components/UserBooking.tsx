@@ -66,13 +66,13 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
           </div>
 
           <div className="flex flex-col gap-2 items-end mt-1">
-            {booking.status === "CHECKED_OUT" && (
+            {booking?.status === "CHECKED_OUT" && (
               <ReviewCusTomer bookingId={booking.id} />
             )}
-            {booking.status === "PENDING" && (
+            {booking?.status === "PENDING" && (
               <RemoveBooking
                 bookingId={booking.id}
-                paymentMethod={booking.payments[0].paymentMethod}
+                paymentMethod={booking?.payments[0]?.paymentMethod}
               />
             )}
           </div>

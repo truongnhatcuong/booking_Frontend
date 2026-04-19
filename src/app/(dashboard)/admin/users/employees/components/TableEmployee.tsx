@@ -30,11 +30,7 @@ import { URL_API } from "@/lib/fetcher";
 import EmployeeRoleAction from "./EmployeeRoleAction";
 import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 import Mutate from "@/hook/Mutate";
-import {
-  translateDepartment,
-  translatePosition,
-  translateUserStatus,
-} from "@/lib/translate";
+import { translateDepartment, translateUserStatus } from "@/lib/translate";
 import { Department, Position } from "../../../profile/components/employee";
 import UpdateEmployee from "./UpdateEmployee";
 

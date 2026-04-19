@@ -26,7 +26,6 @@ const COOKIE_OPTIONS = {
 
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
-
   login: (user) => {
     set({ user });
     localStorage.setItem("token", user.token);
@@ -37,7 +36,7 @@ export const useUserStore = create<UserStore>((set) => ({
   logout: async () => {
     try {
       await axiosInstance.get(`/api/auth/logOut`);
-    } catch (e) {
+    } catch {
       console.warn("Logout API failed, still clearing local");
     }
     localStorage.removeItem("token");
