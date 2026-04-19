@@ -40,12 +40,10 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
     originalPrice: Number(rooms.originalPrice) || 0,
   });
 
-  console.log(formData);
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -60,7 +58,7 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_URL_API}/api/room/${rooms.id}`,
-        formData
+        formData,
       );
       if (res.data) {
         toast.success("Cập nhật thành công!");

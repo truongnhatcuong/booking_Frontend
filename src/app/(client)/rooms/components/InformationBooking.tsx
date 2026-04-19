@@ -9,11 +9,11 @@ import {
   paymentMethodIcons,
 } from "./booking";
 import { useBookingStore } from "@/app/(dashboard)/context/useBookingForm";
-import { URL_API } from "@/lib/fetcher";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
 import { translatepaymentMethodDisplayNames } from "@/lib/translate";
+import { formatPrice } from "@/lib/formatPrice";
 
 interface IInformationProps {
   isOpen: boolean;
@@ -37,7 +37,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
   const [user, setUser] = useState<any | null>(null);
   const router = useRouter();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
-    useState<PaymentMethod | null>(null);
+    useState<PaymentMethod | null>(PaymentMethod.CASH);
   const [guestInfo, setGuestInfo] = useState<GuestInfo>({
     fullName: "",
     email: "",
@@ -102,10 +102,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
     if (isBookingForOther) {
       try {
         //createGuest
-        const resGuest = await axiosInstance.post(
-          `${URL_API}/api/auth/guest`,
-          guestInfo
-        );
+        const resGuest = await axiosInstance.post(`/api/auth/guest`, guestInfo);
         if (resGuest.data) {
           const guestId = resGuest.data.newgest.id;
           const bookingData = {
@@ -114,21 +111,15 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
           };
 
           // reservation for other
-          const res = await axiosInstance.post(
-            `${URL_API}/api/booking`,
-            bookingData
-          );
+          const res = await axiosInstance.post(`/api/booking`, bookingData);
 
           if (res.data) {
-            const resPayment = await axiosInstance.post(
-              `${URL_API}/api/payment`,
-              {
-                amount: formData.totalAmount,
-                paymentMethod: selectedPaymentMethod,
-                bookingId: res.data.data.id,
-                status: "PENDING",
-              }
-            );
+            const resPayment = await axiosInstance.post(`/api/payment`, {
+              amount: formData.totalAmount,
+              paymentMethod: selectedPaymentMethod,
+              bookingId: res.data.data.id,
+              status: "PENDING",
+            });
             if (resPayment.data) {
               toast.success("Đặt phòng thành công!");
               if (selectedPaymentMethod === PaymentMethod.CASH) {
@@ -152,21 +143,15 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
       }
     } else {
       try {
-        const res = await axiosInstance.post(
-          `${URL_API}/api/booking`,
-          formData
-        );
+        const res = await axiosInstance.post(`/api/booking`, formData);
 
         if (res.data) {
-          const resPayment = await axiosInstance.post(
-            `${URL_API}/api/payment`,
-            {
-              amount: formData.totalAmount,
-              paymentMethod: selectedPaymentMethod,
-              bookingId: res.data.data.id,
-              status: "PENDING",
-            }
-          );
+          const resPayment = await axiosInstance.post(`/api/payment`, {
+            amount: formData.totalAmount,
+            paymentMethod: selectedPaymentMethod,
+            bookingId: res.data.data.id,
+            status: "PENDING",
+          });
           if (resPayment.data) {
             toast.success("Đặt phòng thành công!");
             if (selectedPaymentMethod === PaymentMethod.CASH) {
@@ -249,22 +234,21 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
             <InfoBooking />
 
             {/* Thông tin người đặt - Bên phải */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              {isBookingForOther ? (
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  Nhập Thông Tin Người Đặt
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              {/* Header */}
+              <div className="bg-blue-600 px-6 py-4">
+                <h3 className="text-lg font-semibold text-white">
+                  {isBookingForOther
+                    ? "Nhập thông tin người đặt"
+                    : "Thông tin người đặt"}
                 </h3>
-              ) : (
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  Thông tin người đặt
-                </h3>
-              )}
+              </div>
 
-              <div className="space-y-4">
+              <div className="p-6 space-y-4">
                 {isBookingForOther ? (
-                  <div className="space-y-4 rounded-lg">
+                  <div className="space-y-4">
                     <div>
-                      <label className="block text-gray-700 font-medium mb-2">
+                      <label className="block text-sm text-gray-500 mb-1">
                         Họ và tên <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -277,13 +261,13 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                             fullName: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder:text-gray-400"
                         placeholder="Trần Thị B"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 font-medium mb-2">
+                      <label className="block text-sm text-gray-500 mb-1">
                         Email
                       </label>
                       <input
@@ -292,13 +276,13 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                         onChange={(e) =>
                           setGuestInfo({ ...guestInfo, email: e.target.value })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder:text-gray-400"
                         placeholder="guest@email.com"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 font-medium mb-2">
+                      <label className="block text-sm text-gray-500 mb-1">
                         Số điện thoại <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -308,13 +292,13 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                         onChange={(e) =>
                           setGuestInfo({ ...guestInfo, phone: e.target.value })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder:text-gray-400"
                         placeholder="0987654321"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 font-medium mb-2">
+                      <label className="block text-sm text-gray-500 mb-1">
                         CMND/CCCD <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -327,65 +311,52 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                             idNumber: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder:text-gray-400"
                         placeholder="009876543210"
                       />
                     </div>
                   </div>
                 ) : (
-                  <div>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2">
-                          Họ và tên
-                        </label>
-                        <p className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800">
-                          {user?.firstName} {user?.lastName}
-                        </p>
+                  <div className="space-y-3">
+                    {[
+                      {
+                        label: "Họ và tên",
+                        value: `${user?.firstName ?? ""} ${user?.lastName ?? ""}`,
+                      },
+                      { label: "Email", value: user?.email },
+                      { label: "Số điện thoại", value: user?.phone },
+                      { label: "CMND/CCCD", value: user?.customer?.idNumber },
+                    ].map(({ label, value }) => (
+                      <div
+                        key={label}
+                        className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0"
+                      >
+                        <span className="text-sm text-gray-500">{label}</span>
+                        <span className="text-sm font-medium text-gray-800">
+                          {value || "—"}
+                        </span>
                       </div>
-
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2">
-                          Email
-                        </label>
-                        <p className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800">
-                          {user?.email}
-                        </p>
-                      </div>
-
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2">
-                          Số điện thoại
-                        </label>
-                        <p className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800">
-                          {user?.phone}
-                        </p>
-                      </div>
-
-                      <div>
-                        <label className="block text-gray-700 font-medium mb-2">
-                          CMND/CCCD
-                        </label>
-                        <p className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-800">
-                          {user?.customer?.idNumber}
-                        </p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 )}
 
-                {/* Checkbox đặt giúp người khác */}
-                <div className="flex items-center pt-4 border-t">
-                  <input
-                    type="checkbox"
-                    id="bookingForOther"
-                    checked={isBookingForOther}
-                    onChange={(e) => setIsBookingForOther(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
+                {/* Checkbox */}
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                  <div
+                    onClick={() => setIsBookingForOther(!isBookingForOther)}
+                    className={`w-10 h-6 rounded-full cursor-pointer transition-colors duration-200 flex items-center px-1 ${
+                      isBookingForOther ? "bg-blue-600" : "bg-gray-300"
+                    }`}
+                  >
+                    <div
+                      className={`w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${
+                        isBookingForOther ? "translate-x-4" : "translate-x-0"
+                      }`}
+                    />
+                  </div>
                   <label
-                    htmlFor="bookingForOther"
-                    className="ml-2 text-gray-700 font-medium cursor-pointer"
+                    onClick={() => setIsBookingForOther(!isBookingForOther)}
+                    className="text-sm font-medium text-gray-700 cursor-pointer select-none"
                   >
                     Đặt phòng giúp người khác
                   </label>
@@ -446,7 +417,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                   <span className="font-semibold">
                     {calculateNights(
                       formData.checkInDate,
-                      formData.checkOutDate
+                      formData.checkOutDate,
                     )}{" "}
                     đêm
                   </span>
@@ -454,7 +425,7 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
                 <div className="flex justify-between pt-2 border-t">
                   <span className="text-lg font-bold">Tổng cộng:</span>
                   <span className="text-lg font-bold text-blue-600">
-                    {formData.totalAmount.toLocaleString("vi-VN")} VNĐ
+                    {formatPrice(formData.totalAmount)}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -499,8 +470,8 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
             {isSubmitting
               ? "Đang xử lý..."
               : currentStep === 1
-              ? "Tiếp theo"
-              : "Xác nhận đặt phòng"}
+                ? "Tiếp theo"
+                : "Xác nhận đặt phòng"}
           </button>
         </div>
       </form>

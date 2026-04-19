@@ -1,6 +1,6 @@
 import { UploadButton } from "@/utils/uploadthing";
 import { ImageDownIcon, X } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { PostData } from "../add/page";
 import Image from "next/image";
 import PreviewButton from "./PreviewButton";

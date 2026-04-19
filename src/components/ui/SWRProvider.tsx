@@ -11,12 +11,12 @@ export default function SWRProvider({
     <SWRConfig
       value={{
         fetcher,
-        shouldRetryOnError: true,
-        errorRetryCount: 3,
-        errorRetryInterval: 3000,
-        dedupingInterval: 2000,
-        revalidateOnFocus: true,
-        revalidateOnReconnect: true,
+        shouldRetryOnError: false, // tắt retry tự động
+        dedupingInterval: 60000, // cache 60s, tránh gọi lại cùng key
+        revalidateOnFocus: false, // tắt - gọi lại mỗi khi focus tab
+        revalidateOnReconnect: false, // tắt - gọi lại mỗi khi có mạng
+        revalidateIfStale: false, // tắt - gọi lại khi data cũ
+        keepPreviousData: true,
       }}
     >
       {children}

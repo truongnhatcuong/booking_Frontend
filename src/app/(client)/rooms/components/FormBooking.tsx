@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import useSWR from "swr";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { URL_API } from "@/lib/fetcher";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,7 @@ interface RoomBooking {
   handleFormChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => void;
 
   seasonPrice: {
@@ -75,39 +74,53 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
     if (!user?.token) {
       toast.error("Vui lòng đăng nhập để tiếp tục");
       setIsLogin(true); // bật form login nếu cần
+      return;
     }
 
     // Nếu tất cả điều kiện đúng → mở modal
     setIsOpen(true);
   };
 
-  const { data } = useSWR(`${URL_API}/api/room/${room.id}/booked-dates`);
+  const { data } = useSWR(`/api/room/${room.id}/booked-dates`);
   const { data: discount } = useSWR(
-    discountCode ? `${URL_API}/api/discount?code=${discountCode}` : null
+    discountCode ? `/api/discount?code=${discountCode}` : null,
   );
 
   function handleDiscountCode() {
-    if (!formData.checkInDate || !formData.checkOutDate) return;
+    if (!formData.checkInDate || !formData.checkOutDate) {
+      toast.error("Vui lòng chọn ngày trước!");
+      return;
+    }
 
-    if (discount?.data?.percentage) {
-      setFormData({
-        discountId: discount.data.id,
-        totalAmount: Math.round(
-          formData.totalAmount * (1 - discount.data.percentage / 100)
-        ),
-      });
-
-      toast.success("Mã giảm giá đã được áp dụng!");
-    } else if (!discountCode) {
-      toast.error("vui lòng nhập mã giảm giá !");
+    if (!discountCode) {
+      toast.error("Vui lòng nhập mã giảm giá!");
       setFormData({
         discountId: null,
+        discountAmount: 0,
         totalAmount: seasonPrice.total,
       });
+      return;
+    }
+
+    // Kiểm tra data trả về có khớp với mã đang nhập không
+    if (
+      discount?.data?.percentage &&
+      discount?.data?.code === discountCode.toUpperCase()
+    ) {
+      const discountAmount = Math.round(
+        seasonPrice.total * (discount.data.percentage / 100),
+      );
+      setFormData({
+        discountId: discount.data.id,
+        discountAmount: discountAmount,
+        totalAmount: seasonPrice.total - discountAmount,
+      });
+      toast.success("Mã giảm giá đã được áp dụng!");
     } else {
-      toast.error("Mã giảm giá không hợp lệ hoặc đã hết hạn !");
+      toast.error("Mã giảm giá không hợp lệ hoặc đã hết hạn!");
       setFormData({
         discountId: null,
+        discountAmount: 0,
         totalAmount: seasonPrice.total,
       });
     }
@@ -122,7 +135,7 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
 
   const handleDateChange = (
     date: Date | null,
-    field: "checkInDate" | "checkOutDate"
+    field: "checkInDate" | "checkOutDate",
   ) => {
     setFormData({
       [field]: date,
@@ -190,7 +203,7 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
                     formData.checkInDate
                       ? new Date(
                           new Date(formData.checkInDate).getTime() +
-                            24 * 60 * 60 * 1000
+                            24 * 60 * 60 * 1000,
                         )
                       : new Date()
                   }
@@ -215,7 +228,7 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
                 </label>
                 <select
                   name="totalGuests"
-                  className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   onChange={handleFormChange}
                   value={formData.totalGuests}
                 >
@@ -242,7 +255,7 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
               />
             </div>
           </div>
-          <div className="grid w-full max-w-sm gap-2">
+          <div className="grid w-full gap-2">
             <Label htmlFor="discount">Mã giảm giá (nếu có)</Label>
             <div className="flex items-center gap-2">
               <Input
@@ -250,8 +263,13 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
                 placeholder="Nhập mã giảm giá"
                 value={discountCode.toUpperCase()}
                 onChange={(e) => setDiscountCode(e.target.value)}
+                className="py-6"
               />{" "}
-              <Button type="button" onClick={handleDiscountCode}>
+              <Button
+                type="button"
+                onClick={handleDiscountCode}
+                className="py-6"
+              >
                 {" "}
                 Áp Dụng
               </Button>
@@ -266,6 +284,20 @@ const FormBooking = ({ seasonPrice, room, handleFormChange }: RoomBooking) => {
                 {formatPrice(Number(seasonPrice.displayPrice))}
               </span>
             </div>
+
+            {discount?.data?.percentage && formData.discountId && (
+              <div className="flex justify-between mb-2 text-green-600">
+                <span>Giảm giá ({discount.data.percentage}%):</span>
+                <span className="font-medium text-sm">
+                  -{" "}
+                  {formatPrice(
+                    Math.round(
+                      seasonPrice.total * (discount.data.percentage / 100),
+                    ),
+                  )}
+                </span>
+              </div>
+            )}
 
             <div className="border-t border-gray-200 my-2 pt-2">
               <div className="flex justify-between">

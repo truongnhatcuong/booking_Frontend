@@ -63,7 +63,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       {/* Bài viết mới nhất — luôn dùng heroArticles, không bị ảnh hưởng bởi page */}
       <section className="py-16 px-4 md:px-10 bg-white">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-red-600 mb-4">
             Bài Viết Mới Nhất
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">

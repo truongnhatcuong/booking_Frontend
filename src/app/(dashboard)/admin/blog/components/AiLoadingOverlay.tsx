@@ -10,7 +10,7 @@ interface IAiLoading {
 const AiLoadingOverlay = ({ loading }: IAiLoading) => {
   const [progress, setProgress] = useState(0);
   const [currentText, setCurrentText] = useState(
-    "Đang khởi tạo ý tưởng bài viết..."
+    "Đang khởi tạo ý tưởng bài viết...",
   );
   const [dots, setDots] = useState("");
 

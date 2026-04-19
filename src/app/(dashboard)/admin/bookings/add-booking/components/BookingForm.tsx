@@ -116,13 +116,12 @@ export default function BookingForm({
     }
     setIsOpen(true);
   };
-  console.log(booking);
   const { data: dataProvide } = useSWR<IProvide[]>(
     `https://provinces.open-api.vn/api/v1/p`,
-    fetcher
+    fetcher,
   );
   const { data: dataDate } = useSWR(
-    `/api/room/${booking.roomId ? booking.roomId : null}/booked-dates`
+    `/api/room/${booking.roomId ? booking.roomId : null}/booked-dates`,
   );
 
   const { data: dataSelectRoom } = useSWR(`/api/room?limit=9999`);
@@ -139,7 +138,7 @@ export default function BookingForm({
   }, [dataSelectRoom]); //handlechang
 
   const handlechange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setBooking((prev) => ({
@@ -155,7 +154,7 @@ export default function BookingForm({
 
   const handleDateChange = (
     name: "checkInDate" | "checkOutDate",
-    date: Date | null
+    date: Date | null,
   ) => {
     setBooking((prev) => ({
       ...prev,
@@ -441,7 +440,7 @@ export default function BookingForm({
                     booking.checkInDate
                       ? new Date(
                           new Date(booking.checkInDate).getTime() +
-                            24 * 60 * 60 * 1000
+                            24 * 60 * 60 * 1000,
                         )
                       : new Date()
                   }

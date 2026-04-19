@@ -1,6 +1,5 @@
 import { UploadButton } from "@/utils/uploadthing";
 import axios from "axios";
-import { ImageDownIcon } from "lucide-react";
 
 import React from "react";
 import toast from "react-hot-toast";

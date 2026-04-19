@@ -16,7 +16,7 @@ export default async function Page({
   }
   const data = res.data;
   return (
-    <div>
+    <>
       <HeroSection
         title={data.room.name ?? ""}
         backgroundImage={data.room.photoUrls ?? ""}
@@ -24,6 +24,6 @@ export default async function Page({
       />
 
       <CardRoom room={data.room} />
-    </div>
+    </>
   );
 }

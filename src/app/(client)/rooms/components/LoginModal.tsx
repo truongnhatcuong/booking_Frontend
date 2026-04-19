@@ -2,8 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/hook/useUserStore";
-import { URL_API } from "@/lib/fetcher";
-import axios from "axios";
+import axiosInstance from "@/lib/axios";
 import { jwtDecode } from "jwt-decode";
 import { X } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +17,6 @@ interface ILoginModal {
 const LoginModal = ({ isLogin, setIsLogin }: ILoginModal) => {
   const { login } = useUserStore();
 
-
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     email: "",
@@ -26,6 +24,10 @@ const LoginModal = ({ isLogin, setIsLogin }: ILoginModal) => {
   });
   useEffect(() => {
     Modal.setAppElement("#root");
+    const email = localStorage.getItem("remembered_email");
+    if (email) {
+      setFormData((prev) => ({ ...prev, email }));
+    }
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,9 +40,7 @@ const LoginModal = ({ isLogin, setIsLogin }: ILoginModal) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${URL_API}/api/auth/login`, formData, {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.post(`/api/auth/login`, formData);
 
       if (res.data && res.data.accessToken) {
         const token = res.data.accessToken;
@@ -55,7 +55,7 @@ const LoginModal = ({ isLogin, setIsLogin }: ILoginModal) => {
         localStorage.setItem("token", token);
         localStorage.setItem(
           "sessionId",
-          decoded.id ||  Math.random().toString(36).substring(2, 12)
+          decoded.id || Math.random().toString(36).substring(2, 12),
         );
 
         login({
