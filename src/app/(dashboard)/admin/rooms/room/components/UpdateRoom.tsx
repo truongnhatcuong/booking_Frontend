@@ -75,10 +75,10 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
       <Button
         variant="outline"
         size="icon"
-        className="cursor-pointer text-blue-500 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 "
+        className="cursor-pointer bg-blue-500 hover:bg-blue-600 hover:border-blue-300 transition-all duration-200 "
         onClick={() => setIsOpen(true)}
       >
-        <Pencil className="h-4 w-4" />
+        <Pencil className="h-4 w-4 text-white" />
       </Button>
 
       {isOpen && (
@@ -229,11 +229,10 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Available */}
                   <label
-                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 ${
-                      formData.status === "AVAILABLE"
-                        ? "border-green-500 bg-green-50 shadow-md"
-                        : "border-gray-200 hover:border-green-300 hover:bg-green-50/50"
-                    }`}
+                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 ${formData.status === "AVAILABLE"
+                      ? "border-green-500 bg-green-50 shadow-md"
+                      : "border-gray-200 hover:border-green-300 hover:bg-green-50/50"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -245,27 +244,24 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
                     />
                     <div className="flex items-center gap-3">
                       <div
-                        className={`p-2 rounded-lg ${
-                          formData.status === "AVAILABLE"
-                            ? "bg-green-100"
-                            : "bg-gray-100"
-                        }`}
+                        className={`p-2 rounded-lg ${formData.status === "AVAILABLE"
+                          ? "bg-green-100"
+                          : "bg-gray-100"
+                          }`}
                       >
                         <Check
-                          className={`h-5 w-5 ${
-                            formData.status === "AVAILABLE"
-                              ? "text-green-600"
-                              : "text-gray-400"
-                          }`}
+                          className={`h-5 w-5 ${formData.status === "AVAILABLE"
+                            ? "text-green-600"
+                            : "text-gray-400"
+                            }`}
                         />
                       </div>
                       <div>
                         <p
-                          className={`font-semibold ${
-                            formData.status === "AVAILABLE"
-                              ? "text-green-700"
-                              : "text-gray-700"
-                          }`}
+                          className={`font-semibold ${formData.status === "AVAILABLE"
+                            ? "text-green-700"
+                            : "text-gray-700"
+                            }`}
                         >
                           Sẵn sàng
                         </p>
@@ -276,11 +272,10 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
 
                   {/* Occupied */}
                   <label
-                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 ${
-                      formData.status === "OCCUPIED"
-                        ? "border-amber-500 bg-amber-50 shadow-md"
-                        : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"
-                    }`}
+                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 ${formData.status === "OCCUPIED"
+                      ? "border-amber-500 bg-amber-50 shadow-md"
+                      : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -292,27 +287,24 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
                     />
                     <div className="flex items-center gap-3">
                       <div
-                        className={`p-2 rounded-lg ${
-                          formData.status === "OCCUPIED"
-                            ? "bg-amber-100"
-                            : "bg-gray-100"
-                        }`}
+                        className={`p-2 rounded-lg ${formData.status === "OCCUPIED"
+                          ? "bg-amber-100"
+                          : "bg-gray-100"
+                          }`}
                       >
                         <Clock
-                          className={`h-5 w-5 ${
-                            formData.status === "OCCUPIED"
-                              ? "text-amber-600"
-                              : "text-gray-400"
-                          }`}
+                          className={`h-5 w-5 ${formData.status === "OCCUPIED"
+                            ? "text-amber-600"
+                            : "text-gray-400"
+                            }`}
                         />
                       </div>
                       <div>
                         <p
-                          className={`font-semibold ${
-                            formData.status === "OCCUPIED"
-                              ? "text-amber-700"
-                              : "text-gray-700"
-                          }`}
+                          className={`font-semibold ${formData.status === "OCCUPIED"
+                            ? "text-amber-700"
+                            : "text-gray-700"
+                            }`}
                         >
                           Đang sử dụng
                         </p>
@@ -323,11 +315,10 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
 
                   {/* Maintenance */}
                   <label
-                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 ${
-                      formData.status === "MAINTENANCE"
-                        ? "border-red-500 bg-red-50 shadow-md"
-                        : "border-gray-200 hover:border-red-300 hover:bg-red-50/50"
-                    }`}
+                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 ${formData.status === "MAINTENANCE"
+                      ? "border-red-500 bg-red-50 shadow-md"
+                      : "border-gray-200 hover:border-red-300 hover:bg-red-50/50"
+                      }`}
                   >
                     <input
                       type="radio"
@@ -339,27 +330,24 @@ const UpdateRoom = ({ data, rooms }: RoomProps) => {
                     />
                     <div className="flex items-center gap-3">
                       <div
-                        className={`p-2 rounded-lg ${
-                          formData.status === "MAINTENANCE"
-                            ? "bg-red-100"
-                            : "bg-gray-100"
-                        }`}
+                        className={`p-2 rounded-lg ${formData.status === "MAINTENANCE"
+                          ? "bg-red-100"
+                          : "bg-gray-100"
+                          }`}
                       >
                         <Wrench
-                          className={`h-5 w-5 ${
-                            formData.status === "MAINTENANCE"
-                              ? "text-red-600"
-                              : "text-gray-400"
-                          }`}
+                          className={`h-5 w-5 ${formData.status === "MAINTENANCE"
+                            ? "text-red-600"
+                            : "text-gray-400"
+                            }`}
                         />
                       </div>
                       <div>
                         <p
-                          className={`font-semibold ${
-                            formData.status === "MAINTENANCE"
-                              ? "text-red-700"
-                              : "text-gray-700"
-                          }`}
+                          className={`font-semibold ${formData.status === "MAINTENANCE"
+                            ? "text-red-700"
+                            : "text-gray-700"
+                            }`}
                         >
                           Bảo trì
                         </p>

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/lib/axios";
+import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
 
@@ -40,11 +41,11 @@ const RoleDeleteButton = ({ roleId, roleName }: RoleDeleteButtonProps) => {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          variant="destructive"
-          size="sm"
-          onClick={(e) => e.stopPropagation()}
+          variant="outline"
+          aria-haspopup="dialog"
+          className="bg-red-500 hover:bg-red-700 hover:border-red-300 transition-all duration-200 "
         >
-          Xóa
+          <Trash className="w-5 h-5 text-white" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent onClick={(e) => e.stopPropagation()}>

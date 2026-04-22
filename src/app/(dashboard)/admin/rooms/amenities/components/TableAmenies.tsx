@@ -27,7 +27,7 @@ const TableAmenies = ({ amenities }: IAmenities) => {
   }
 
   return (
-    <div className="bg-white  rounded-xl border">
+    <div className="bg-white rounded-xl ">
       <Table>
         <TableHeader>
           <TableRow>

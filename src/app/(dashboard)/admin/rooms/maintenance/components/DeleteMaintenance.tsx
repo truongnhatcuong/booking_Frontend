@@ -12,8 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Mutate from "@/hook/Mutate";
 import axiosInstance from "@/lib/axios";
-import axios from "axios";
-import { Trash2 } from "lucide-react";
+import { Trash } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 
@@ -37,9 +36,9 @@ const DeleteMaintenance = ({ id }: { id: string }) => {
         <Button
           variant="outline"
           aria-haspopup="dialog"
-          className="text-red-500 hover:text-red-700 cursor-pointer"
+          className="bg-red-500 hover:bg-red-700 hover:border-red-300 transition-all duration-200 "
         >
-          <Trash2 className="w-5 h-5" />
+          <Trash className="w-5 h-5 text-white" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

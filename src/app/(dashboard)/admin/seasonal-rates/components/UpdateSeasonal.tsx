@@ -172,9 +172,9 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
         <Button
           variant="outline"
           size="sm"
-          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+          className="bg-blue-500 hover:bg-blue-700 hover:border-blue-300 transition-all duration-200 "
         >
-          <Edit2 className="w-4 h-4" />
+          <Edit2 className="w-4 h-4 text-white" />
         </Button>
       </DialogTrigger>
 
@@ -384,7 +384,7 @@ export default function UpdateSeasonal({ rate }: UpdateSeasonalProps) {
                       {Math.abs(
                         ((calculateNewPrice() - calculateOldPrice()) /
                           calculateOldPrice()) *
-                          100,
+                        100,
                       ).toFixed(1)}
                       %)
                     </span>

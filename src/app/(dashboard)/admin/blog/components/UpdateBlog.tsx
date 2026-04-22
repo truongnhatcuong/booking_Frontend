@@ -59,7 +59,7 @@ const UpdateBlog: React.FC<IUpdateProps> = ({ data, isOpen, setIsOpen }) => {
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
-        className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg w-full max-w-7xl max-h-[90vh] overflow-y-auto"
+        className=" absolute top-1/2 left-1/2 transform -translate-x-[45%] -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg w-full max-w-7xl max-h-[90vh] overflow-y-auto"
         overlayClassName="fixed inset-0 bg-black/10 "
       >
         <form className="space-y-4" onSubmit={submitUpdate}>
