@@ -39,10 +39,10 @@ const DeleteRoom = ({ roomId }: DeleteRoomProps) => {
         type="button"
         variant="outline"
         size="icon"
-        className="cursor-pointer text-red-500 hover:text-red-600"
+        className="cursor-pointer bg-red-500 hover:bg-red-600 hover:border-red-300 transition-all duration-200 "
         onClick={handleDelete}
       >
-        <Trash className="h-4 w-4 " />
+        <Trash className="h-4 w-4 text-white" />
       </Button>
     </>
   );

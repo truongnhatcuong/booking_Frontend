@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios";
 import Mutate from "../../../../../hook/Mutate";
@@ -60,10 +60,10 @@ export default function DeleteSeasonal({ id }: DeleteSeasonalProps) {
       <AlertDialogTrigger asChild>
         <Button
           variant="outline"
-          size="sm"
-          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          aria-haspopup="dialog"
+          className="bg-red-500 hover:bg-red-700 hover:border-red-300 transition-all duration-200 "
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash className="w-5 h-5 text-white" />
         </Button>
       </AlertDialogTrigger>
 

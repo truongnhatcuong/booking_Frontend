@@ -96,10 +96,11 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
       <Button
         variant="outline"
         size="icon"
-        className="cursor-pointer"
+        className="cursor-pointer  bg-blue-500"
+
         onClick={() => setIsOpen(true)}
       >
-        <Pencil className="h-4 w-4 " />
+        <Pencil className="h-4 w-4 text-white" />
       </Button>
       {isOpen && (
         <Modal
@@ -201,7 +202,7 @@ const UpdateRoomType = ({ roomTypes }: MockRoomType) => {
                       onUploadError={(error) => {
                         toast.error(
                           `Upload failed. ${error.message}` ||
-                            "Tải lên không thành công!",
+                          "Tải lên không thành công!",
                         );
                       }}
                       content={{

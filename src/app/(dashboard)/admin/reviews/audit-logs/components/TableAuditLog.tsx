@@ -2,7 +2,6 @@ import React from "react";
 import moment from "moment";
 import {
   BedDouble,
-  BedSingle,
   LogIn,
   LogOut,
   CreditCard,
@@ -93,8 +92,7 @@ const TableAuditLog = ({ auditLogs }: IAuditLogProps) => {
           bgColor,
           label,
         } = getActionConfig(log.action);
-        const fullName =
-          `${log.firstName} ${log.lastName}`.trim() || "Hệ thống";
+
 
         return (
           <div

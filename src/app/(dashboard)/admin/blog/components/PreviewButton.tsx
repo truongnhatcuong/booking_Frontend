@@ -61,11 +61,11 @@ const PreviewButton: React.FC<PreviewButtonProps> = ({
         closeTimeoutMS={200}
         shouldCloseOnOverlayClick={true}
         shouldCloseOnEsc={true}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-0 z-50 rounded-lg shadow-lg w-full max-w-7xl max-h-[90vh] flex flex-col"
+        className="absolute top-1/2 left-1/2 transform -translate-x-[40%] -translate-y-1/2 bg-white p-0 z-50 rounded-lg shadow-lg w-full max-w-7xl max-h-[90vh] flex flex-col"
         overlayClassName="fixed inset-0 bg-black/30"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 ">
           <h3 className="text-lg font-semibold">Bản xem trước</h3>
           <button
             onClick={() => setShowPreview(false)}

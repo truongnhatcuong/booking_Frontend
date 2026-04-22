@@ -2,15 +2,19 @@
 import React from "react";
 import TableAmenies from "./components/TableAmenies";
 import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
 import AddAmenies from "./components/AddAmenies";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
+import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
 
 const Page = () => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
   const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/amenity`,
-    fetcher,
+    `/api/amenity?page=${page}&limit=${limit}`,
   );
+
+  console.log("data?.amenity", data);
 
   // Nếu còn loading
 
@@ -20,15 +24,24 @@ const Page = () => {
 
   // Kiểm tra trạng thái loading và hiển thị thông báo
   return (
-    <div className="bg-white p-6 rounded-xl">
+    <div className="bg-white p-4 rounded-xl">
       <div className="flex justify-end items-center ">
         <AddAmenies />
       </div>
       {isLoading ? (
         <div className="text-center col-span-5">Đang tải dữ liệu...</div>
       ) : (
-        <TableAmenies amenities={data?.amenity || []} />
+        <TableAmenies amenities={data?.data?.amenity || []} />
       )}
+      <div className="flex justify-between  items-center gap-2">
+
+        <LimitSelector onChange={setLimit} value={limit} />
+        <Pagination
+          page={page}
+          setPage={setPage}
+          totalPages={data?.data?.totalPages || 0}
+        />
+      </div>
     </div>
   );
 };

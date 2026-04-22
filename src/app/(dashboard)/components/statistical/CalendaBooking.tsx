@@ -142,6 +142,7 @@ const CalendarBooking = () => {
               eventPropGetter={() => ({
                 style: { backgroundColor: "transparent", zIndex: 2 },
               })}
+              popup={true}
               views={["month"]}
               className="modern-calendar"
             />

@@ -73,10 +73,10 @@ const CreateMaintenanceForm = ({ roomId, RoomNumber }: MaintenanceProps) => {
       <Button
         variant="outline"
         size="icon"
-        className="h-8 w-8"
+        className="h-8 w-8 bg-yellow-500 hover:bg-yellow-700 hover:border-yellow-300 transition-all duration-200 "
         onClick={() => setIsOpen(true)}
       >
-        <WrenchIcon className="h-4 w-4 text-yellow-600" />
+        <WrenchIcon className="h-4 w-4 text-white" />
       </Button>
       <Modal
         isOpen={isOpen}
