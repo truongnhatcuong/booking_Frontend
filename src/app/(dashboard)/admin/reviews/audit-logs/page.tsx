@@ -36,7 +36,6 @@ const Page = () => {
   const tabs = [
     { label: "Tất cả", entity: "All" },
     { label: "Đặt phòng", entity: "Booking" },
-
     { label: "Thanh toán", entity: "Payment" },
     { label: "Người dùng", entity: "User" },
   ];

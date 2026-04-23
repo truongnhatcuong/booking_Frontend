@@ -40,9 +40,8 @@ function MainContent({ children }: { children: React.ReactNode }) {
 
   return (
     <main
-      className={`transition-all duration-300 p-4 md:p-8 pt-16 md:pt-8 ${
-        isCollapsed ? "md:ml-16" : "md:ml-64"
-      }`}
+      className={`transition-all duration-300 p-4 md:p-8 pt-16 md:pt-8 ${isCollapsed ? "md:ml-16" : "md:ml-64"
+        }`}
     >
       {children}
     </main>

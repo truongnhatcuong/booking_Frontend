@@ -10,13 +10,15 @@ export default function UserProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { initUser } = useUserStore();
+  const { initUser, user } = useUserStore(); // 👈 Lấy thẳng biến user từ zustand ra
   const router = useRouter();
 
   function getTokenRemainingTime(token: string | null): number {
     if (!token) return 0;
     try {
       const decoded = jwtDecode<{ exp: number }>(token);
+
+
       if (!decoded.exp) return 0;
       const remaining = decoded.exp * 1000 - Date.now();
       return remaining > 0 ? remaining : 0;
@@ -30,10 +32,12 @@ export default function UserProvider({
     let timer: ReturnType<typeof setTimeout>;
 
     const handleToken = async () => {
-      const token = localStorage.getItem("token");
+      // 👈 Lấy từ user.token (nếu vừa login), hoặc fallback Local cho chắc
+      const token = user?.token || localStorage.getItem("token");
 
       if (!token) {
-        console.log("❌ Không có token trong localStorage");
+        // Này là báo bình thường khi người chơi chưa Login (Khách), không phải Lỗi
+        console.log("❌ Không có token để check (do chưa đăng nhập)");
         return;
       }
 
@@ -41,10 +45,10 @@ export default function UserProvider({
       console.log("⏱ Token còn lại:", Math.round(remainingTime / 1000), "giây");
 
       if (remainingTime <= 1000) {
-        console.log("🔄 Token hết hạn → đang refresh...");
+        console.log("🔄 Token sắp tàn phế → đang xách giỏ đi refresh...");
         try {
           const newToken = await refreshAccessToken();
-          console.log("✅ Refresh thành công");
+          console.log("✅ Tu tiên Refresh thành công, thọ thêm 1 tiếng");
           initUser();
           const newRemaining = getTokenRemainingTime(newToken);
           timer = setTimeout(
@@ -52,22 +56,21 @@ export default function UserProvider({
             newRemaining > 1000 ? newRemaining - 1000 : 30_000,
           );
         } catch (err: any) {
-          console.log("❌ Refresh thất bại:", err?.message || err);
-          console.log("❌ Response:", err?.response?.data);
-          console.log("❌ Status:", err?.response?.status);
+          console.log("❌ Refresh tạch rồi:", err?.message || err);
           localStorage.removeItem("token");
           router.push("/");
         }
       } else {
         initUser();
+        // Cài báo thức lúc nó ngỏm - 1 giây sẽ gọi đi vòng lặp tiếp
         timer = setTimeout(handleToken, remainingTime - 1000);
       }
     };
 
     handleToken();
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => clearTimeout(timer); // Chống kẹt bộ nhớ khi thoát Component
+  }, [user?.token]); // 👈 Quan trọng cực kì: Chèn user?.token vào đây. Để hễ cứ đăng nhập thành công là Token chạy vào -> useEffect tự thức tỉnh đo lại giờ!
 
   return <>{children}</>;
 }

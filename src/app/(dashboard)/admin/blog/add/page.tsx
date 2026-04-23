@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Image from "@tiptap/extension-image";
 import FormBlog from "../components/FormBlog";
 import axios from "axios";
 

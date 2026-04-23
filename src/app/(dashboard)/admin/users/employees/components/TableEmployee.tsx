@@ -157,8 +157,8 @@ const TableEmployee = ({
                   <TableCell className="hidden md:table-cell">
                     {employee.employee?.hireDate
                       ? formatDate(
-                          new Date(employee.employee.hireDate).toString(),
-                        )
+                        new Date(employee.employee.hireDate).toString(),
+                      )
                       : "Chưa cập nhật"}
                   </TableCell>
                   <TableCell>
@@ -172,8 +172,8 @@ const TableEmployee = ({
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {employee.employee?.roles[0]?.role?.name ||
-                      "vui lòng phân quyền"}
+                    <p className={`${employee.employee?.roles[0]?.role ? "bg-green-500 text-white " : "bg-red-400 text-white "} text-xs rounded-full w-fit p-1`}>{employee.employee?.roles[0]?.role?.name ||
+                      "vui lòng phân quyền"}</p>
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>

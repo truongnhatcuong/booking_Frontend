@@ -29,35 +29,35 @@ const AdminHeader = () => {
     return "Trang Quản Trị";
   };
   return (
-    <div className="navbar bg-base-100 shadow-sm mb-5">
+    <div className="navbar bg-base-100 shadow-sm mb-5 px-2 md:px-4">
       <div>
         <button
           onClick={toggleCollapse}
-          className="p-1 rounded-md hover:bg-gray-100 transition-colors mr-3"
+          className="p-1 rounded-md hover:bg-gray-100 transition-colors mr-1 md:mr-3"
         >
           {isCollapsed ? (
-            <ListIndentIncrease className="h-7 w-7" />
+            <ListIndentIncrease className="h-6 w-6 md:h-7 md:w-7" />
           ) : (
-            <ListIndentDecrease className="h-7 w-7" />
+            <ListIndentDecrease className="h-6 w-6 md:h-7 md:w-7 hidden md:block" />
           )}
         </button>
       </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2.5">
-          <span className="text-lg font-semibold text-gray-800 tracking-wide">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1 md:gap-2.5 truncate">
+          <span className="text-xs sm:text-base md:text-lg font-semibold text-gray-800 tracking-wide truncate">
             {getPageTitle()}
           </span>
         </div>
       </div>
-      <div className="mx-6">
+      <div className="mx-2 sm:mx-3 md:mx-6 flex-shrink-0">
         <AdminNotifications />
       </div>
-      <div className="flex items-center gap-3 ">
-        <div>
-          <p className="text-base font-bold">
+      <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+        <div className="hidden md:block text-right">
+          <p className="text-sm md:text-base font-bold truncate max-w-[120px] lg:max-w-[200px]">
             {user?.firstName} {user?.lastName}
           </p>
-          <p className="text-xs text-gray-500">{user?.email}</p>
+          <p className="text-[11px] md:text-xs text-gray-500 truncate max-w-[120px] lg:max-w-[200px]">{user?.email}</p>
         </div>
         <div className="dropdown dropdown-end">
           <div
@@ -86,20 +86,20 @@ const AdminHeader = () => {
             {["ADMIN", "MARKETING", "MANAGER"].includes(
               storedUser?.role || "",
             ) && (
-              <li>
-                <Link
-                  href={
-                    "https://docs.google.com/spreadsheets/d/1-1k7Mcmh7pIX8qfXdpT-QVTf5dqaLn7Nw_GPcx7IaBY/edit?gid=0#gid=0"
-                  }
-                  target="_blank"
-                >
-                  Quản Lý Dữ Liệu
-                  <span className="badge bg-red-600 text-white px-2 py-3">
-                    New
-                  </span>
-                </Link>
-              </li>
-            )}
+                <li>
+                  <Link
+                    href={
+                      "https://docs.google.com/spreadsheets/d/1-1k7Mcmh7pIX8qfXdpT-QVTf5dqaLn7Nw_GPcx7IaBY/edit?gid=0#gid=0"
+                    }
+                    target="_blank"
+                  >
+                    Quản Lý Dữ Liệu
+                    <span className="badge bg-red-600 text-white px-2 py-3">
+                      New
+                    </span>
+                  </Link>
+                </li>
+              )}
 
             <li>
               <button onClick={logout}>Đăng Xuất</button>

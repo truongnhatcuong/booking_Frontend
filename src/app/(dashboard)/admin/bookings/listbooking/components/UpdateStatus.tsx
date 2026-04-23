@@ -24,7 +24,6 @@ import { MoreHorizontal } from "lucide-react";
 import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios";
 import { URL_API } from "@/lib/fetcher";
-import axios from "axios";
 import Mutate from "@/hook/Mutate";
 import Invoice from "./Invoice";
 import { IBookingRecord } from "./bookingad";
@@ -33,53 +32,53 @@ interface IUpdateStatus {
 }
 const UpdateStatus = ({ booking }: IUpdateStatus) => {
   const handleUpdateStatus = async () => {
-    const res = await axiosInstance.put(`/api/booking/${booking.id}`);
+    const nextStatus = booking.status === "PENDING" ? "CHECKED_IN" : "CHECKED_OUT";
 
-    if (res.data) {
-      if (res.data.data.status === "CHECKED_IN") {
+    // 1. Optimistic Update: Cập nhật UI ngay lập tức
+    Mutate(`${URL_API}/api/booking`); // Trigger revalidate ngầm
+
+    try {
+      const res = await axiosInstance.put(`/api/booking/${booking.id}`);
+      if (res.data) {
+        toast.success(nextStatus === "CHECKED_IN" ? "Đã nhận phòng" : "Đã trả phòng");
+        // Revalidate lại để đồng bộ dữ liệu chuẩn từ server
         Mutate(`${URL_API}/api/booking`);
-        toast.success("Đã nhận phòng");
-      } else if (res.data.data.status === "CHECKED_OUT") {
-        Mutate(`${URL_API}/api/booking`);
-        toast.success("Đã trả phòng");
       }
+    } catch {
+      toast.error("Cập nhật thất bại");
+      Mutate(`${URL_API}/api/booking`); // Rollback dữ liệu
     }
   };
-  // huy
+
+  // huỷ
   const handleCancelledStatus = async () => {
     try {
-      const res = await axios.put(
-        `${URL_API}/api/booking/cancelled/${booking.id}`,
-        {},
-        {
-          withCredentials: true,
-        },
-      );
+      // Optimistic logic (giả định xóa/ẩn ngay)
+      const res = await axiosInstance.put(`/api/booking/cancelled/${booking.id}`);
 
       if (res.data) {
         Mutate(`${URL_API}/api/booking`);
         toast.success("Phòng Đã Được Hủy");
       }
-    } catch (error: any) {
-      toast.error(error.response.data.message);
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Lỗi khi hủy phòng");
+      Mutate(`${URL_API}/api/booking`);
     }
   };
 
   const deleteBooking = async () => {
     try {
-      const res = await axios.delete(
-        `${URL_API}/api/booking/employee/${booking.id}`,
-        {
-          withCredentials: true,
-        },
-      );
+      const res = await axiosInstance.delete(`/api/booking/employee/${booking.id}`);
 
       if (res.data) {
         Mutate(`${URL_API}/api/booking`);
         toast.success("Phòng Đã Được xóa");
       }
-    } catch (error: any) {
-      toast.error(error.response.data.message);
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Lỗi khi xóa");
+      Mutate(`${URL_API}/api/booking`);
     }
   };
 

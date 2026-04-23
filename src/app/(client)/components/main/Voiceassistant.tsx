@@ -127,7 +127,7 @@ export default function VoiceAssistant() {
                 {feedback}
               </p>
             )}
-            {transcript && state === "listening_command" && (
+            {transcript && (
               <p className="text-xs opacity-60 italic">
                 {removeWakePhrase(transcript)}
               </p>

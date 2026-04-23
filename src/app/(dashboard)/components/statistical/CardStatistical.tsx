@@ -10,7 +10,7 @@ const CardStatistical = () => {
   const { data, isLoading } = useSWR(`/api/dashboard?range=${range}`);
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 p-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2 w-full">
         <CardItemTotal
           title="Loading..."
           total={0}
