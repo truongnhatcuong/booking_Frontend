@@ -8,6 +8,40 @@ import { generateVoicePrompt } from "@/lib/voice-prompts";
 const WAKE_WORD = "xin chào";
 const SILENCE_TIMEOUT = 4000;
 
+// Add type definitions for Speech Recognition
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onstart: (event: Event) => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onend: (event: Event) => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+
+interface SpeechRecognitionConstructor {
+  new(): SpeechRecognition;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  }
+}
+
 type VoiceState =
   | "idle"
   | "listening_wake"
@@ -25,13 +59,8 @@ export const removeWakePhrase = (text: string) => {
     "xin chào",
   ];
 
-  let result = text.toLowerCase().trim();
-  for (const pattern of noisePatterns) {
-    while (result.includes(pattern)) {
-      result = result.replace(pattern, "").trim();
-    }
-  }
-  return result.trim();
+  const regex = new RegExp(noisePatterns.join("|"), "gi");
+  return text.replace(regex, "").replace(/\s+/g, " ").trim();
 };
 
 export function useVoiceAssistant() {
@@ -40,7 +69,7 @@ export function useVoiceAssistant() {
   const [transcript, setTranscript] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isListeningRef = useRef(false);
   const commandBufferRef = useRef("");
@@ -86,7 +115,7 @@ export function useVoiceAssistant() {
     isSpeakingRef.current = true;
     try {
       recognitionRef.current?.stop();
-    } catch {}
+    } catch { }
 
     fetch(`${URL_API}/api/chatai/tts?text=${encodeURIComponent(text)}`)
       .then((res) => {
@@ -345,8 +374,7 @@ export function useVoiceAssistant() {
   // ── Khởi động nhận diện giọng nói ──
   const startRecognition = useCallback(() => {
     const SpeechRecognition =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       setFeedback("❌ Trình duyệt không hỗ trợ nhận diện giọng nói");
@@ -356,7 +384,7 @@ export function useVoiceAssistant() {
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
-      } catch {}
+      } catch { }
     }
 
     const recognition = new SpeechRecognition();
@@ -370,8 +398,8 @@ export function useVoiceAssistant() {
       console.log("🎤 Mic started, waiting for wake word...");
     };
 
-    recognition.onresult = (event: any) => {
-      if (isSpeakingRef.current) return; // ← thêm dòng này
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      if (isSpeakingRef.current) return;
 
       let interim = "";
       let final = "";
@@ -383,18 +411,15 @@ export function useVoiceAssistant() {
       }
 
       const combined = (final + interim).toLowerCase().trim();
-      let displayText = combined;
-      if (combined.includes(WAKE_WORD)) {
-        displayText = combined.split(WAKE_WORD).pop()?.trim() || "";
-      }
-      setTranscript(combined);
-      console.log("🗣️ Heard:", combined, "| state:", stateRef.current);
 
       if (stateRef.current === "listening_command") {
-        commandBufferRef.current =
-          displayText || combined
-            ? combined.split(WAKE_WORD).pop()?.trim() || combined
-            : combined;
+        // Chỉ hiển thị transcript khi đang nghe lệnh
+        const cmdText = combined.includes(WAKE_WORD)
+          ? combined.split(WAKE_WORD).pop()?.trim() || ""
+          : combined;
+
+        setTranscript(cmdText);
+        commandBufferRef.current = cmdText;
 
         if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
         if (commandBufferRef.current) {
@@ -409,15 +434,16 @@ export function useVoiceAssistant() {
           }, SILENCE_TIMEOUT);
         }
       } else if (stateRef.current === "listening_wake") {
+        // Đang chờ từ khóa: Không hiện transcript lên UI
         if (combined.includes(WAKE_WORD)) {
           console.log("🔔 Wake word detected!");
           updateState("listening_command");
           setFeedback("👂 Đang nghe lệnh...");
+          setTranscript(""); // Xóa text "xin chào" để bắt đầu nhận lệnh mới
           commandBufferRef.current = "";
           if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
           speak("Dạ, tôi nghe. Bạn cần gì ạ?");
-          commandBufferRef.current = "";
         }
       }
     };
@@ -430,7 +456,7 @@ export function useVoiceAssistant() {
       restartMic();
     };
 
-    recognition.onerror = (e: any) => {
+    recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
       if (e.error === "no-speech") return;
       if (e.error === "aborted") return;
       console.error("🚨 Speech error:", e.error);
@@ -454,7 +480,7 @@ export function useVoiceAssistant() {
     window.speechSynthesis?.cancel();
     try {
       recognitionRef.current?.stop();
-    } catch {}
+    } catch { }
     isListeningRef.current = false;
     updateState("idle");
     setFeedback("");

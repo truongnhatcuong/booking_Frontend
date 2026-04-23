@@ -67,6 +67,24 @@ axiosInstance.interceptors.request.use(
   },
 );
 
+// ─── Variables for concurrency handling ───
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: unknown) => void;
+  reject: (reason?: any) => void;
+}> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 // ─── Response interceptor ─────────────────────────────────────────────────────
 axiosInstance.interceptors.response.use(
   (response) => response,
@@ -77,21 +95,53 @@ axiosInstance.interceptors.response.use(
       error.message ||
       "Có lỗi xảy ra từ server!";
 
+    // Mất token / Token hết hạn
     if (error.response?.status === 401 && !originalRequest._retry) {
+
+      // Nếu đang trong quá trình lấy token mới rồi -> Những request đến sau phải chờ (đưa vào hàng đợi)
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return axiosInstance(originalRequest); // Chạy lại request bị tạch ban đầu
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
+      // Đánh dấu request này là gốc và bắt đầu refresh token
       originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
         const newAccessToken = await refreshAccessToken();
+
+        // Nhả hàng đợi, gọi tất cả request đang chờ chạy lại
+        processQueue(null, newAccessToken);
+
+        // Chạy lại ngay cái request gọi đầu tiên
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
+
       } catch (refreshError) {
+        // Nếu lấy token thất bại -> Báo lỗi cho mớ đang chờ
+        processQueue(refreshError, null);
         console.error("Refresh token thất bại:", refreshError);
 
-        // ✅ Chỉ xóa localStorage và redirect ở client
+        // ✅ Chỉ xóa state và redirect ở client
         if (isClient) {
           localStorage.removeItem("token");
           Cookies.remove("token");
+          useUserStore.getState().logout(); // Phải dọn cả state Zustand
           window.location.href = "/signIn";
         }
+        return Promise.reject(refreshError);
+      } finally {
+        // Xong xuôi thì nhả cờ refresh
+        isRefreshing = false;
       }
     }
 

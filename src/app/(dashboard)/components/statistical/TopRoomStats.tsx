@@ -2,7 +2,6 @@
 import useSWR from "swr";
 import { useState } from "react";
 
-const URL_API = process.env.NEXT_PUBLIC_URL_API;
 
 type Period = "week" | "month" | "quarter" | "year";
 

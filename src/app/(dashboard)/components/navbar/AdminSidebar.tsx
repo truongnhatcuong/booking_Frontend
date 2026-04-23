@@ -13,7 +13,6 @@ import {
 import { IListItemAdmin, getMenuByRole } from "./data-admin-Menu";
 import { useSidebar } from "../../context/contextAdmin";
 import useAuth from "@/lib/authUser";
-import { translatePosition } from "@/lib/translate";
 import { useUserStore } from "@/hook/useUserStore";
 import {
   AlertDialog,
@@ -192,10 +191,9 @@ const AdminSidebar = () => {
                     <div
                       className={`
                         flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl cursor-pointer transition-colors
-                        ${
-                          active
-                            ? "bg-blue-50 text-blue-600"
-                            : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                        ${active
+                          ? "bg-blue-50 text-blue-600"
+                          : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                         }
                       `}
                       onClick={() => {
@@ -215,10 +213,9 @@ const AdminSidebar = () => {
                       <div
                         className={`
                           flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-colors
-                          ${
-                            active
-                              ? "text-blue-600"
-                              : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                          ${active
+                            ? "text-blue-600"
+                            : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                           }
                         `}
                         onClick={() => toggleSubMenu(menuItem.id)}
@@ -260,10 +257,9 @@ const AdminSidebar = () => {
                                 href={subItem.link}
                                 className={`
                                   flex items-center gap-2.5 px-3 py-2 rounded-lg transition-colors text-sm
-                                  ${
-                                    isSubMenuActive(subItem.link)
-                                      ? "bg-blue-50 text-blue-600 font-medium"
-                                      : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                  ${isSubMenuActive(subItem.link)
+                                    ? "bg-blue-50 text-blue-600 font-medium"
+                                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                                   }
                                 `}
                               >

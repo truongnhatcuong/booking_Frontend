@@ -1,10 +1,11 @@
 "use client";
-import "react-datepicker/dist/react-datepicker.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { URL_API } from "@/lib/fetcher";
 import toast from "react-hot-toast";
 import { useRoomTypeStore } from "@/hook/roomTypeStore";
+import { Calendar, Users, Home, Search, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface IRoomType {
   id: string;
@@ -16,17 +17,16 @@ interface ISeearchForm {
   setSearchParams: (value: any) => void;
   searchParams: any;
   setLoading: (value: boolean) => void;
-  // onSubmit: (e: React.FormEvent) => Promise<void>;
   setAvailableRooms: (value: any) => void;
 }
+
 type CacheValue = {
   data: any[];
   timestamp: number;
 };
 
-// ✅ Cache dùng chung cho toàn file, không bị tạo lại mỗi lần render
 const roomCache = new Map<string, CacheValue>();
-const TTL = 60_000; // 60 giây
+const TTL = 60_000;
 
 const SearchForm = ({
   searchParams,
@@ -36,6 +36,23 @@ const SearchForm = ({
 }: ISeearchForm) => {
   const { roomType } = useRoomTypeStore();
   const [isSticky, setIsSticky] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth >= 768) {
+        setIsSticky(window.scrollY > 400);
+      } else {
+        setIsSticky(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -47,24 +64,10 @@ const SearchForm = ({
     }));
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerWidth >= 768) {
-        setIsSticky(window.scrollY > 2000);
-      } else {
-        setIsSticky(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchParams.checkInDate || !searchParams.checkOutDate) {
-      toast.error(
-        "Vui lòng chọn đầy đủ ngày nhận và ngày trả phòng trước khi tìm!",
-      );
+      toast.error("Vui lòng chọn đầy đủ ngày nhận và trả phòng!");
       return;
     }
     setLoading(true);
@@ -72,40 +75,17 @@ const SearchForm = ({
 
     try {
       const cached = roomCache.get(url);
-      if (cached) {
-        const isValid = Date.now() - cached.timestamp < TTL;
-
-        if (isValid) {
-          console.log("👉 Dùng cache cho URL:", url); // <== biết ngay
-
-          // 🔹 Dùng cache nếu chưa hết hạn
-          if (cached.data.length > 0) {
-            setAvailableRooms(cached.data);
-          } else {
-            setAvailableRooms([]);
-            toast.error("Hiện tại phòng chúng tôi chưa có");
-          }
-          return;
-        } else {
-          console.log("👉 Hết hạn cache cho URL:", url); // <== biết ngay
-
-          // 🔹 Hết hạn thì xóa cache (optional)
-          roomCache.delete(url);
-        }
+      if (cached && Date.now() - cached.timestamp < TTL) {
+        setAvailableRooms(cached.data.length > 0 ? cached.data : []);
+        if (cached.data.length === 0) toast.error("Hiện tại không còn phòng trống");
+        return;
       }
 
       const res = await axios.get(url);
       const rooms = res.data || [];
-      // Lưu cache luôn, kể cả mảng rỗng
-
       roomCache.set(url, { data: rooms, timestamp: Date.now() });
-
-      if (rooms.length > 0) {
-        setAvailableRooms(rooms);
-      } else {
-        setAvailableRooms([]);
-        toast.error(`Hiện tại phòng chúng tôi chưa có`);
-      }
+      setAvailableRooms(rooms);
+      if (rooms.length === 0) toast.error("Hiện tại không còn phòng trống");
     } catch (error: any) {
       toast.error("Có lỗi xảy ra khi tìm phòng");
     } finally {
@@ -113,134 +93,124 @@ const SearchForm = ({
     }
   };
 
+  if (!mounted) return <div className="h-24"></div>;
+
   return (
     <div
-      className={` max-w-4xl mx-auto my-8 md:shadow-md transition-all duration-300 
-        ${
-          isSticky
-            ? "fixed -top-8 left-0 p-2 right-0 z-40 max-w-full  shadow-lg bg-white"
-            : " p-5 lg:p-15"
-        }
-      `}
+      className={`w-full mx-auto transition-all duration-500 ease-in-out px-4 
+        ${isSticky
+          ? "fixed top-0 left-0 right-0 z-50 py-2 bg-white/80 backdrop-blur-md shadow-lg border-b border-blue-50"
+          : "relative py-16"
+        }`}
     >
-      <form
-        className={`relative flex max-w-4xl mx-4 md:mx-auto flex-col md:grid ${
-          isSticky ? "md:grid-cols-5" : "md:grid-cols-4"
-        } lg:grid-cols-${isSticky ? "5" : "4"} gap-4`}
-        onSubmit={handleSubmit}
+      <motion.div
+        layout
+        className={`max-w-6xl mx-auto bg-white transition-all duration-300
+          ${isSticky
+            ? "max-w-4xl rounded-full shadow-md border border-gray-100"
+            : "rounded-2xl shadow-2xl border border-gray-100 relative pb-8"
+          }`}
       >
-        <div className="flex flex-col">
-          {!isSticky && (
-            <label
-              htmlFor="checkInDate"
-              className="mb-2 font-medium text-gray-700"
-            >
-              Ngày nhận phòng
-            </label>
-          )}
-          <input
-            type="date"
-            id="checkInDate"
-            name="checkInDate"
-            value={searchParams.checkInDate}
-            onChange={handleChange}
-            required
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
-            min={new Date().toISOString().split("T")[0]}
-          />
-        </div>
+        <form onSubmit={handleSubmit} className={`flex flex-col lg:flex-row items-stretch ${isSticky ? "px-2" : ""}`}>
 
-        <div className="flex flex-col">
-          {!isSticky && (
-            <label
-              htmlFor="checkOutDate"
-              className="mb-2 font-medium text-gray-700"
-            >
-              Ngày trả phòng
-            </label>
-          )}
-          <input
-            type="date"
-            id="checkOutDate"
-            name="checkOutDate"
-            value={searchParams.checkOutDate}
-            onChange={handleChange}
-            disabled={!searchParams.checkInDate}
-            min={searchParams.checkInDate}
-            required
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="flex flex-col">
-          {!isSticky && (
-            <label
-              htmlFor="customer"
-              className="mb-2 font-medium text-gray-700"
-            >
-              Số Khách
-            </label>
-          )}
-          <select
-            id="customer"
-            name="customer"
-            value={searchParams.customer}
-            onChange={handleChange}
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
-          >
-            {[...Array(6)].map((_, i) => (
-              <option key={i + 1} value={i + 1}>
-                {i + 1} khách
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col">
-          {!isSticky && (
-            <label
-              htmlFor="roomType"
-              className="mb-2 font-medium text-gray-700"
-            >
-              Loại phòng
-            </label>
-          )}
-          <select
-            id="roomType"
-            name="roomType"
-            value={searchParams.roomType}
-            onChange={handleChange}
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 bg-white focus:ring-blue-500"
-          >
-            <option value="">Tất cả</option>
-            {roomType?.map((item: IRoomType) => (
-              <option value={item.name} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {isSticky ? (
-          <div className="flex flex-col">
-            <button
-              type="submit"
-              className="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
-            >
-              Tìm phòng
-            </button>
+          {/* Segment: Check-in */}
+          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+            <div className="flex items-center gap-2">
+              <Calendar size={isSticky ? 16 : 20} className="text-blue-500 shrink-0" />
+              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Ngày nhận</label>}
+            </div>
+            <input
+              type="date"
+              name="checkInDate"
+              value={searchParams.checkInDate}
+              onChange={handleChange}
+              required
+              min={new Date().toISOString().split("T")[0]}
+              className={`bg-transparent border-none outline-none text-gray-800 font-semibold cursor-pointer w-full ${isSticky ? "text-xs" : "text-lg mt-1"}`}
+            />
           </div>
-        ) : (
-          <div className=" lg:absolute col-span-full lg:col-span-1 top-25  lg:left-1/2 transform lg:-translate-x-1/2 lg:translate-y-1/2 ">
-            <button
-              type="submit"
-              className="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 lg:px-20 rounded-md transition duration-200 w-full"
-            >
-              Tìm phòng trống
-            </button>
+
+          {/* Segment: Check-out */}
+          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+            <div className="flex items-center gap-2">
+              <Calendar size={isSticky ? 16 : 20} className="text-red-400 shrink-0" />
+              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Ngày trả</label>}
+            </div>
+            <input
+              type="date"
+              name="checkOutDate"
+              value={searchParams.checkOutDate}
+              onChange={handleChange}
+              disabled={!searchParams.checkInDate}
+              min={searchParams.checkInDate}
+              required
+              className={`bg-transparent border-none outline-none text-gray-800 font-semibold cursor-pointer w-full disabled:opacity-30 ${isSticky ? "text-xs" : "text-lg mt-1"}`}
+            />
           </div>
-        )}
-      </form>
+
+          {/* Segment: Guests */}
+          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+            <div className="flex items-center gap-2">
+              <Users size={isSticky ? 16 : 20} className="text-purple-500 shrink-0" />
+              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Số lượng khách</label>}
+            </div>
+            <div className="relative w-full">
+              <select
+                name="customer"
+                value={searchParams.customer}
+                onChange={handleChange}
+                className={`bg-white p-2 border-none outline-none text-gray-800 font-semibold cursor-pointer w-full appearance-none ${isSticky ? "text-xs " : "text-lg mt-1"}`}
+              >
+                {[...Array(6)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1} Khách hàng
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={14} className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
+            </div>
+          </div>
+
+          {/* Segment: Room Type */}
+          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+            <div className="flex items-center gap-2">
+              <Home size={isSticky ? 16 : 20} className="text-emerald-500 shrink-0" />
+              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Loại phòng</label>}
+            </div>
+            <div className="relative w-full">
+              <select
+                name="roomType"
+                value={searchParams.roomType}
+                onChange={handleChange}
+                className={`bg-white p-2 border-none outline-none text-gray-800 font-semibold cursor-pointer w-full appearance-none ${isSticky ? "text-xs" : "text-lg mt-1"}`}
+              >
+                <option value="">Tất cả hạng phòng</option>
+                {roomType?.map((item: IRoomType) => (
+                  <option value={item.name} key={item.id}>{item.name}</option>
+                ))}
+              </select>
+              <ChevronDown size={14} className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
+            </div>
+          </div>
+
+          {/* Action: Button */}
+          <button
+            type="submit"
+            className={`bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 transition-all duration-300 font-bold group active:scale-95 shadow-lg
+              ${isSticky
+                ? "px-6 py-2 rounded-full text-xs my-1 mr-1"
+                : "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[65%] px-16 py-5 rounded-xl text-xl"
+              }`}
+          >
+            <Search size={isSticky ? 14 : 24} className="group-hover:scale-110 transition-transform" />
+            <span>TÌM KIẾM</span>
+          </button>
+        </form>
+      </motion.div>
     </div>
   );
 };
