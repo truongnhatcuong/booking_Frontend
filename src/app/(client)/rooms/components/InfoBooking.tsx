@@ -1,5 +1,5 @@
 "use client";
-import { useBookingStore } from "@/app/(dashboard)/context/useBookingForm";
+import { useBookingStore } from "@/hook/useBookingForm";
 import { formatDate } from "@/lib/formatDate";
 import { formatPrice } from "@/lib/formatPrice";
 import React from "react";

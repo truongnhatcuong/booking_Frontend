@@ -3,10 +3,9 @@ import React, { useState } from "react";
 import TableCustomer from "./components/TableCustomer";
 import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 import useSWR from "swr";
-import { URL_API } from "@/lib/fetcher";
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
 import LimitSelector from "@/app/(dashboard)/components/Pagination/SelectRecord";
-import { useDebounce } from "../../../../../hook/Debounce";
+import { useDebounce } from "../../../../../hook/useDebounce";
 
 const Page = () => {
   const [searchTerm, setSearchTerm] = useState("");

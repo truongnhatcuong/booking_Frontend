@@ -39,12 +39,12 @@ const AddAmenityToRoomtype = ({
   const { data } = useSWR(`/api/amenity`);
   useEffect(() => {
     if (data) {
-      setAmenity(data.amenity);
+      const filteredAmenities = data?.data?.amenity.filter(
+        (item: Amenity) => !roomTypeAmenities?.includes(item.id),
+      );
+      setAmenity(filteredAmenities);
     }
   }, [data]);
-  const filteredAmenities = (amenity || []).filter(
-    (item) => !roomTypeAmenities?.includes(item.id),
-  );
 
   useEffect(() => {
     Modal.setAppElement("#root");
@@ -92,7 +92,7 @@ const AddAmenityToRoomtype = ({
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              {filteredAmenities.map((item) => (
+              {amenity.map((item) => (
                 <div key={item.id} className="flex items-center gap-2">
                   <Input
                     type="checkbox"

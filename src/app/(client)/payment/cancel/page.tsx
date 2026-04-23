@@ -3,15 +3,14 @@ import React, { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { Factory } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import axios from "axios";
-import { URL_API } from "@/lib/fetcher";
+import axiosInstance from "@/lib/axios";
 
 const CancelPage = () => {
   const searchParams = useSearchParams();
   const status = searchParams.get("status");
   const orderCode = searchParams.get("orderCode");
   useEffect(() => {
-    axios.post(`${URL_API}/api/payment/webhook/payos`, {
+    axiosInstance.post(`/api/payment/webhook/payos`, {
       status,
       orderCode,
     });

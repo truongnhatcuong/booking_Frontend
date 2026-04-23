@@ -1,5 +1,6 @@
 import React from "react";
-import moment from "moment";
+import { format } from "date-fns";
+import { vi } from "date-fns/locale";
 import {
   BedDouble,
   LogIn,
@@ -19,8 +20,6 @@ export interface AuditLog {
   lastName: string;
   firstName: string;
 }
-
-moment.locale("vi");
 
 interface IAuditLogProps {
   auditLogs: AuditLog[];
@@ -93,7 +92,6 @@ const TableAuditLog = ({ auditLogs }: IAuditLogProps) => {
           label,
         } = getActionConfig(log.action);
 
-
         return (
           <div
             key={log.id}
@@ -115,7 +113,9 @@ const TableAuditLog = ({ auditLogs }: IAuditLogProps) => {
                 </p>
               )}
               <p className="text-xs text-gray-400 mt-1">
-                {moment(log.createdAt).format("HH:mm - DD/MM/YYYY")}
+                {format(new Date(log.createdAt), "HH:mm - dd/MM/yyyy", {
+                  locale: vi,
+                })}
               </p>
             </div>
 

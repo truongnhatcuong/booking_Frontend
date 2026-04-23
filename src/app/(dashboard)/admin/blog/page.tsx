@@ -5,7 +5,7 @@ import useSWR from "swr";
 import SearchForm from "../../components/searchPage/SearchForm";
 import LimitSelector from "../../components/Pagination/SelectRecord";
 import Pagination from "../../components/Pagination/Pagination";
-import { useDebounce } from "@/hook/Debounce";
+import { useDebounce } from "@/hook/useDebounce";
 
 const Page = () => {
   const [query, setQuery] = useState({

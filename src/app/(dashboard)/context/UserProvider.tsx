@@ -18,7 +18,6 @@ export default function UserProvider({
     try {
       const decoded = jwtDecode<{ exp: number }>(token);
 
-
       if (!decoded.exp) return 0;
       const remaining = decoded.exp * 1000 - Date.now();
       return remaining > 0 ? remaining : 0;
@@ -33,7 +32,7 @@ export default function UserProvider({
 
     const handleToken = async () => {
       // 👈 Lấy từ user.token (nếu vừa login), hoặc fallback Local cho chắc
-      const token = user?.token || localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
       if (!token) {
         // Này là báo bình thường khi người chơi chưa Login (Khách), không phải Lỗi

@@ -45,7 +45,7 @@ const SearchForm = ({
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerWidth >= 768) {
-        setIsSticky(window.scrollY > 400);
+        setIsSticky(window.scrollY > 1500);
       } else {
         setIsSticky(false);
       }
@@ -77,7 +77,8 @@ const SearchForm = ({
       const cached = roomCache.get(url);
       if (cached && Date.now() - cached.timestamp < TTL) {
         setAvailableRooms(cached.data.length > 0 ? cached.data : []);
-        if (cached.data.length === 0) toast.error("Hiện tại không còn phòng trống");
+        if (cached.data.length === 0)
+          toast.error("Hiện tại không còn phòng trống");
         return;
       }
 
@@ -86,7 +87,7 @@ const SearchForm = ({
       roomCache.set(url, { data: rooms, timestamp: Date.now() });
       setAvailableRooms(rooms);
       if (rooms.length === 0) toast.error("Hiện tại không còn phòng trống");
-    } catch (error: any) {
+    } catch {
       toast.error("Có lỗi xảy ra khi tìm phòng");
     } finally {
       setLoading(false);
@@ -98,27 +99,40 @@ const SearchForm = ({
   return (
     <div
       className={`w-full mx-auto transition-all duration-500 ease-in-out px-4 
-        ${isSticky
-          ? "fixed top-0 left-0 right-0 z-50 py-2 bg-white/80 backdrop-blur-md shadow-lg border-b border-blue-50"
-          : "relative py-16"
+        ${
+          isSticky
+            ? "fixed top-0 left-0 right-0 z-50 py-2 bg-white/80 backdrop-blur-md shadow-lg border-b border-blue-50"
+            : "relative py-16"
         }`}
     >
       <motion.div
         layout
         className={`max-w-6xl mx-auto bg-white transition-all duration-300
-          ${isSticky
-            ? "max-w-4xl rounded-full shadow-md border border-gray-100"
-            : "rounded-2xl shadow-2xl border border-gray-100 relative pb-8"
+          ${
+            isSticky
+              ? "max-w-4xl rounded-full shadow-md border border-gray-100"
+              : "rounded-2xl shadow-2xl border border-gray-100 relative pb-8"
           }`}
       >
-        <form onSubmit={handleSubmit} className={`flex flex-col lg:flex-row items-stretch ${isSticky ? "px-2" : ""}`}>
-
+        <form
+          onSubmit={handleSubmit}
+          className={`flex flex-col lg:flex-row items-stretch ${isSticky ? "px-2" : ""}`}
+        >
           {/* Segment: Check-in */}
-          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
-            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+          <div
+            className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}
+          >
             <div className="flex items-center gap-2">
-              <Calendar size={isSticky ? 16 : 20} className="text-blue-500 shrink-0" />
-              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Ngày nhận</label>}
+              <Calendar
+                size={isSticky ? 16 : 20}
+                className="text-blue-500 shrink-0"
+              />
+              {!isSticky && (
+                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                  Ngày nhận
+                </label>
+              )}
             </div>
             <input
               type="date"
@@ -132,11 +146,20 @@ const SearchForm = ({
           </div>
 
           {/* Segment: Check-out */}
-          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
-            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+          <div
+            className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}
+          >
             <div className="flex items-center gap-2">
-              <Calendar size={isSticky ? 16 : 20} className="text-red-400 shrink-0" />
-              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Ngày trả</label>}
+              <Calendar
+                size={isSticky ? 16 : 20}
+                className="text-red-400 shrink-0"
+              />
+              {!isSticky && (
+                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                  Ngày trả
+                </label>
+              )}
             </div>
             <input
               type="date"
@@ -151,11 +174,20 @@ const SearchForm = ({
           </div>
 
           {/* Segment: Guests */}
-          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
-            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+          <div
+            className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}
+          >
             <div className="flex items-center gap-2">
-              <Users size={isSticky ? 16 : 20} className="text-purple-500 shrink-0" />
-              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Số lượng khách</label>}
+              <Users
+                size={isSticky ? 16 : 20}
+                className="text-purple-500 shrink-0"
+              />
+              {!isSticky && (
+                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                  Số lượng khách
+                </label>
+              )}
             </div>
             <div className="relative w-full">
               <select
@@ -170,16 +202,28 @@ const SearchForm = ({
                   </option>
                 ))}
               </select>
-              <ChevronDown size={14} className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
+              <ChevronDown
+                size={14}
+                className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
+              />
             </div>
           </div>
 
           {/* Segment: Room Type */}
-          <div className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
-            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}>
+          <div
+            className={`flex-1 group relative flex flex-col hover:bg-blue-50/40 transition-all border-gray-100 cursor-pointer 
+            ${isSticky ? "p-2 px-3 border-none flex-row items-center gap-2" : "p-6 border-b lg:border-b-0 lg:border-r"}`}
+          >
             <div className="flex items-center gap-2">
-              <Home size={isSticky ? 16 : 20} className="text-emerald-500 shrink-0" />
-              {!isSticky && <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">Loại phòng</label>}
+              <Home
+                size={isSticky ? 16 : 20}
+                className="text-emerald-500 shrink-0"
+              />
+              {!isSticky && (
+                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                  Loại phòng
+                </label>
+              )}
             </div>
             <div className="relative w-full">
               <select
@@ -190,10 +234,15 @@ const SearchForm = ({
               >
                 <option value="">Tất cả hạng phòng</option>
                 {roomType?.map((item: IRoomType) => (
-                  <option value={item.name} key={item.id}>{item.name}</option>
+                  <option value={item.name} key={item.id}>
+                    {item.name}
+                  </option>
                 ))}
               </select>
-              <ChevronDown size={14} className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
+              <ChevronDown
+                size={14}
+                className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
+              />
             </div>
           </div>
 
@@ -201,12 +250,16 @@ const SearchForm = ({
           <button
             type="submit"
             className={`bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 transition-all duration-300 font-bold group active:scale-95 shadow-lg
-              ${isSticky
-                ? "px-6 py-2 rounded-full text-xs my-1 mr-1"
-                : "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[65%] px-16 py-5 rounded-xl text-xl"
+              ${
+                isSticky
+                  ? "px-6 py-2 rounded-full text-xs my-1 mr-1"
+                  : "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[65%] px-16 py-5 rounded-xl text-xl"
               }`}
           >
-            <Search size={isSticky ? 14 : 24} className="group-hover:scale-110 transition-transform" />
+            <Search
+              size={isSticky ? 14 : 24}
+              className="group-hover:scale-110 transition-transform"
+            />
             <span>TÌM KIẾM</span>
           </button>
         </form>

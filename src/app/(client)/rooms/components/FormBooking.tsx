@@ -15,7 +15,7 @@ import {
   getHighlightedDates,
 } from "@/lib/formatDate";
 import InformationBooking from "./InformationBooking";
-import { useBookingStore } from "@/app/(dashboard)/context/useBookingForm";
+import { useBookingStore } from "@/hook/useBookingForm";
 import { useUserStore } from "@/hook/useUserStore";
 import LoginModal from "./LoginModal";
 
