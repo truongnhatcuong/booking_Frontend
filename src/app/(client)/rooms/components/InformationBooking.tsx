@@ -8,7 +8,7 @@ import {
   paymentMethodDescriptions,
   paymentMethodIcons,
 } from "./booking";
-import { useBookingStore } from "@/app/(dashboard)/context/useBookingForm";
+import { useBookingStore } from "@/hook/useBookingForm";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
@@ -121,8 +121,8 @@ const InformationBooking = ({ isOpen, setIsOpen }: IInformationProps) => {
               status: "PENDING",
             });
             if (resPayment.data) {
-              toast.success("Đặt phòng thành công!");
               if (selectedPaymentMethod === PaymentMethod.CASH) {
+                toast.success("Đặt phòng thành công!");
                 router.push("/profile/bookings");
               } else if (
                 selectedPaymentMethod === PaymentMethod.QR_CODE &&

@@ -29,7 +29,6 @@ export const useUserStore = create<UserStore>((set) => ({
   login: (user) => {
     set({ user });
     localStorage.setItem("token", user.token);
-    // Thêm: lưu vào cookie cho middleware đọc
     Cookies.set("token", user.token, COOKIE_OPTIONS);
   },
 
@@ -40,7 +39,6 @@ export const useUserStore = create<UserStore>((set) => ({
       console.warn("Logout API failed, still clearing local");
     }
     localStorage.removeItem("token");
-    // Thêm: xóa cookie
     Cookies.remove("token");
     set({ user: null });
     window.location.href = "/";

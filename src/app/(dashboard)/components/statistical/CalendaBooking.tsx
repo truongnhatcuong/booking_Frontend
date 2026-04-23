@@ -2,14 +2,24 @@
 import { URL_API } from "@/lib/fetcher";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { format, parse, startOfWeek, getDay } from "date-fns";
+import { vi } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDays } from "lucide-react";
 
-moment.locale("vi");
-const localizer = momentLocalizer(moment);
+const locales = {
+  vi: vi,
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+  getDay,
+  locales,
+});
 
 interface BookingEvent {
   id: string;
@@ -79,8 +89,8 @@ const CalendarBooking = () => {
 
   const CustomEvent = ({ event }: any) => {
     const b = event.booking;
-    const checkInDate = moment(b.checkInDate).format("DD/MM");
-    const checkOutDate = moment(b.checkOutDate).format("DD/MM");
+    const checkInDate = format(new Date(b.checkInDate), "dd/MM");
+    const checkOutDate = format(new Date(b.checkOutDate), "dd/MM");
 
     return (
       <div className="h-full overflow-hidden">
@@ -144,6 +154,7 @@ const CalendarBooking = () => {
               })}
               popup={true}
               views={["month"]}
+              culture="vi"
               className="modern-calendar"
             />
           </div>

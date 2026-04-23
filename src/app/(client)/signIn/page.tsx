@@ -10,7 +10,7 @@ import { URL_API } from "@/lib/fetcher";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import { useUserStore } from "@/hook/useUserStore";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Eye } from "lucide-react";
 import { useCheckFaceLog } from "@/hook/useCheckFaceLog";
@@ -37,7 +37,8 @@ export default function SignInForm() {
   const [message, setMessage] = useState("");
   const [showFaceModal, setShowFaceModal] = useState(false);
   const router = useRouter();
-
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   // Load saved email
   useEffect(() => {
     const savedEmail = localStorage.getItem("remembered_email");
@@ -60,13 +61,13 @@ export default function SignInForm() {
 
   // Redirect nếu đã login
   useEffect(() => {
-    if (user)
+    if (token && user)
       router.push(
         user.userType === "ADMIN" || user.userType === "EMPLOYEE"
           ? "/admin"
           : "/",
       );
-  }, []);
+  }, [token]);
 
   const redirectAfterLogin = (token: string) => {
     const decoded: any = jwtDecode(token);

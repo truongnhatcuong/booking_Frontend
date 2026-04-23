@@ -6,7 +6,7 @@ import CreateRoomtype from "./components/CreateRoomtype";
 import SearchForm from "@/app/(dashboard)/components/searchPage/SearchForm";
 
 import Pagination from "@/app/(dashboard)/components/Pagination/Pagination";
-import { useDebounce } from "@/hook/Debounce";
+import { useDebounce } from "@/hook/useDebounce";
 
 const Page = () => {
   const [search, setSearch] = useState("");

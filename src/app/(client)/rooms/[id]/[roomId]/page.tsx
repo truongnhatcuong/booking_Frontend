@@ -11,7 +11,7 @@ import FormBooking from "../../components/FormBooking";
 import DetailRooms from "../../components/DetailRooms";
 import RoomRelative from "../../components/RoomRelative";
 import { ShowCurrentPrice } from "@/lib/showCurrentPrice";
-import { useBookingStore } from "@/app/(dashboard)/context/useBookingForm";
+import { useBookingStore } from "@/hook/useBookingForm";
 
 export interface RoomData {
   room: {
@@ -46,7 +46,7 @@ export default function Page({
   const { roomId, id } = use(params);
   const { formData, setFormData } = useBookingStore();
   const { data, isLoading } = useSWR<RoomData>(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/room/${roomId}`
+    `${process.env.NEXT_PUBLIC_URL_API}/api/room/${roomId}`,
   );
 
   const [seasonPrice, setSeasonPrice] = useState({
@@ -78,7 +78,7 @@ export default function Page({
   const handleFormChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData({ [name]: value });

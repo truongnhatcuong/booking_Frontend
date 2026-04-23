@@ -2,7 +2,8 @@
 import React, { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle } from "lucide-react";
-import axios from "axios";
+import toast from "react-hot-toast";
+import axiosInstance from "@/lib/axios";
 
 const PaymentSuccess = () => {
   const searchParams = useSearchParams();
@@ -10,11 +11,12 @@ const PaymentSuccess = () => {
   const status = searchParams.get("status");
   const orderCode = searchParams.get("orderCode");
   useEffect(() => {
-    axios.post(`${process.env.NEXT_PUBLIC_URL_API}/api/payment/webhook/payos`, {
+    axiosInstance.post(`/api/payment/webhook/payos`, {
       status,
       orderCode,
     });
     const timeout = setTimeout(() => {
+      toast.success("Đặt phòng thành công!");
       router.push("/profile/bookings");
     }, 3000);
 

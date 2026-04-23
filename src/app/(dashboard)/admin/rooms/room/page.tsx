@@ -29,43 +29,35 @@ const Page = () => {
   return (
     <div className="bg-white p-4 rounded-md shadow-md">
       <div className="lg:flex lg:justify-between items-center my-5">
-        <div className="hidden lg:block">
+        <div className="flex items-center gap-4 flex-wrap">
           <SearchForm
             search={search}
             setSearch={setSearch}
             setPage={setPage}
             placeholder="Nhập Số Phòng Tại Đây ...."
+          />
+
+          <RoomTypeFilter
+            className="w-full lg:w-60 mb-2"
+            placeholder="Chọn loại phòng"
+            showCapacity={true}
+            options={DataTypeRoom?.roomType}
+            onTypeChange={setSelectedRoomTypes}
+            selectedTypes={selectedRoomTypes}
+          />
+          <StatusFilter
+            options={dataRoom?.room?.data || []}
+            selectedStatuses={selectedStatuses}
+            onStatusChange={setSelectedStatuses}
+            placeholder="Chọn trạng thái phòng"
+            multiple={false}
+            className="w-full lg:w-60 mb-2"
           />
         </div>
 
         <CreateRoom data={DataTypeRoom?.roomType ?? []} />
-        <div className="block lg:hidden">
-          <SearchForm
-            search={search}
-            setSearch={setSearch}
-            setPage={setPage}
-            placeholder="Nhập Số Phòng Tại Đây ...."
-          />
-        </div>
       </div>
-      <div className="mb-5 flex flex-col lg:flex-row items-center gap-6">
-        <RoomTypeFilter
-          className="w-full lg:w-60"
-          placeholder="Chọn loại phòng"
-          showCapacity={true}
-          options={DataTypeRoom?.roomType}
-          onTypeChange={setSelectedRoomTypes}
-          selectedTypes={selectedRoomTypes}
-        />
-        <StatusFilter
-          options={dataRoom?.room?.data || []}
-          selectedStatuses={selectedStatuses}
-          onStatusChange={setSelectedStatuses}
-          placeholder="Chọn trạng thái phòng"
-          multiple={false}
-          className="w-full lg:w-60 "
-        />
-      </div>
+
       <TableRoom
         rooms={dataRoom?.room.data ?? []}
         data={DataTypeRoom?.roomType || []}

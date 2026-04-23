@@ -68,9 +68,7 @@ export default async function middleware(req: NextRequest) {
   if (pathname === "/admin/unauthorized") return NextResponse.next();
   if (pathname === "/admin/profile") return NextResponse.next();
 
-  const token =
-    req.cookies.get("token")?.value ??
-    req.headers.get("authorization")?.split(" ")[1];
+  const token = req.cookies.get("token")?.value;
 
   // Chưa có token → về login
   if (!token) {

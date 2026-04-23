@@ -1,23 +1,38 @@
 import React from "react";
 import BeanHotel from "./components/main/BeanHotel";
-import HotelShow from "./components/main/HotelShow";
 import ShearchRoomPage from "./components/main/SearchRoom";
-import ChatBoxAL from "./components/main/ChatBoxAl";
-import ChatBox from "./components/main/ChatBox";
-import RoomTypeShowcase from "./components/main/RoomTypeShowcase";
-import Footer2 from "./components/footer/foorter2";
-import TestimonialCarousel from "./components/common/CustomerReviewed";
 import BannerServer from "./components/main/fetchBannerImages";
-import HotelMapWrapper from "./components/main/HotelMapWrapper";
-import HotelHighlightsServer from "./components/main/HotelHighlightsServer";
+
+import dynamic from "next/dynamic";
+
+// 👇 Chỉ import động các UI nặng nằm xa hoặc không cần hiển thị liền
+const RoomTypeShowcase = dynamic(
+  () => import("./components/main/RoomTypeShowcase"),
+);
+const HotelShow = dynamic(() => import("./components/main/HotelShow"));
+const HotelHighlightsServer = dynamic(
+  () => import("./components/main/HotelHighlightsServer"),
+);
+const TestimonialCarousel = dynamic(
+  () => import("./components/common/CustomerReviewed"),
+);
+const ChatBoxAL = dynamic(() => import("./components/main/ChatBoxAl"));
+const ChatBox = dynamic(() => import("./components/main/ChatBox"));
+const Footer2 = dynamic(() => import("./components/footer/foorter2"));
+// Map Wrapper bạn đã dynamic ngầm rồi nhưng nhúng dynamic ở đây giúp tách code ra riêng rẻ hẳn
+const HotelMapWrapper = dynamic(
+  () => import("./components/main/HotelMapWrapper"),
+);
 
 const Page = () => {
   return (
     <div className="">
-      {" "}
+      {/* KHÔNG DYNAMIC - Hiển thị ngay */}
       <BannerServer />
       <ShearchRoomPage />
       <BeanHotel />
+
+      {/* DYNAMIC - Quá trình tải tách biệt khỏi giao diện ban đầu */}
       <RoomTypeShowcase />
       <HotelShow />
       <HotelHighlightsServer />
@@ -26,7 +41,6 @@ const Page = () => {
       <HotelMapWrapper />
       <TestimonialCarousel />
       <Footer2 />
-      {/* Thêm VoiceAssistant vào đây, nó sẽ hiển thị nút mic ở góc dưới bên phải */}
     </div>
   );
 };

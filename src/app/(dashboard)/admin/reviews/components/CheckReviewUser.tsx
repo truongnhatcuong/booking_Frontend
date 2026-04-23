@@ -1,9 +1,8 @@
 "use client";
 import React from "react";
-import moment from "moment";
+import { format, formatDistanceToNow } from "date-fns";
+import { vi } from "date-fns/locale";
 import DeleteReview from "./DeleteReview";
-
-moment.locale("vi");
 
 interface User {
   id: string;
@@ -93,8 +92,11 @@ export default function ReviewTableForm({ reviews }: ReviewTableFormProps) {
                 {review.comment}
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                {moment(review.reviewDate).fromNow()} ·{" "}
-                {moment(review.reviewDate).format("DD/MM/YYYY")}
+                {formatDistanceToNow(new Date(review.reviewDate), {
+                  addSuffix: true,
+                  locale: vi,
+                })}{" "}
+                · {format(new Date(review.reviewDate), "dd/MM/yyyy")}
               </p>
             </div>
 
