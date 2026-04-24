@@ -32,15 +32,12 @@ const ListItems: IListHeader[] = [
 const ListItem = () => {
   const pathname = usePathname();
   const { setRoomTypes } = useRoomTypeStore();
-  const { data, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`,
-  );
+  const { data, isLoading } = useSWR(`/api/roomtype/dropdown/list`);
+
   useEffect(() => {
-    if (data?.roomType) setRoomTypes(data.roomType);
+    if (data) setRoomTypes(data);
   }, [data]);
-
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
-
   const toggleMobileDropdown = () => {
     setIsMobileDropdownOpen((prev) => !prev);
   };
@@ -54,9 +51,8 @@ const ListItem = () => {
             <HoverCard>
               <HoverCardTrigger asChild className="hidden md:block">
                 <div
-                  className={`px-6 py-2 text-white text-base font-medium cursor-pointer hover:text-teal-500 transition-colors duration-200 ${
-                    pathname === item.link ? "bg-teal-500 rounded-full" : ""
-                  }`}
+                  className={`px-6 py-2 text-white text-base font-medium cursor-pointer hover:text-teal-500 transition-colors duration-200 ${pathname === item.link ? "bg-teal-500 rounded-full" : ""
+                    }`}
                 >
                   <div className="flex  items-center gap-1">
                     <p>{item.title}</p>
@@ -71,17 +67,16 @@ const ListItem = () => {
                 {isLoading && (
                   <p className="text-gray-500 text-sm">Loading...</p>
                 )}
-                {data && data?.roomType?.length > 0 ? (
+                {data && data?.length > 0 ? (
                   <ul className="grid grid-cols-2">
-                    {data?.roomType?.map((item: IRoomtype) => (
+                    {data?.map((item: IRoomtype) => (
                       <li key={item.id}>
                         <Link
                           href={`/rooms/${item.id}`}
-                          className={`block ${
-                            pathname.startsWith(`/rooms/${item.id}`)
-                              ? "text-red-500 font-semibold"
-                              : ""
-                          } text-gray-700 hover:bg-gray-50 p-2 rounded hover:border-l-4 text-center hover:border-amber-400 transition-all duration-150`}
+                          className={`block ${pathname.startsWith(`/rooms/${item.id}`)
+                            ? "text-red-500 font-semibold"
+                            : ""
+                            } text-gray-700 hover:bg-gray-50 p-2 rounded hover:border-l-4 text-center hover:border-amber-400 transition-all duration-150`}
                         >
                           {item.name}
                         </Link>
@@ -100,17 +95,15 @@ const ListItem = () => {
             <div className="md:hidden w-full">
               <button
                 onClick={toggleMobileDropdown}
-                className={`w-full px-6 py-3 text-base font-medium rounded-lg transition-colors duration-200 flex items-center justify-center ${
-                  pathname === item.link
-                    ? "bg-teal-500 text-white"
-                    : "text-white hover:text-teal-500 hover:bg-white/10"
-                }`}
+                className={`w-full px-6 py-3 text-base font-medium rounded-lg transition-colors duration-200 flex items-center justify-center ${pathname === item.link
+                  ? "bg-teal-500 text-white"
+                  : "text-white hover:text-teal-500 hover:bg-white/10"
+                  }`}
               >
                 <span>{item.title}</span>
                 <ChevronDown
-                  className={`w-4 h-4 transition-transform duration-200  ${
-                    isMobileDropdownOpen ? "rotate-180" : ""
-                  }`}
+                  className={`w-4 h-4 transition-transform duration-200  ${isMobileDropdownOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -121,17 +114,16 @@ const ListItem = () => {
                       <p className="text-gray-500 text-sm">Loading...</p>
                     </div>
                   )}
-                  {data && data?.roomType?.length > 0 ? (
+                  {data && data?.length > 0 ? (
                     <ul className="grid grid-cols-2">
-                      {data?.roomType.map((romType: IRoomtype) => (
+                      {data?.map((romType: IRoomtype) => (
                         <li key={romType.id}>
                           <Link
                             href={`/rooms/${romType.id}`}
-                            className={`block ${
-                              pathname.startsWith(`/rooms/${romType.id}`)
-                                ? "text-red-500 font-semibold"
-                                : ""
-                            } hover:bg-gray-50 px-4 text-center py-3 hover:border-l-4  transition-all duration-150`}
+                            className={`block ${pathname.startsWith(`/rooms/${romType.id}`)
+                              ? "text-red-500 font-semibold"
+                              : ""
+                              } hover:bg-gray-50 px-4 text-center py-3 hover:border-l-4  transition-all duration-150`}
                             onClick={() => setIsMobileDropdownOpen(false)}
                           >
                             {romType.name}
@@ -156,11 +148,10 @@ const ListItem = () => {
           <Link
             href={item.link}
             key={item.id}
-            className={`w-full md:w-auto px-6 py-3 md:py-2 text-base font-medium rounded-lg md:rounded-full transition-colors duration-200 text-center md:text-left ${
-              pathname === item.link
-                ? "bg-teal-400/60 text-white font-bold"
-                : "text-white hover:text-teal-300 hover:bg-white/10 md:hover:bg-transparent font-medium"
-            }`}
+            className={`w-full md:w-auto px-6 py-3 md:py-2 text-base font-medium rounded-lg md:rounded-full transition-colors duration-200 text-center md:text-left ${pathname === item.link
+              ? "bg-teal-400/60 text-white font-bold"
+              : "text-white hover:text-teal-300 hover:bg-white/10 md:hover:bg-transparent font-medium"
+              }`}
           >
             {item.title}
           </Link>
