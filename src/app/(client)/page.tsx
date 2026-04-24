@@ -16,6 +16,9 @@ const HotelHighlightsServer = dynamic(
 const TestimonialCarousel = dynamic(
   () => import("./components/common/CustomerReviewed"),
 );
+const HotelShowcaseSection = dynamic(
+  () => import("./components/main/Hotelshowcasesection"),
+);
 const ChatBoxAL = dynamic(() => import("./components/main/ChatBoxAl"));
 const ChatBox = dynamic(() => import("./components/main/ChatBox"));
 const Footer2 = dynamic(() => import("./components/footer/foorter2"));
@@ -34,8 +37,10 @@ const Page = () => {
 
       {/* DYNAMIC - Quá trình tải tách biệt khỏi giao diện ban đầu */}
       <RoomTypeShowcase />
+      <HotelShowcaseSection />
       <HotelShow />
       <HotelHighlightsServer />
+
       <ChatBoxAL />
       <ChatBox />
       <HotelMapWrapper />
