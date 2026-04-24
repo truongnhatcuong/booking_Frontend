@@ -42,9 +42,9 @@ export default function HotelShowcaseSection() {
       <div className="max-w-5xl mx-auto px-6 text-center mb-12">
         <div className="flex items-center justify-center gap-4 mb-4">
           <span className="flex-1 border-t border-dashed border-blue-200" />
-          <h2 className="text-3xl font-bold text-blue-800 tracking-tight whitespace-nowrap">
+          <h1 className="text-3xl font-bold text-blue-800 tracking-tight whitespace-nowrap">
             Trải nghiệm tại khách sạn
-          </h2>
+          </h1>
           <span className="flex-1 border-t border-dashed border-blue-200" />
         </div>
         <p className="text-gray-500 text-base leading-relaxed max-w-2xl mx-auto">

@@ -10,7 +10,6 @@ import { motion } from "framer-motion";
 interface IRoomType {
   id: string;
   name: string;
-  maxOccupancy: number;
 }
 
 interface ISeearchForm {
@@ -98,20 +97,18 @@ const SearchForm = ({
 
   return (
     <div
-      className={`w-full mx-auto transition-all duration-500 ease-in-out px-4 
-        ${
-          isSticky
-            ? "fixed top-0 left-0 right-0 z-50 py-2 bg-white/80 backdrop-blur-md shadow-lg border-b border-blue-50"
-            : "relative py-16"
+      className={`w-full mx-auto transition-all duration-500 ease-in-out 
+        ${isSticky
+          ? "fixed top-0 left-0 right-0 z-40 py-2 bg-white/80 backdrop-blur-md shadow-lg border-b border-blue-50"
+          : "relative py-16"
         }`}
     >
       <motion.div
         layout
         className={`max-w-6xl mx-auto bg-white transition-all duration-300
-          ${
-            isSticky
-              ? "max-w-4xl rounded-full shadow-md border border-gray-100"
-              : "rounded-2xl shadow-2xl border border-gray-100 relative pb-8"
+          ${isSticky
+            ? "max-w-4xl lg:rounded-full shadow-md border border-gray-100"
+            : "rounded-2xl shadow-2xl border border-gray-100 relative pb-8"
           }`}
       >
         <form
@@ -129,7 +126,7 @@ const SearchForm = ({
                 className="text-blue-500 shrink-0"
               />
               {!isSticky && (
-                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                <label className="text-xs uppercase tracking-wider font-bold text-gray-400">
                   Ngày nhận
                 </label>
               )}
@@ -156,7 +153,7 @@ const SearchForm = ({
                 className="text-red-400 shrink-0"
               />
               {!isSticky && (
-                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                <label className="text-xs uppercase tracking-wider font-bold text-gray-400">
                   Ngày trả
                 </label>
               )}
@@ -184,7 +181,7 @@ const SearchForm = ({
                 className="text-purple-500 shrink-0"
               />
               {!isSticky && (
-                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                <label className="text-xs uppercase tracking-wider font-bold text-gray-400">
                   Số lượng khách
                 </label>
               )}
@@ -194,7 +191,7 @@ const SearchForm = ({
                 name="customer"
                 value={searchParams.customer}
                 onChange={handleChange}
-                className={`bg-white p-2 border-none outline-none text-gray-800 font-semibold cursor-pointer w-full appearance-none ${isSticky ? "text-xs " : "text-lg mt-1"}`}
+                className={`bg-white p-1 lg:p-2 border-none outline-none text-gray-800 font-semibold cursor-pointer w-full appearance-none ${isSticky ? "text-xs " : "text-lg mt-1"}`}
               >
                 {[...Array(6)].map((_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -220,7 +217,7 @@ const SearchForm = ({
                 className="text-emerald-500 shrink-0"
               />
               {!isSticky && (
-                <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400">
+                <label className="text-xs uppercase tracking-wider font-bold text-gray-400">
                   Loại phòng
                 </label>
               )}
@@ -230,7 +227,7 @@ const SearchForm = ({
                 name="roomType"
                 value={searchParams.roomType}
                 onChange={handleChange}
-                className={`bg-white p-2 border-none outline-none text-gray-800 font-semibold cursor-pointer w-full appearance-none ${isSticky ? "text-xs" : "text-lg mt-1"}`}
+                className={`bg-white p-1 lg:p-2 border-none outline-none text-gray-800 font-semibold cursor-pointer w-full appearance-none ${isSticky ? "text-xs" : "text-lg mt-1"}`}
               >
                 <option value="">Tất cả hạng phòng</option>
                 {roomType?.map((item: IRoomType) => (
@@ -250,10 +247,9 @@ const SearchForm = ({
           <button
             type="submit"
             className={`bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 transition-all duration-300 font-bold group active:scale-95 shadow-lg
-              ${
-                isSticky
-                  ? "px-6 py-2 rounded-full text-xs my-1 mr-1"
-                  : "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[65%] px-16 py-5 rounded-xl text-xl"
+              ${isSticky
+                ? "px-6 py-2 rounded-full text-xs my-1 mr-1"
+                : "absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[65%] px-16 py-5 rounded-xl text-xl"
               }`}
           >
             <Search

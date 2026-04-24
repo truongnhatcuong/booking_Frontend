@@ -28,9 +28,13 @@ const HotelHighlightsCarousel = ({ highlights }: Props) => {
     <section className="py-15 bg-linear-to-br from-background to-muted bg-white mx-4 lg:mx-0">
       <div>
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-foreground mb-4 animate-fade-in-up">
-            Tiện Nghi Đẳng Cấp
-          </h2>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <span className="flex-1 border-t border-dashed border-blue-200" />
+            <h1 className="text-3xl font-bold text-blue-800 tracking-tight whitespace-nowrap">
+              Tiện Nghi Đẳng Cấp
+            </h1>
+            <span className="flex-1 border-t border-dashed border-blue-200" />
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up">
             Khám phá những tiện ích và dịch vụ cao cấp tại khách sạn của chúng
             tôi

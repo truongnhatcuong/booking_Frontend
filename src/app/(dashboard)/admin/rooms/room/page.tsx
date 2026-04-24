@@ -22,7 +22,7 @@ const Page = () => {
   const { data: dataRoom } = useSWR(
     `/api/room?search=${search}&limit=${limit}&page=${page}&${params.toString()}&status=${selectedStatuses}`,
   );
-  const { data: DataTypeRoom } = useSWR(`/api/roomtype?page=1&limit=9999`);
+  const { data: DataTypeRoom } = useSWR(`/api/roomtype/dropdown/list`);
 
   const totalPages: number = dataRoom?.room.pagination?.totalPages || 1;
 
@@ -55,12 +55,12 @@ const Page = () => {
           />
         </div>
 
-        <CreateRoom data={DataTypeRoom?.roomType ?? []} />
+        <CreateRoom data={DataTypeRoom ?? []} />
       </div>
 
       <TableRoom
         rooms={dataRoom?.room.data ?? []}
-        data={DataTypeRoom?.roomType || []}
+        data={DataTypeRoom || []}
       />
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
       <LimitSelector value={limit} onChange={(value) => setLimit(value)} />

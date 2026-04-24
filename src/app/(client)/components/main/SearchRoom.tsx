@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import SearchForm from "./SearchForm";
 import RoomCard from "./RoomCard";
 
+
 const SearchRoomPage = () => {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -9,12 +9,6 @@ interface Amenity {
 export interface IRoomType {
   id: string;
   name: string;
-  description: string | null;
-  maxOccupancy: number;
-  photoUrls: string; // JSON string array<
-  amenities: {
-    amenity: Amenity;
-  }[];
 }
 
 interface RoomTypeState {

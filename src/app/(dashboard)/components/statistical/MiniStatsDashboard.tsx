@@ -204,9 +204,8 @@ function DataTable({ table }: { table: TableData }) {
               {columns.map((c, idx) => (
                 <th
                   key={c.key}
-                  className={`whitespace-nowrap px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-gray-500 ${
-                    idx === 0 ? "text-left" : "text-center"
-                  }`}
+                  className={`whitespace-nowrap px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-gray-500 ${idx === 0 ? "text-left" : "text-center"
+                    }`}
                 >
                   {c.label}
                 </th>
@@ -382,6 +381,8 @@ function ChartCard({ chart }: { chart: ChartDef }) {
 }
 
 /* ─── Main Dashboard ───────────────────────────────────────── */
+import { exportDashboardToExcel } from "@/lib/exportExcel";
+
 export function MiniStatsDashboard({
   payload,
 }: {
@@ -393,11 +394,15 @@ export function MiniStatsDashboard({
   const kpi = payload.tables.find(isKpiTable);
   const rest = payload.tables.filter((t) => t !== kpi);
 
+  const handleExportExcel = async () => {
+    await exportDashboardToExcel(payload, "BEAN HOTEL & SPA");
+  };
+
   return (
     <div className="space-y-4 px-0 sm:space-y-5">
       {/* Period header */}
-      <div className="rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-600 to-indigo-500 p-4 shadow-sm sm:p-5">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div className="rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-600 to-indigo-500 p-4 shadow-sm sm:p-10">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-medium uppercase tracking-widest text-indigo-200">
               Báo cáo
@@ -406,10 +411,33 @@ export function MiniStatsDashboard({
               {payload.period.label}
             </h2>
           </div>
-          <div className="flex flex-wrap items-center gap-1 text-xs text-indigo-100 sm:text-sm">
-            <span className="rounded-md bg-white/10 px-2 py-1">{fromText}</span>
-            <span className="text-indigo-300">→</span>
-            <span className="rounded-md bg-white/10 px-2 py-1">{toText}</span>
+          <div className="flex flex-col items-end gap-2 text-xs text-indigo-100 sm:text-sm">
+            <div className="flex items-center gap-1">
+              <span className="rounded-md bg-white/10 px-2 py-1">{fromText}</span>
+              <span className="text-indigo-300">→</span>
+              <span className="rounded-md bg-white/10 px-2 py-1">{toText}</span>
+            </div>
+
+            <button
+              onClick={handleExportExcel}
+              className="mt-1 flex items-center gap-1 rounded bg-white px-3 py-1.5 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              Xuất Excel
+            </button>
+
           </div>
         </div>
       </div>

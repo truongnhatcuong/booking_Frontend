@@ -21,7 +21,7 @@ const FaceLoginModal = dynamic(() => import("./components/FaceLoginModal"), {
 });
 
 export default function SignInForm() {
-  const { login, user } = useUserStore();
+  const { login } = useUserStore();
   const {
     hasFace,
     checked,
@@ -39,6 +39,9 @@ export default function SignInForm() {
   const router = useRouter();
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+
+
   // Load saved email
   useEffect(() => {
     const savedEmail = localStorage.getItem("remembered_email");
@@ -61,26 +64,26 @@ export default function SignInForm() {
 
   // Redirect nếu đã login
   useEffect(() => {
-    if (token && user)
-      router.push(
-        user.userType === "ADMIN" || user.userType === "EMPLOYEE"
-          ? "/admin"
-          : "/",
-      );
+    if (token) {
+      redirectAfterLogin(token);
+    }
   }, [token]);
 
-  const redirectAfterLogin = (token: string) => {
-    const decoded: any = jwtDecode(token);
-    if (
-      decoded.userType === "EMPLOYEE" ||
-      decoded.userType === "ADMIN" ||
-      decoded.role
-    ) {
-      router.push("/admin");
-    } else {
-      router.push("/");
-    }
-  };
+  const redirectAfterLogin = React.useCallback(
+    (token: string) => {
+      const decoded: any = jwtDecode(token);
+      if (
+        decoded.userType === "EMPLOYEE" ||
+        decoded.userType === "ADMIN" ||
+        decoded.role
+      ) {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+    },
+    [router],
+  );
 
   useEffect(() => {
     if (!message) return;
