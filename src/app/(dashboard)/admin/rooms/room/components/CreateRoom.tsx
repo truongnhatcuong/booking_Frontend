@@ -40,13 +40,22 @@ const CreateRoom = ({ data }: RoomProps) => {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
+
+    // Chỉ nhận số cho roomNumber
+    let processedValue = value;
+    if (name === "roomNumber") {
+      processedValue = value.replace(/\D/g, "");
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "floor" || name === "originalPrice" ? Number(value) : value,
+        name === "floor" || name === "originalPrice"
+          ? Number(processedValue)
+          : processedValue,
     }));
   };
 
@@ -66,7 +75,7 @@ const CreateRoom = ({ data }: RoomProps) => {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_URL_API}/api/room`,
-        formData
+        formData,
       );
       if (res.data) {
         toast.success("Tạo Phòng Thành Công");
@@ -140,7 +149,8 @@ const CreateRoom = ({ data }: RoomProps) => {
                     </label>
                     <input
                       type="text"
-                      placeholder="Ví dụ: 101, A201..."
+                      inputMode="numeric"
+                      placeholder="Ví dụ: 101, 102..."
                       name="roomNumber"
                       value={formData.roomNumber}
                       onChange={handleChange}
@@ -301,7 +311,7 @@ const CreateRoom = ({ data }: RoomProps) => {
                         onUploadError={(error) => {
                           toast.error(
                             `Upload failed: ${error.message}` ||
-                              "Tải lên không thành công!"
+                              "Tải lên không thành công!",
                           );
                         }}
                         content={{
@@ -339,7 +349,7 @@ const CreateRoom = ({ data }: RoomProps) => {
                       onUploadError={(error) => {
                         toast.error(
                           `Upload failed: ${error.message}` ||
-                            "Tải lên không thành công!"
+                            "Tải lên không thành công!",
                         );
                       }}
                       content={{
