@@ -26,7 +26,7 @@ const ReviewCusTomer = ({ bookingId }: Booking) => {
   });
 
   const { data } = useSWR<BookingReviewStatus>(
-    `/api/review/status?bookingId=${bookingId}`
+    `/api/review/status?bookingId=${bookingId}`,
   );
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const ReviewCusTomer = ({ bookingId }: Booking) => {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_URL_API}/api/review`,
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.data) {
         Mutate(`/api/review/status`);
@@ -49,7 +49,7 @@ const ReviewCusTomer = ({ bookingId }: Booking) => {
       }
     } catch (error: any) {
       toast.error(
-        error.response?.data?.message || "Đã xảy ra lỗi. Vui lòng thử lại sau."
+        error.response?.data?.message || "Đã xảy ra lỗi. Vui lòng thử lại sau.",
       );
     }
   };

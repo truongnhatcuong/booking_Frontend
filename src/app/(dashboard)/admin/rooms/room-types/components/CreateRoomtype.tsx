@@ -18,7 +18,7 @@ interface Amenity {
   name: string;
 }
 const CreateRoomtype = () => {
-  const { data } = useSWR(`${process.env.NEXT_PUBLIC_URL_API}/api/amenity`);
+  const { data } = useSWR(`/api/amenity`);
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState<undefined | string>(undefined);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -29,7 +29,7 @@ const CreateRoomtype = () => {
       setSelectedAmenities((prev) => [...prev, value]);
     } else {
       setSelectedAmenities((prev) =>
-        prev.filter((amenityId) => amenityId !== value)
+        prev.filter((amenityId) => amenityId !== value),
       );
     }
   };
@@ -41,7 +41,7 @@ const CreateRoomtype = () => {
     photoUrls: "",
   });
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -53,21 +53,19 @@ const CreateRoomtype = () => {
     }));
   };
 
-
-
   const handleCreateRoomType = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`,
-        formData
+        formData,
       );
       if (res.data) {
         await axios.post(
           `${process.env.NEXT_PUBLIC_URL_API}/api/roomtype/${res.data.roomType.id}/amenities`,
           {
             amenityIds: selectedAmenities,
-          }
+          },
         );
 
         toast.success("Thêm loại phòng thành công!");
@@ -75,7 +73,8 @@ const CreateRoomtype = () => {
         setImage("");
         setFormData({
           name: "",
-          description: "",          maxOccupancy: 0,
+          description: "",
+          maxOccupancy: 0,
           photoUrls: "",
         });
         Mutate(`${process.env.NEXT_PUBLIC_URL_API}/api/roomtype`);
@@ -186,7 +185,7 @@ const CreateRoomtype = () => {
                       onUploadError={(error) => {
                         toast.error(
                           `Upload failed. ${error.message}` ||
-                            "Tải lên không thành công!"
+                            "Tải lên không thành công!",
                         );
                       }}
                       content={{
@@ -218,12 +217,9 @@ const CreateRoomtype = () => {
                     /> */}
                   </div>
                   <div className="border rounded-lg p-4 max-h-[200px] overflow-y-auto">
-                    <div className="space-y-2">
-                      {data.amenity.map((amenity: Amenity) => (
-                        <div
-                          key={amenity.id}
-                          className="flex items-center space-x-2"
-                        >
+                    <div className="space-y-2 grid grid-cols-2">
+                      {data?.data?.amenity.map((amenity: Amenity) => (
+                        <div key={amenity.id} className=" space-x-2">
                           <div className="text-sm text-gray-700 flex items-center space-x-2">
                             <input
                               onChange={handleCheckboxChange}

@@ -74,7 +74,7 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
     .toUpperCase();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pb-10 cursor-grabbing">
+    <div className="max-w-7xl mx-auto px-4 pb-10">
       {/* ── Hero header ── */}
       <div
         className="relative rounded-2xl overflow-hidden mb-0"
@@ -93,7 +93,7 @@ const BookingDetails = ({ booking }: BookingDetailsProps) => {
         />
 
         {/* top-right actions */}
-        <div className="absolute top-5 right-5 flex flex-col gap-2 items-end z-10">
+        <div className="absolute top-5 right-5 flex flex-col gap-2 items-end z-30 cursor-pointer swiper-no-swiping">
           {booking.status === "CHECKED_OUT" && (
             <ReviewCusTomer bookingId={booking.id} />
           )}
