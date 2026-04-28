@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 
 const axiosRefresh = axios.create({
   baseURL: process.env.NEXT_PUBLIC_URL_API,
-  timeout: 10000,
+  timeout: 30000,
   withCredentials: true,
 });
 
@@ -97,7 +97,6 @@ axiosInstance.interceptors.response.use(
 
     // Mất token / Token hết hạn
     if (error.response?.status === 401 && !originalRequest._retry) {
-
       // Nếu đang trong quá trình lấy token mới rồi -> Những request đến sau phải chờ (đưa vào hàng đợi)
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
@@ -125,7 +124,6 @@ axiosInstance.interceptors.response.use(
         // Chạy lại ngay cái request gọi đầu tiên
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
-
       } catch (refreshError) {
         // Nếu lấy token thất bại -> Báo lỗi cho mớ đang chờ
         processQueue(refreshError, null);
